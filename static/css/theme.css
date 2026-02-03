@@ -164,11 +164,6 @@ a:hover {
   padding: 0;
 }
 
-.logout-link:hover {
-  color: #e0b85a;
-  text-decoration: none;
-}
-
 
 /* =========================
    AUTH / LOGIN PAGE
@@ -196,4 +191,51 @@ a:hover {
 /* inputs full width */
 .auth-card input {
   width: 100%;
+}
+
+/* =========================
+   TOP NAVBAR – ACTIONS
+========================= */
+
+.spa-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+
+  background-color: transparent;
+  border: none;
+
+  color: var(--spa-bg);
+  font-weight: 500;
+  font-size: 0.95rem;
+
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* IKONA – ZAWSZE WIDOCZNA */
+.spa-nav-link i {
+  font-size: 1.05rem;
+  line-height: 1;
+  opacity: 1;
+}
+
+/* HOVER */
+.spa-nav-link:hover {
+  background-color: rgba(205, 160, 61, 0.55); /* złote tło */
+  color: var(--spa-bg);
+  cursor: pointer;
+}
+
+.navbar .spa-nav-link i {
+  color: var(--spa-text) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.navbar .spa-nav-link:hover i {
+  color: var(--spa-text) !important;
 }
