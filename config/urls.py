@@ -16,7 +16,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
+from accounts.forms import EmailAuthenticationForm
+from accounts.views import dashboard_view
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # ROOT = LOGIN
+    path(
+        "",
+        auth_views.LoginView.as_view(
+            template_name="accounts/login.html",
+            authentication_form=EmailAuthenticationForm,
+        ),
+        name="login",
+    ),
+
+    # DASHBOARD PO LOGINIE
+    path("dashboard/", dashboard_view, name="dashboard"),
+
+    # LOGOUT
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+
+    # DJANGO ADMIN (USER MANAGEMENT)
+    path("admin/", admin.site.urls),
 ]

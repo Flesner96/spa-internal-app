@@ -1,0 +1,48 @@
+from django import forms
+from .models import User, Role, UserRole
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
+
+class UserCreateForm(forms.ModelForm):
+    roles = forms.ModelMultipleChoiceField(
+        queryset=Role.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+        label="Role"
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            "email",
+            "first_name",
+            "last_name",
+            "phone",
+            "area",
+            "is_active",
+        ]
+
+    def clean_roles(self):
+        roles = self.cleaned_data.get("roles")
+        if not roles or roles.count() == 0:
+            raise forms.ValidationError("Musisz przypisać co najmniej jedną rolę.")
+        return roles
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        
+        user.set_password(User.objects.make_random_password())
+        if commit:
+            user.save()
+            for role in self.cleaned_data["roles"]:
+                UserRole.objects.create(user=user, role=role)
+        return user
+
+
+User = get_user_model()
+
+class EmailAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={"autofocus": True})
+    )

@@ -16,8 +16,17 @@ class Role(models.Model):
         return self.name
     
 
+from django.contrib.auth.models import AbstractUser
+
 class User(AbstractUser):
+    username = None  # USUWAMY username
+    email = models.EmailField(unique=True)
+
     area = models.ForeignKey(Area, on_delete=models.PROTECT)
+    phone = models.CharField(max_length=20, blank=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
 
 class UserRole(models.Model):

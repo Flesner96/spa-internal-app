@@ -1,0 +1,17 @@
+<h1>Dashboard</h1>
+
+<p>Zalogowany jako: {{ request.user.email }}</p>
+<p>Area: {{ area.name }}</p>
+
+{% if "SA" in roles %}
+  <section>
+    <h2>Panel systemowy WiP</h2>
+  </section>
+{% endif %}
+
+{% if "BS" in roles %}
+  <section>
+    <h2>Twoje sprawy</h2>
+    <p>Grafik, dyspozycje</p>
+  </section>
+{% endif %}
