@@ -239,3 +239,11 @@ a:hover {
 .navbar .spa-nav-link:hover i {
   color: var(--spa-text) !important;
 }
+
+.navbar-toggler {
+  border-color: var(--spa-primary);
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}

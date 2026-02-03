@@ -31,41 +31,62 @@
 
 <body>
 
-<nav class="navbar spa-navbar px-3">
-    <div class="container-fluid">
+<nav class="navbar spa-navbar navbar-expand-lg px-3">
+  <div class="container-fluid">
 
-        <!-- LEWA STRONA -->
-        <a href="{% url 'dashboard' %}" class="navbar-brand spa-nav-icon">
-            <i class="bi bi-house-door"></i>
-        </a>
+    <!-- LEWA STRONA -->
+    <a href="{% url 'dashboard' %}"
+       class="navbar-brand spa-nav-icon {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="bi bi-house-door"></i>
+    </a>
 
-        <!-- PRAWA STRONA -->
-        {% if request.user.is_authenticated %}
-        <div class="d-flex align-items-center gap-4 spa-nav-actions">
+    <!-- HAMBURGER -->
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#spaNavbar"
+            aria-controls="spaNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-            <a href="#" class="spa-nav-link disabled">
-                <i class="bi bi-person"></i>
-                <span>Twój profil</span>
-            </a>
+    <!-- PRAWA STRONA / MOBILE MENU -->
+    {% if request.user.is_authenticated %}
+    <div class="collapse navbar-collapse" id="spaNavbar">
 
-            <a href="#" class="spa-nav-link disabled">
-                <i class="bi bi-key"></i>
-                <span>Zmiana hasła</span>
-            </a>
+      <ul class="navbar-nav ms-auto spa-nav-actions">
 
-            <form method="post" action="{% url 'logout' %}" class="m-0">
-                {% csrf_token %}
-                <button type="submit" class="spa-nav-link spa-logout">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Wyloguj</span>
-                </button>
-            </form>
+        <li class="nav-item">
+          <a href="#" class="spa-nav-link nav-link disabled">
+            <i class="bi bi-person"></i>
+            <span>Twój profil</span>
+          </a>
+        </li>
 
-        </div>
-        {% endif %}
+        <li class="nav-item">
+          <a href="#" class="spa-nav-link nav-link disabled">
+            <i class="bi bi-key"></i>
+            <span>Zmiana hasła</span>
+          </a>
+        </li>
 
+        <li class="nav-item">
+          <form method="post" action="{% url 'logout' %}" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="spa-nav-link spa-logout nav-link">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Wyloguj</span>
+            </button>
+          </form>
+        </li>
+
+      </ul>
     </div>
+    {% endif %}
+
+  </div>
 </nav>
+
 
 
 <main class="container">
