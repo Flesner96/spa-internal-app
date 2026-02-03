@@ -41,8 +41,20 @@ class UserCreateForm(forms.ModelForm):
 
 User = get_user_model()
 
+# forms.py
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
-        label="Email",
-        widget=forms.EmailInput(attrs={"autofocus": True})
+        widget=forms.EmailInput(attrs={
+            "class": "form-control",
+            "placeholder": "Email"
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "Hasło"
+        })
     )

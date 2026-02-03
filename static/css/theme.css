@@ -1,0 +1,199 @@
+:root {
+  --spa-primary: #CDA03D;
+  --spa-bg: #0C345F;
+  --spa-bg-soft: rgba(255, 255, 255, 0.04);
+  --spa-text: #ffffff;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+body {
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--spa-bg) !important;
+  color: var(--spa-text) !important;
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--spa-text);
+  font-weight: 600;
+}
+
+.card-title,
+.section-title {
+  color: var(--spa-primary);
+  font-weight: 600;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* =========================
+   LINKS
+========================= */
+a {
+  color: var(--spa-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #e0b85a;
+  text-decoration: underline;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+  background-color: var(--spa-bg) !important;
+  border-bottom: 2px solid var(--spa-primary);
+}
+
+.navbar-brand,
+.navbar span,
+.navbar a {
+  color: var(--spa-text) !important;
+  font-weight: 500;
+}
+
+/* =========================
+   CARDS
+========================= */
+.card {
+  background-color: var(--spa-bg-soft) !important;
+  border: 1px solid var(--spa-primary);
+  color: var(--spa-text);
+  border-radius: 8px;
+}
+
+.card:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn-primary,
+.btn-success {
+  background-color: var(--spa-primary);
+  border-color: var(--spa-primary);
+  color: #000;
+  font-weight: 600;
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: #e0b85a;
+  border-color: #e0b85a;
+  color: #000;
+}
+
+.btn-outline-primary {
+  border-color: var(--spa-primary);
+  color: var(--spa-primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--spa-primary);
+  color: #000;
+}
+
+/* =========================
+   FORMS
+========================= */
+.form-label {
+  color: var(--spa-text);
+  font-weight: 500;
+}
+
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--spa-text);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--spa-primary);
+  box-shadow: 0 0 0 0.15rem rgba(205, 160, 61, 0.35);
+  color: var(--spa-text);
+}
+
+/* =========================
+   MODALS
+========================= */
+.modal-content {
+  background-color: var(--spa-bg);
+  color: var(--spa-text);
+  border: 1px solid var(--spa-primary);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* =========================
+   TABLES (NA PRZYSZŁOŚĆ)
+========================= */
+.table {
+  color: var(--spa-text);
+}
+
+.table thead th {
+  color: var(--spa-primary);
+  border-bottom: 1px solid var(--spa-primary);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.logout-link {
+  color: var(--spa-primary);
+  text-decoration: underline;
+  font-weight: 500;
+  padding: 0;
+}
+
+.logout-link:hover {
+  color: #e0b85a;
+  text-decoration: none;
+}
+
+
+/* =========================
+   AUTH / LOGIN PAGE
+========================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-wrapper {
+  width: 100%;
+  padding: 1rem;
+}
+
+.auth-card {
+  max-width: 420px;
+  margin: 0 auto;
+  border: 1px solid var(--spa-primary);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* inputs full width */
+.auth-card input {
+  width: 100%;
+}

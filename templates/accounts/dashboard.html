@@ -1,17 +1,26 @@
-<h1>Dashboard</h1>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-<p>Zalogowany jako: {{ request.user.email }}</p>
-<p>Area: {{ area.name }}</p>
+{% block content %}
+
+<h1 class="mb-4">Dashboard</h1>
 
 {% if "SA" in roles %}
-  <section>
-    <h2>Panel systemowy WiP</h2>
-  </section>
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Panel systemowy</h5>
+    <p class="card-text text-muted">WIP – funkcje administracyjne</p>
+  </div>
+</div>
 {% endif %}
 
 {% if "BS" in roles %}
-  <section>
-    <h2>Twoje sprawy</h2>
-    <p>Grafik, dyspozycje</p>
-  </section>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Twoje sprawy</h5>
+    
+  </div>
+</div>
 {% endif %}
+
+{% endblock %}

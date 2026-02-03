@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 
 
-def root_redirect(request):
+def root_view(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
     return redirect("login")

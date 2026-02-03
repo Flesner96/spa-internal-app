@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view
+from accounts.views import dashboard_view, root_view
 
 urlpatterns = [
     # ROOT = LOGIN
+    path("", root_view, name="root"),
+
     path(
-        "",
+        "login/",
         auth_views.LoginView.as_view(
             template_name="accounts/login.html",
             authentication_form=EmailAuthenticationForm,

@@ -1,5 +1,32 @@
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Zaloguj</button>
-</form>
+{% extends "auth_base.html" %}
+{% block title %}Logowanie{% endblock %}
+
+{% block content %}
+
+<div class="auth-card card">
+    <div class="card-body p-4">
+
+        <h3 class="mb-4 text-center">Logowanie</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Login*</label>
+                {{ form.username }}
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Hasło*</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Zaloguj się
+            </button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
