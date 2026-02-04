@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import login_required
-from .models import User
 
 
 def root_view(request):
