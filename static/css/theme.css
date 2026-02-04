@@ -286,3 +286,23 @@ input[type="file"]::file-selector-button:hover {
   color: var(--spa-text) !important;
 }
 
+/* =========================
+   PAGINATION
+========================= */
+
+.page-link {
+  background-color: transparent;
+  border: 1px solid var(--spa-primary);
+  color: var(--spa-text);
+}
+
+.page-link:hover {
+  background-color: rgba(205, 160, 61, 0.25);
+  color: var(--spa-text);
+}
+
+.page-item.disabled .page-link {
+  background-color: transparent;
+  color: var(--spa-text-muted);
+  border-color: rgba(205, 160, 61, 0.4);
+}

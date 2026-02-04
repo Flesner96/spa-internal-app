@@ -47,8 +47,12 @@
 
         <div>
           <strong>
-            {{ msg.author.first_name }} {{ msg.author.last_name }}
-          </strong>
+  {% if msg.author.first_name or msg.author.last_name %}
+    {{ msg.author.first_name }} {{ msg.author.last_name }}
+  {% else %}
+    {{ msg.author.email }}
+  {% endif %}
+</strong>
           <span class="text-muted small ms-2">
             {{ msg.created_at|date:"d.m.Y H:i" }}
           </span>
@@ -92,5 +96,37 @@
     Brak wpisów w zeszycie.
   </div>
 {% endfor %}
+
+{% if messages.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+      {% if messages.has_previous %}
+        <li class="page-item">
+          <a class="page-link"
+             href="?page={{ messages.previous_page_number }}">
+            ‹
+          </a>
+        </li>
+      {% endif %}
+
+      <li class="page-item disabled">
+        <span class="page-link">
+          {{ messages.number }} / {{ messages.paginator.num_pages }}
+        </span>
+      </li>
+
+      {% if messages.has_next %}
+        <li class="page-item">
+          <a class="page-link"
+             href="?page={{ messages.next_page_number }}">
+            ›
+          </a>
+        </li>
+      {% endif %}
+
+    </ul>
+  </nav>
+{% endif %}
 
 {% endblock %}

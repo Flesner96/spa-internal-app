@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import AreaMessage
 from .forms import AreaMessageForm, UserProfileForm
-
+from django.core.paginator import Paginator
 
 def root_view(request):
     if request.user.is_authenticated:
@@ -63,16 +63,26 @@ def edit_area_message(request, pk):
 
 @login_required
 def board_view(request):
-    user = request.user
-    area = user.area
+    area = request.user.area
 
-    messages = AreaMessage.objects.filter(area=area)
+    messages_qs = (
+        AreaMessage.objects
+        .filter(area=area)
+        .order_by("-created_at")
+    )
+
+    paginator = Paginator(messages_qs, 5)  # ⬅️ ile wpisów na stronę
+    page_number = request.GET.get("page")
+    messages = paginator.get_page(page_number)
 
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect("login")
+
         form = AreaMessageForm(request.POST, request.FILES)
         if form.is_valid():
             msg = form.save(commit=False)
-            msg.author = user
+            msg.author = request.user
             msg.area = area
             msg.save()
             return redirect("board")

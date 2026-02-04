@@ -46,10 +46,12 @@ class AreaMessage(models.Model):
     )
 
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="area_messages"
-    )
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name="area_messages",
+    null=False,
+    blank=False,
+)
 
     content = models.TextField()
 
