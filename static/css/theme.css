@@ -270,3 +270,19 @@ input[type="file"]::file-selector-button:hover {
   background-color: rgba(205, 160, 61, 0.25);
   border-color: var(--spa-primary);
 }
+
+/* =========================
+   NAVBAR HOME ICON FIX
+========================= */
+
+.spa-nav-icon,
+.spa-nav-icon:hover {
+  color: var(--spa-text);
+  text-decoration: none;
+}
+
+.spa-nav-icon i,
+.spa-nav-icon:hover i {
+  color: var(--spa-text) !important;
+}
+
