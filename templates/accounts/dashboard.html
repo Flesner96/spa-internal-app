@@ -18,11 +18,11 @@
 ===================== -->
 <div class="row mb-4">
   <div class="col-12">
-    <h5 class="section-title mb-3">Twoje narzędzia</h5>
+    <h5 class="section-title mb-3"></h5>
   </div>
 
   <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
+    <a href="{% url 'board' %}" class="tool-tile">
       <i class="bi bi-journal-text"></i>
       <span>Zeszyt</span>
     </a>
@@ -45,112 +45,46 @@
   <div class="col-6 col-md-4 col-lg-3 mb-3">
     <a href="#" class="tool-tile disabled">
       <i class="bi bi-thermometer-half"></i>
-      <span>Sauny</span>
+      <span>Seanse saunowe</span>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-card-list"></i>
+      <span>Vouchery</span>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-currency-exchange"></i>
+      <span>Stan gotówki</span>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-clipboard2-fill"></i>
+      <span>Cennik</span>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-person-arms-up"></i>
+      <span>Zajęcia</span>
     </a>
   </div>
 </div>
+<hr class="my-4">
 
-<!-- =====================
-     ZESZYT – SZYBKI WPIS
-===================== -->
-<div class="card mb-4">
+<h5 class="section-title mb-3">Ważna informacja</h5>
+
+<div class="card">
   <div class="card-body">
+    <strong>Małgorzata</strong>
+    <span class="text-muted small ms-2">dzisiaj 09:30</span>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="card-title mb-0">
-        Zeszyt – {{ request.user.area.name }}
-      </h5>
-
-      <span class="text-muted small">
-        ostatnie wpisy
-      </span>
-    </div>
-
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-
-      <div class="mb-2">
-        {{ form.content }}
-      </div>
-
-      <div class="mb-3">
-        {{ form.attachment }}
-      </div>
-
-      <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">
-          Dodaj wpis
-        </button>
-      </div>
-
-    </form>
-
+    <p class="mt-2 mb-0">
+      Spotkanie recepcji co środę o 14:00
+    </p>
   </div>
 </div>
-
-
-<!-- =====================
-     ZESZYT – OSTATNIE WPISY
-===================== -->
-{% for msg in messages %}
-  <div class="card mb-3">
-    <div class="card-body">
-
-      <div class="d-flex justify-content-between align-items-start mb-2">
-
-        <div>
-          <strong>
-            {{ msg.author.first_name }} {{ msg.author.last_name }}
-          </strong>
-          <span class="text-muted small ms-2">
-            {{ msg.created_at|date:"d.m.Y H:i" }}
-          </span>
-
-          {% if msg.is_edited %}
-            <span class="text-muted small ms-2">
-              (edytowano)
-            </span>
-          {% endif %}
-        </div>
-
-        {% if msg.author == request.user %}
-          <a href="{% url 'edit_area_message' msg.id %}"
-             class="spa-nav-link">
-            <i class="bi bi-pen"></i>
-            <span>Edytuj</span>
-          </a>
-        {% endif %}
-
-      </div>
-
-      <div class="mb-2">
-        {{ msg.content|linebreaksbr }}
-      </div>
-
-      {% if msg.attachment %}
-        <div class="mt-2">
-          <a href="{{ msg.attachment.url }}" target="_blank"
-             class="spa-nav-link">
-            <i class="bi bi-paperclip"></i>
-            <span>Załącznik</span>
-          </a>
-        </div>
-      {% endif %}
-
-    </div>
-  </div>
-{% empty %}
-  <div class="text-muted text-center mb-4">
-    Brak wpisów w zeszycie.
-  </div>
-{% endfor %}
-
-<div class="text-center mt-3">
-  <a href="#" class="spa-nav-link">
-    <i class="bi bi-journal-text"></i>
-    <span>Zobacz cały zeszyt</span>
-  </a>
-</div>
-
-
 {% endblock %}

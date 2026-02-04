@@ -14,27 +14,7 @@ def root_view(request):
 
 @login_required
 def dashboard_view(request):
-    user = request.user
-    area = user.area
-    messages = AreaMessage.objects.filter(area=area)
-
-    if request.method == "POST":
-        form = AreaMessageForm(request.POST, request.FILES)
-        if form.is_valid():
-            msg = form.save(commit=False)
-            msg.author = user
-            msg.area = area
-            msg.save()
-            return redirect("dashboard")
-    else:
-        form = AreaMessageForm()
-
-    context = {
-        "messages": messages[:5],  
-        "form": form,
-    }
-
-    return render(request, "accounts/dashboard.html", context)
+    return render(request, "accounts/dashboard.html")
 
 
 @login_required
@@ -79,4 +59,31 @@ def edit_area_message(request, pk):
         request,
         "accounts/edit_message.html",
         {"form": form, "message": message},
+    )
+
+@login_required
+def board_view(request):
+    user = request.user
+    area = user.area
+
+    messages = AreaMessage.objects.filter(area=area)
+
+    if request.method == "POST":
+        form = AreaMessageForm(request.POST, request.FILES)
+        if form.is_valid():
+            msg = form.save(commit=False)
+            msg.author = user
+            msg.area = area
+            msg.save()
+            return redirect("board")
+    else:
+        form = AreaMessageForm()
+
+    return render(
+        request,
+        "accounts/board.html",
+        {
+            "messages": messages,
+            "form": form,
+        }
     )

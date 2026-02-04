@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view, edit_area_message
+from accounts.views import dashboard_view, root_view, profile_view, edit_area_message, board_view
 
 urlpatterns = [
     # ROOT = LOGIN
@@ -81,4 +81,5 @@ urlpatterns = [
         edit_area_message,
         name="edit_area_message",
     ),
+    path("board/", board_view, name="board"),
 ]
