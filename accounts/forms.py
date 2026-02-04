@@ -58,3 +58,28 @@ class EmailAuthenticationForm(AuthenticationForm):
             "placeholder": "Hasło"
         })
     )
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email", "phone"]
+
+        widgets = {
+            "first_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Imię"
+            }),
+            "last_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Nazwisko"
+            }),
+            "email": forms.EmailInput(attrs={
+                "class": "form-control",
+                "placeholder": "Email"
+            }),
+            "phone": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Numer telefonu"
+            }),
+        }

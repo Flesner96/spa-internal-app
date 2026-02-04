@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view
+from accounts.views import dashboard_view, root_view, profile_view
 
 urlpatterns = [
     # ROOT = LOGIN
@@ -41,4 +41,5 @@ urlpatterns = [
 
     # DJANGO ADMIN (USER MANAGEMENT)
     path("admin/", admin.site.urls),
+     path("profile/", profile_view, name="profile"),
 ]
