@@ -128,3 +128,5 @@ STATICFILES_DIRS = [
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "SPA Internal <no-reply@spa.local>"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

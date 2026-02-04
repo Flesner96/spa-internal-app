@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, FileResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import AreaMessage
@@ -86,4 +86,21 @@ def board_view(request):
             "messages": messages,
             "form": form,
         }
+    )
+
+@login_required
+def download_area_message_attachment(request, pk):
+    msg = get_object_or_404(AreaMessage, pk=pk)
+
+    # 🔒 bezpieczeństwo: tylko ta sama area
+    if msg.area != request.user.area:
+        raise Http404()
+
+    if not msg.attachment:
+        raise Http404()
+
+    return FileResponse(
+        msg.attachment.open("rb"),
+        as_attachment=True,
+        filename=msg.attachment.name.split("/")[-1],
     )

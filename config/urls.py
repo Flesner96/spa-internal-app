@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view, edit_area_message, board_view
+from accounts.views import dashboard_view, root_view, profile_view, edit_area_message, board_view, download_area_message_attachment
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # ROOT = LOGIN
@@ -82,4 +84,15 @@ urlpatterns = [
         name="edit_area_message",
     ),
     path("board/", board_view, name="board"),
+    path(
+    "messages/<int:pk>/attachment/",
+    download_area_message_attachment,
+    name="download_area_message_attachment",
+),
+
 ]
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

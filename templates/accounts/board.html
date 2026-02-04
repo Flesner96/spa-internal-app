@@ -76,13 +76,14 @@
 
       {% if msg.attachment %}
         <div class="mt-2">
-          <a href="{{ msg.attachment.url }}" target="_blank"
-             class="spa-nav-link">
+          <a href="{% url 'download_area_message_attachment' msg.id %}"
+            class="spa-nav-link">
             <i class="bi bi-paperclip"></i>
-            <span>Załącznik</span>
+            <span>Pobierz załącznik</span>
           </a>
         </div>
       {% endif %}
+
 
     </div>
   </div>
