@@ -3,72 +3,31 @@
 
 {% block content %}
 
+<div class="row">
+  {% for tool in tools %}
+    <div class="col-6 col-md-4 col-lg-3 mb-3">
 
-{% if "SA" in roles %}
-<div class="card mb-4">
-  <div class="card-body">
-    <h5 class="card-title">Panel systemowy</h5>
-    <p class="card-text text-muted">WIP – funkcje administracyjne</p>
-  </div>
-</div>
-{% endif %}
+      {% if tool.enabled %}
+        <a href="{% url tool.url %}" class="tool-tile">
+          <i class="bi {{ tool.icon }}"></i>
+          <span>{{ tool.name }}</span>
+        </a>
+      {% else %}
+        <div class="tool-tile disabled">
+          <i class="bi {{ tool.icon }}"></i>
+          <span>{{ tool.name }}</span>
+        </div>
+      {% endif %}
 
-<!-- =====================
-     TWOJE NARZĘDZIA
-===================== -->
-<div class="row mb-4">
-  <div class="col-12">
-    <h5 class="section-title mb-3"></h5>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="{% url 'board' %}" class="tool-tile">
-      <i class="bi bi-journal-text"></i>
-      <span>Zeszyt</span>
-    </a>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-calendar-week"></i>
-      <span>Grafik</span>
-    </a>
-  </div>
-<div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-card-list"></i>
-      <span>Vouchery</span>
-    </a>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-currency-exchange"></i>
-      <span>Stan gotówki</span>
-    </a>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-clipboard2-fill"></i>
-      <span>Raporty</span>
-    </a>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-ui-checks"></i>
-      <span>Formularze</span>
-    </a>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-person-arms-up"></i>
-      <span>Zajęcia</span>
-    </a>
-  </div>
-  <div class="col-6 col-md-4 col-lg-3 mb-3">
-    <a href="#" class="tool-tile disabled">
-      <i class="bi bi-thermometer-half"></i>
-      <span>Seanse saunowe</span>
-    </a>
-  </div>
+    </div>
+  {% empty %}
+    <div class="text-muted">
+      Brak dostępnych narzędzi dla tej area.
+    </div>
+  {% endfor %}
 </div>
+
+
 
 <hr class="my-4">
 

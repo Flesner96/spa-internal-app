@@ -14,7 +14,125 @@ def root_view(request):
 
 @login_required
 def dashboard_view(request):
-    return render(request, "accounts/dashboard.html")
+    area_code = request.user.area.code  # np. "RECEPTION", "SPA", "MANAGER"
+
+    tools_by_area = {
+        "RC": [
+            {
+                "name": "Zeszyt",
+                "icon": "bi-journal-text",
+                "url": "board",
+                "enabled": True,
+            },
+            {
+                "name": "Grafik",
+                "icon": "bi-calendar-week",
+                "url": "schedule",
+                "enabled": False,
+            },
+            {
+                "name": "Vouchery",
+                "icon": "bi-card-list",
+                "url": "voucher",
+                "enabled": False,
+            },
+            {
+                "name": "Stan gotówki",
+                "icon": "bi-currency-exchange",
+                "url": "balance",
+                "enabled": False,
+            },
+            {
+                "name": "Formularze",
+                "icon": "bi-ui-checks",
+                "url": "forms",
+                "enabled": False,
+            },
+            {
+                "name": "Raporty",
+                "icon": "bi-graph-up",
+                "url": "reports",
+                "enabled": False,
+            },
+            {
+                "name": "Seanse saunowe",
+                "icon": "bi-thermometer-half",
+                "url": "saunas",
+                "enabled": False,
+            },
+            {
+                "name": "Zajęcia",
+                "icon": "bi-person-arms-up",
+                "url": "classes",
+                "enabled": False,
+            },
+        ],
+        "SP": [
+            {
+                "name": "Zeszyt",
+                "icon": "bi-journal-text",
+                "url": "board",
+                "enabled": True,
+            },
+            
+        ],
+        "SA": [
+            {
+                "name": "Zeszyt",
+                "icon": "bi-journal-text",
+                "url": "board",
+                "enabled": True,
+            },
+            {
+                "name": "Grafik",
+                "icon": "bi-calendar-week",
+                "url": "schedule",
+                "enabled": False,
+            },
+            {
+                "name": "Formularze",
+                "icon": "bi-ui-checks",
+                "url": "forms",
+                "enabled": False,
+            },
+            {
+                "name": "Seanse saunowe",
+                "icon": "bi-thermometer-half",
+                "url": "saunas",
+                "enabled": False,
+            },
+        ],
+        "BD": [
+            {
+                "name": "Zeszyt",
+                "icon": "bi-journal-text",
+                "url": "board",
+                "enabled": True,
+            },
+            {
+                "name": "Grafik",
+                "icon": "bi-calendar-week",
+                "url": "schedule",
+                "enabled": False,
+            },
+            {
+                "name": "Raporty",
+                "icon": "bi-graph-up",
+                "url": "reports",
+                "enabled": False,
+            },
+        ],
+    }
+
+    tools = tools_by_area.get(area_code, [])
+
+    return render(
+        request,
+        "accounts/dashboard.html",
+        {
+            "tools": tools
+        }
+    )
 
 
 @login_required
