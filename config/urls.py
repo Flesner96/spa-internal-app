@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view
+from accounts.views import dashboard_view, root_view, profile_view, edit_area_message
 
 urlpatterns = [
     # ROOT = LOGIN
@@ -75,5 +75,10 @@ urlpatterns = [
             template_name="accounts/password_reset_complete.html",
         ),
         name="password_reset_complete",
+    ),
+    path(
+        "dashboard/message/<int:pk>/edit/",
+        edit_area_message,
+        name="edit_area_message",
     ),
 ]

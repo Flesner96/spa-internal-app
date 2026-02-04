@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Edytuj wpis{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <div class="card">
+      <div class="card-body">
+
+        <h5 class="card-title mb-3">Edytuj wpis</h5>
+
+        <p class="text-muted small mb-3">
+          Autor: {{ message.author.first_name }} {{ message.author.last_name }}<br>
+          Utworzono: {{ message.created_at|date:"d.m.Y H:i" }}
+        </p>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            {{ form.content }}
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              Zapisz zmiany
+            </button>
+
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">
+              Anuluj
+            </a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

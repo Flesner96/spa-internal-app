@@ -3,7 +3,6 @@
 
 {% block content %}
 
-<h1 class="mb-4">Dashboard</h1>
 
 {% if "SA" in roles %}
 <div class="card mb-4">
@@ -14,13 +13,144 @@
 </div>
 {% endif %}
 
-{% if "BS" in roles %}
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">Twoje sprawy</h5>
-    
+<!-- =====================
+     TWOJE NARZĘDZIA
+===================== -->
+<div class="row mb-4">
+  <div class="col-12">
+    <h5 class="section-title mb-3">Twoje narzędzia</h5>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-journal-text"></i>
+      <span>Zeszyt</span>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-calendar-week"></i>
+      <span>Grafik</span>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-ui-checks"></i>
+      <span>Formularze</span>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-lg-3 mb-3">
+    <a href="#" class="tool-tile disabled">
+      <i class="bi bi-thermometer-half"></i>
+      <span>Sauny</span>
+    </a>
   </div>
 </div>
-{% endif %}
+
+<!-- =====================
+     ZESZYT – SZYBKI WPIS
+===================== -->
+<div class="card mb-4">
+  <div class="card-body">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="card-title mb-0">
+        Zeszyt – {{ request.user.area.name }}
+      </h5>
+
+      <span class="text-muted small">
+        ostatnie wpisy
+      </span>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="mb-2">
+        {{ form.content }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.attachment }}
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">
+          Dodaj wpis
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+<!-- =====================
+     ZESZYT – OSTATNIE WPISY
+===================== -->
+{% for msg in messages %}
+  <div class="card mb-3">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-start mb-2">
+
+        <div>
+          <strong>
+            {{ msg.author.first_name }} {{ msg.author.last_name }}
+          </strong>
+          <span class="text-muted small ms-2">
+            {{ msg.created_at|date:"d.m.Y H:i" }}
+          </span>
+
+          {% if msg.is_edited %}
+            <span class="text-muted small ms-2">
+              (edytowano)
+            </span>
+          {% endif %}
+        </div>
+
+        {% if msg.author == request.user %}
+          <a href="{% url 'edit_area_message' msg.id %}"
+             class="spa-nav-link">
+            <i class="bi bi-pen"></i>
+            <span>Edytuj</span>
+          </a>
+        {% endif %}
+
+      </div>
+
+      <div class="mb-2">
+        {{ msg.content|linebreaksbr }}
+      </div>
+
+      {% if msg.attachment %}
+        <div class="mt-2">
+          <a href="{{ msg.attachment.url }}" target="_blank"
+             class="spa-nav-link">
+            <i class="bi bi-paperclip"></i>
+            <span>Załącznik</span>
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+{% empty %}
+  <div class="text-muted text-center mb-4">
+    Brak wpisów w zeszycie.
+  </div>
+{% endfor %}
+
+<div class="text-center mt-3">
+  <a href="#" class="spa-nav-link">
+    <i class="bi bi-journal-text"></i>
+    <span>Zobacz cały zeszyt</span>
+  </a>
+</div>
+
 
 {% endblock %}

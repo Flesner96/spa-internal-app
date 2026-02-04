@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Role, UserRole
+from .models import User, Role, UserRole, AreaMessage
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 
@@ -81,5 +81,23 @@ class UserProfileForm(forms.ModelForm):
             "phone": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Numer telefonu"
+            }),
+        }
+
+
+
+class AreaMessageForm(forms.ModelForm):
+    class Meta:
+        model = AreaMessage
+        fields = ["content", "attachment"]
+
+        widgets = {
+            "content": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 3,
+                "placeholder": "Dodaj ważną informację dla zespołu..."
+            }),
+            "attachment": forms.ClearableFileInput(attrs={
+                "class": "form-control"
             }),
         }

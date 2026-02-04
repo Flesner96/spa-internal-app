@@ -1,8 +1,9 @@
 :root {
-  --spa-primary: #CDA03D;
+  --spa-primary: #eeb73fc9;
   --spa-bg: #0C345F;
   --spa-bg-soft: rgba(255, 255, 255, 0.04);
   --spa-text: #ffffff;
+  --spa-text-muted: rgba(255, 255, 255, 0.7);
 }
 
 /* =========================
@@ -10,8 +11,8 @@
 ========================= */
 body {
   font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--spa-bg) !important;
-  color: var(--spa-text) !important;
+  background-color: var(--spa-bg);
+  color: var(--spa-text);
 }
 
 /* =========================
@@ -29,42 +30,80 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-muted {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-/* =========================
-   LINKS
-========================= */
-a {
-  color: var(--spa-primary);
-  text-decoration: none;
-}
-
-a:hover {
-  color: #e0b85a;
-  text-decoration: underline;
+  color: var(--spa-text-muted) !important;
 }
 
 /* =========================
    NAVBAR
 ========================= */
 .navbar {
-  background-color: var(--spa-bg) !important;
+  background-color: var(--spa-bg);
   border-bottom: 2px solid var(--spa-primary);
 }
 
-.navbar-brand,
-.navbar span,
-.navbar a {
-  color: var(--spa-text) !important;
+.navbar-brand {
+  color: var(--spa-text);
+  font-weight: 600;
+}
+
+/* hamburger */
+.navbar-toggler {
+  border-color: var(--spa-primary);
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* =========================
+   SPA NAV LINKS (navbar + akcje)
+========================= */
+.spa-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+
+  background-color: transparent;
+  border: none;
+
+  color: var(--spa-text);
   font-weight: 500;
+  font-size: 0.95rem;
+
+  text-decoration: none;
+  opacity: 1;
+
+  transition: background-color 0.15s ease;
+}
+
+.spa-nav-link i {
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--spa-text);
+  opacity: 1;
+}
+
+/* hover – spójny wszędzie */
+.spa-nav-link:hover {
+  background-color: rgba(241, 180, 47, 0.5);
+  color: var(--spa-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* mocniejszy hover tylko dla logout */
+.spa-logout:hover {
+  background-color: rgba(241, 180, 47, 0.55);
 }
 
 /* =========================
    CARDS
 ========================= */
 .card {
-  background-color: var(--spa-bg-soft) !important;
+  background-color: var(--spa-bg-soft);
   border: 1px solid var(--spa-primary);
   color: var(--spa-text);
   border-radius: 8px;
@@ -88,7 +127,7 @@ a:hover {
 .btn-primary:hover,
 .btn-success:hover {
   background-color: #e0b85a;
-  border-color: #e0b85a;
+  border-color: #e0b85ac5;
   color: #000;
 }
 
@@ -128,6 +167,24 @@ a:hover {
 }
 
 /* =========================
+   AUTH / LOGIN
+========================= */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--spa-primary);
+}
+
+/* =========================
    MODALS
 ========================= */
 .modal-content {
@@ -142,7 +199,7 @@ a:hover {
 }
 
 /* =========================
-   TABLES (NA PRZYSZŁOŚĆ)
+   TABLES (przyszłość)
 ========================= */
 .table {
   color: var(--spa-text);
@@ -156,94 +213,43 @@ a:hover {
 .table tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
-
-.logout-link {
-  color: var(--spa-primary);
-  text-decoration: underline;
-  font-weight: 500;
-  padding: 0;
-}
-
-
 /* =========================
-   AUTH / LOGIN PAGE
+   DASHBOARD TOOLS
 ========================= */
 
-.auth-page {
-  min-height: 100vh;
+.tool-tile {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
 
-.auth-wrapper {
-  width: 100%;
-  padding: 1rem;
-}
+  height: 110px;
+  gap: 0.5rem;
 
-.auth-card {
-  max-width: 420px;
-  margin: 0 auto;
+  background-color: var(--spa-bg-soft);
   border: 1px solid var(--spa-primary);
-  background-color: rgba(255, 255, 255, 0.05);
-}
+  border-radius: 10px;
 
-/* inputs full width */
-.auth-card input {
-  width: 100%;
-}
-
-/* =========================
-   TOP NAVBAR – ACTIONS
-========================= */
-
-.spa-nav-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-
-  padding: 0.35rem 0.6rem;
-  border-radius: 6px;
-
-  background-color: transparent;
-  border: none;
-
-  color: var(--spa-bg);
-  font-weight: 500;
-  font-size: 0.95rem;
-
+  color: var(--spa-text);
   text-decoration: none;
-  transition: background-color 0.15s ease, color 0.15s ease;
+
+  font-weight: 500;
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
-/* IKONA – ZAWSZE WIDOCZNA */
-.spa-nav-link i {
-  font-size: 1.05rem;
-  line-height: 1;
-  opacity: 1;
+.tool-tile i {
+  font-size: 1.8rem;
+  color: var(--spa-primary);
 }
 
-/* HOVER */
-.spa-nav-link:hover {
-  background-color: rgba(205, 160, 61, 0.55); /* złote tło */
-  color: var(--spa-bg);
-  cursor: pointer;
+.tool-tile:hover {
+  background-color: rgba(205, 160, 61, 0.15);
+  transform: translateY(-2px);
+  text-decoration: none;
 }
 
-.navbar .spa-nav-link i {
-  color: var(--spa-text) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.navbar .spa-nav-link:hover i {
-  color: var(--spa-text) !important;
-}
-
-.navbar-toggler {
-  border-color: var(--spa-primary);
-}
-
-.navbar-toggler-icon {
-  filter: invert(1);
+/* WIP / disabled */
+.tool-tile.disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }

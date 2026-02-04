@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
-from .forms import UserProfileForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from .models import AreaMessage
+from .forms import AreaMessageForm, UserProfileForm
 
 
 def root_view(request):
@@ -12,14 +15,23 @@ def root_view(request):
 @login_required
 def dashboard_view(request):
     user = request.user
+    area = user.area
+    messages = AreaMessage.objects.filter(area=area)
 
-    roles = set(
-        user.userrole_set.values_list("role__code", flat=True)
-    )
+    if request.method == "POST":
+        form = AreaMessageForm(request.POST, request.FILES)
+        if form.is_valid():
+            msg = form.save(commit=False)
+            msg.author = user
+            msg.area = area
+            msg.save()
+            return redirect("dashboard")
+    else:
+        form = AreaMessageForm()
 
     context = {
-        "roles": roles,
-        "area": user.area,
+        "messages": messages[:5],  
+        "form": form,
     }
 
     return render(request, "accounts/dashboard.html", context)
@@ -41,4 +53,30 @@ def profile_view(request):
         request,
         "accounts/profile.html",
         {"form": form}
+    )
+
+
+@login_required
+def edit_area_message(request, pk):
+    message = get_object_or_404(AreaMessage, pk=pk)
+
+    # TYLKO autor może edytować
+    if message.author != request.user:
+        return HttpResponseForbidden("Nie masz uprawnień do edycji tego wpisu.")
+
+    if request.method == "POST":
+        form = AreaMessageForm(request.POST, instance=message)
+        if form.is_valid():
+            msg = form.save(commit=False)
+            msg.is_edited = True
+            msg.edited_at = timezone.now()
+            msg.save()
+            return redirect("dashboard")
+    else:
+        form = AreaMessageForm(instance=message)
+
+    return render(
+        request,
+        "accounts/edit_message.html",
+        {"form": form, "message": message},
     )
