@@ -73,3 +73,4 @@ class AreaMessage(models.Model):
 
     def __str__(self):
         return f"{self.author} | {self.created_at:%Y-%m-%d %H:%M}"
+    
