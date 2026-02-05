@@ -14,43 +14,13 @@
   {% for session in sessions %}
     <div class="col-6 col-md-4 col-lg-3 mb-3">
 
-  {% if request.user.area.code == "SA" %}
+      {% if request.user.area.code == "SA" %}
+        {% include "saunas/_session_card.html" with session=session clickable=True %}
+      {% else %}  
+        {% include "saunas/_session_card.html" with session=session clickable=False %}
+      {% endif %}
 
-    <!-- INTERAKTYWNY kafelek -->
-    <a href="{% url 'sauna_session_detail' session.id %}"
-       class="card h-100 text-decoration-none">
-  {% endif %}
-
-    <!-- STATYCZNY kafelek -->
-    <div class="card h-100 readonly">
-
-
-      <div class="card-body">
-
-        <strong>{{ session.session_name }}</strong><br>
-
-        {{ session.start_time|time:"H:i" }} – {{ session.end_time|time:"H:i" }}<br>
-        {{ session.sauna_name }}<br>
-
-        <span class="text-muted">
-          {{ session.leader_name }}
-        </span>
-
-        {% if session.total_people %}
-          <div class="mt-2 small text-muted">
-            K: {{ session.women|default:0 }}
-            M: {{ session.men|default:0 }}
-            TOTAL: {{ session.total_people|default:0 }}
-          </div>
-        {% endif %}
-
-      </div>
-    </div>  
-  {% if request.user.area.code == "SA" %}
-    </a>
-  {% endif %}
-
-</div>
+    </div>
 
   {% empty %}
     <p class="text-muted">
