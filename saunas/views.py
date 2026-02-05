@@ -9,9 +9,10 @@ from .utils import get_week_range
 
 
 @login_required
-def sauna_day_view(request):
+def sauna_day_view(request, date):
     user_area_code = request.user.area.code
 
+    # mapowanie RC → SA
     if user_area_code == "RC":
         target_area_code = "SA"
     else:
@@ -29,20 +30,22 @@ def sauna_day_view(request):
             },
         )
 
-    selected_date = request.GET.get("date")
+    selected_date = parse_date(date)
 
-    if selected_date:
-        sauna_day = SaunaDay.objects.filter(
-            area=target_area,
-            date=selected_date,
-        ).first()
-    else:
-        sauna_day = (
-            SaunaDay.objects
-            .filter(area=target_area)
-            .order_by("-date")
-            .first()
+    if not selected_date:
+        return render(
+            request,
+            "saunas/day.html",
+            {
+                "sauna_day": None,
+                "sessions": [],
+            },
         )
+
+    sauna_day = SaunaDay.objects.filter(
+        area=target_area,
+        date=selected_date,
+    ).first()
 
     sessions = sauna_day.sessions.all() if sauna_day else []
 
