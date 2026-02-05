@@ -58,7 +58,7 @@ def dashboard_view(request):
                 "name": "Seanse saunowe",
                 "icon": "bi-thermometer-half",
                 "url": "saunas",
-                "enabled": False,
+                "enabled": True,
             },
             {
                 "name": "Zajęcia",
@@ -99,7 +99,7 @@ def dashboard_view(request):
                 "name": "Seanse saunowe",
                 "icon": "bi-thermometer-half",
                 "url": "saunas",
-                "enabled": False,
+                "enabled": True,
             },
         ],
         "BD": [
