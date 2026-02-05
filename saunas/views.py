@@ -62,12 +62,21 @@ def sauna_day_view(request, date):
 @login_required
 def sauna_session_detail(request, pk):
     session = get_object_or_404(SaunaSession, pk=pk)
-    if session.sauna_day.area != request.user.area and request.user.area.code != "SA":
+
+    # blokada cross-area
+    if (
+        session.sauna_day.area != request.user.area
+        and request.user.area.code != "SA"
+    ):
         return redirect("saunas")
 
     user_area = request.user.area.code
 
-    can_edit = user_area == "SA"
+    # 🔥 TU BYŁ BUG
+    can_edit = (
+        user_area == "SA"
+        and session.sauna_day.is_editable()
+    )
 
     if request.method == "POST" and can_edit:
         form = SaunaAttendanceForm(request.POST, instance=session)
@@ -95,6 +104,7 @@ def sauna_session_detail(request, pk):
             "can_edit": can_edit,
         },
     )
+
 
 @login_required
 def sauna_week_view(request):
