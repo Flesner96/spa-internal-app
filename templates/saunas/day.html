@@ -29,7 +29,7 @@
 
         <strong>{{ session.session_name }}</strong><br>
 
-        {{ session.start_time }} – {{ session.end_time }}<br>
+        {{ session.start_time|time:"H:i" }} – {{ session.end_time|time:"H:i" }}<br>
         {{ session.sauna_name }}<br>
 
         <span class="text-muted">

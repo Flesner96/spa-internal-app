@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-
+from django.utils import timezone
 
 class SaunaDay(models.Model):
     area = models.ForeignKey(
@@ -11,6 +11,10 @@ class SaunaDay(models.Model):
 
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_editable(self):
+        today = timezone.localdate()
+        return self.date >= today
 
     class Meta:
         unique_together = ("area", "date")
