@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import SaunaAttendanceForm
 from .models import SaunaDay, SaunaSession
 from accounts.models import Area
-
+from datetime import timedelta
+from django.utils.dateparse import parse_date
+from .utils import get_week_range
 
 
 @login_required
@@ -88,5 +90,51 @@ def sauna_session_detail(request, pk):
             "session": session,
             "form": form,
             "can_edit": can_edit,
+        },
+    )
+
+@login_required
+def sauna_week_view(request):
+    user_area = request.user.area.code
+
+    if user_area == "RC":
+        target_area_code = "SA"
+    else:
+        target_area_code = user_area
+
+    area = request.user.area.__class__.objects.get(code=target_area_code)
+
+    selected = request.GET.get("date")
+    base_date = parse_date(selected) if selected else None
+
+    start, end = get_week_range(base_date)
+
+    days = (
+        SaunaDay.objects
+        .filter(area=area, date__range=(start, end))
+        .prefetch_related("sessions")
+        .order_by("date")
+    )
+
+    # mapa: date → SaunaDay
+    day_map = {d.date: d for d in days}
+
+    week = []
+    current = start
+
+    while current <= end:
+        week.append({
+            "date": current,
+            "day": day_map.get(current),
+        })
+        current += timedelta(days=1)
+
+    return render(
+        request,
+        "saunas/week.html",
+        {
+            "week": week,
+            "start": start,
+            "end": end,
         },
     )

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Tydzień saun{% endblock %}
+
+{% block content %}
+
+<h4 class="section-title mb-3">
+  Tydzień: {{ start }} – {{ end }}
+</h4>
+
+<div class="row g-3">
+
+  {% for item in week %}
+    <div class="col">
+
+      <div class="card h-100">
+
+        <div class="card-body">
+
+          <strong>
+            {{ item.date|date:"D d.m" }}
+          </strong>
+
+          {% if item.day %}
+
+            {% for session in item.day.sessions.all %}
+
+              <div class="mt-2 p-2 border rounded">
+
+                <small>
+                  {{ session.start_time }} – {{ session.end_time }}
+                </small><br>
+
+                {{ session.session_name }}<br>
+
+                <span class="text-muted small">
+                  {{ session.leader_name }}
+                </span>
+
+                {% if session.total_people %}
+                  <div class="small mt-1">
+                    K: {{ session.women|default:0 }}
+                    M: {{ session.men|default:0 }}
+                    T: {{ session.total_people|default:0 }}
+                  </div>
+                {% endif %}
+
+              </div>
+
+            {% empty %}
+              <p class="text-muted small mt-2">
+                Brak seansów
+              </p>
+            {% endfor %}
+
+          {% else %}
+            <p class="text-muted small mt-2">
+              Brak planu
+            </p>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}
