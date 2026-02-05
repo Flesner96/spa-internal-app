@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Seans{% endblock %}
+
+{% block content %}
+
+<h4 class="section-title mb-3">
+  {{ session.session_name }}
+</h4>
+<div class="card">
+  <div class="card-body">
+
+    <h5 class="card-title mb-3">Frekwencja</h5>
+
+    {% if can_edit %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label">Kobiety</label>
+          {{ form.women }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Mężczyźźni</label>
+          {{ form.men }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          Zapisz
+        </button>
+
+      </form>
+
+    {% else %}
+
+      <p>Kobiety: <strong>{{ session.women }}</strong></p>
+      <p>Mężczyźni: <strong>{{ session.men }}</strong></p>
+      <p>Razem: <strong>{{ session.total_people }}</strong></p>
+
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

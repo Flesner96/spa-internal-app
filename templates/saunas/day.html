@@ -14,29 +14,48 @@
   {% for session in sessions %}
     <div class="col-6 col-md-4 col-lg-3 mb-3">
 
-      <div class="card h-100">
-        <div class="card-body">
+  {% if request.user.area.code == "SA" %}
 
-          <strong>
-            {{ session.session_name }}
-          </strong>
+    <!-- INTERAKTYWNY kafelek -->
+    <a href="{% url 'sauna_session_detail' session.id %}"
+       class="card h-100 text-decoration-none">
 
-          <p class="mb-1 mt-1">
-            {{ session.start_time }} – {{ session.end_time }}
-          </p>
+  {% else %}
 
-          <p class="mb-1">
-            {{ session.sauna_name }}
-          </p>
+    <!-- STATYCZNY kafelek -->
+    <div class="card h-100 readonly">
 
-          <p class="text-muted small mb-0">
-            {{ session.leader_name }}
-          </p>
+  {% endif %}
 
-        </div>
+      <div class="card-body">
+
+        <strong>{{ session.session_name }}</strong><br>
+
+        {{ session.start_time }} – {{ session.end_time }}<br>
+        {{ session.sauna_name }}<br>
+
+        <span class="text-muted">
+          {{ session.leader_name }}
+        </span>
+
+        {% if session.total_people %}
+          <div class="mt-2 small text-muted">
+            K: {{ session.women|default:0 }}
+            M: {{ session.men|default:0 }}
+            TOTAL: {{ session.total_people|default:0 }}
+          </div>
+        {% endif %}
+
       </div>
 
+  {% if request.user.area.code == "SA" %}
+    </a>
+  {% else %}
     </div>
+  {% endif %}
+
+</div>
+
   {% empty %}
     <p class="text-muted">
       Brak seansów.
