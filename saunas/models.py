@@ -27,6 +27,8 @@ class SaunaSession(models.Model):
         related_name="sessions"
     )
 
+    session_name = models.CharField(max_length=150)
+
     start_time = models.TimeField()
     end_time = models.TimeField()
 
@@ -40,7 +42,6 @@ class SaunaSession(models.Model):
         blank=True
     )
 
-    # dane operacyjne
     total_people = models.PositiveIntegerField(null=True, blank=True)
     women = models.PositiveIntegerField(null=True, blank=True)
     men = models.PositiveIntegerField(null=True, blank=True)
@@ -51,4 +52,5 @@ class SaunaSession(models.Model):
         ordering = ["start_time"]
 
     def __str__(self):
-        return f"{self.sauna_name} {self.start_time}-{self.end_time}"
+        return f"{self.session_name} ({self.start_time}-{self.end_time})"
+

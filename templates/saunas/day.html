@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Seanse saunowe{% endblock %}
+
+{% block content %}
+
+<h4 class="section-title mb-3">
+  Seanse – {{ sauna_day.date|default:"Brak planu" }}
+</h4>
+
+{% if sauna_day %}
+
+<div class="row">
+
+  {% for session in sessions %}
+    <div class="col-6 col-md-4 col-lg-3 mb-3">
+
+      <div class="card h-100">
+        <div class="card-body">
+
+          <strong>
+            {{ session.session_name }}
+          </strong>
+
+          <p class="mb-1 mt-1">
+            {{ session.start_time }} – {{ session.end_time }}
+          </p>
+
+          <p class="mb-1">
+            {{ session.sauna_name }}
+          </p>
+
+          <p class="text-muted small mb-0">
+            {{ session.leader_name }}
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  {% empty %}
+    <p class="text-muted">
+      Brak seansów.
+    </p>
+  {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="card">
+  <div class="card-body text-muted">
+    Brak planu dla tej area.
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

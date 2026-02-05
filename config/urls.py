@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
 from accounts.views import dashboard_view, root_view, profile_view, edit_area_message, board_view, download_area_message_attachment
@@ -25,6 +25,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     # ROOT = LOGIN
     path("", root_view, name="root"),
+    path("dashboard/", dashboard_view, name="dashboard"),
+    # ACCOUNT APP
 
     path(
         "login/",
@@ -34,14 +36,7 @@ urlpatterns = [
         ),
         name="login",
     ),
-
-    # DASHBOARD PO LOGINIE
-    path("dashboard/", dashboard_view, name="dashboard"),
-
-    # LOGOUT
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-
-    # DJANGO ADMIN (USER MANAGEMENT)
     path("admin/", admin.site.urls),
     path("profile/", profile_view, name="profile"),
     path(
@@ -53,7 +48,6 @@ urlpatterns = [
         ),
         name="password_reset",
     ),
-
     path(
         "password-reset/done/",
         auth_views.PasswordResetDoneView.as_view(
@@ -61,7 +55,6 @@ urlpatterns = [
         ),
         name="password_reset_done",
     ),
-
     path(
         "reset/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(
@@ -70,7 +63,6 @@ urlpatterns = [
         ),
         name="password_reset_confirm",
     ),
-
     path(
         "reset/done/",
         auth_views.PasswordResetCompleteView.as_view(
@@ -88,8 +80,10 @@ urlpatterns = [
     "messages/<int:pk>/attachment/",
     download_area_message_attachment,
     name="download_area_message_attachment",
-),
+    ),
 
+    # SAUNA APP
+    path("saunas/", include("saunas.urls")),
 ]
 
 if settings.DEBUG:
