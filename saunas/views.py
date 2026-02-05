@@ -57,6 +57,8 @@ def sauna_day_view(request):
 @login_required
 def sauna_session_detail(request, pk):
     session = get_object_or_404(SaunaSession, pk=pk)
+    if session.sauna_day.area != request.user.area and request.user.area.code != "SA":
+        return redirect("saunas")
 
     user_area = request.user.area.code
 
