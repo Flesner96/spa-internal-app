@@ -48,13 +48,22 @@
             aria-expanded="false"
             aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
+  </button>
 
     <!-- PRAWA STRONA / MOBILE MENU -->
     {% if request.user.is_authenticated %}
     <div class="collapse navbar-collapse" id="spaNavbar">
-
+      
       <ul class="navbar-nav ms-auto spa-nav-actions">
+
+        {% if request.user.is_sa_supervisor %}
+          <li class="nav-item">
+            <a href="{% url 'sauna_import' %}" class="spa-nav-link nav-link">
+                <i class="bi bi-upload"></i>
+              <span>Import Seansów</span>
+            </a>
+          </li>
+        {% endif %}
 
         <li class="nav-item">
           <a href="{% url 'profile' %}" class="spa-nav-link nav-link">

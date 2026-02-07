@@ -21,7 +21,7 @@ class Role(models.Model):
     
 
 class User(AbstractUser):
-    username = None  # USUWAMY username
+    username = None
     email = models.EmailField(unique=True)
 
     area = models.ForeignKey(Area, on_delete=models.PROTECT)
@@ -29,6 +29,31 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    # =====================
+    # PERMISSIONS
+    # =====================
+
+
+    @property
+    def role_codes(self):
+        if not hasattr(self, "_cached_role_codes"):
+            self._cached_role_codes = set(
+                self.userrole_set.values_list("role__code", flat=True)
+            )
+        return self._cached_role_codes
+
+
+    def has_role(self, code: str) -> bool:
+        return code in self.role_codes
+
+    @property
+    def is_sa_supervisor(self) -> bool:
+        return (
+            self.area
+            and self.area.code == "SA"
+            and self.has_role("ASup")
+        )
 
 
 class UserRole(models.Model):

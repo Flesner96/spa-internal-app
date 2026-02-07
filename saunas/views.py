@@ -158,11 +158,8 @@ def sauna_week_view(request):
 @login_required
 def sauna_import_view(request):
 
-    if not (
-        request.user.area.code == "SA"
-        and request.user.role == "ASup"
-    ):
-        messages.error(request, "Brak uprawnień do importu seansów.")
+    if not request.user.is_sa_supervisor:
+        messages.error(request, "Brak uprawnień.")
         return redirect("saunas")
 
 
