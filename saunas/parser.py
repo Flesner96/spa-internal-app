@@ -25,6 +25,8 @@ def parse_sauna_text(raw_text):
     IGNORE_PATTERNS = [
     "SEANS PŁATNY",
     "ZŁ",
+    "N2",
+    "CONCEPT",
 ]
 
     for line in lines:

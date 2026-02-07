@@ -7,6 +7,10 @@
   Import seansów
 </h4>
 
+<!-- =====================
+     TEKST → PARSER
+===================== -->
+
 <form method="post">
   {% csrf_token %}
 
@@ -28,33 +32,59 @@
 
 </form>
 
-{% if preview %}
+<!-- =====================
+     FORMSET (EDYCJA)
+===================== -->
+
+{% if formset %}
 
 <hr>
 
 <h5>Podgląd</h5>
 
+{% if meta %}
 <div class="card mb-3">
   <div class="card-body">
 
-    <strong>Data:</strong> {{ preview.date }}<br>
-    <strong>Lider:</strong> {{ preview.leader }}
+    <strong>Data:</strong> {{ meta.date }}<br>
+    <strong>Lider:</strong> {{ meta.leader }}
 
   </div>
 </div>
-
-{% for s in preview.sessions %}
-<div class="card mb-2">
-  <div class="card-body">
-
-    {{ s.time }} — {{ s.description }}
-
-  </div>
-</div>
-{% endfor %}
+{% endif %}
 
 <form method="post">
   {% csrf_token %}
+
+  {{ formset.management_form }}
+
+  {% for form in formset %}
+  <div class="card mb-2">
+    <div class="card-body">
+
+      <div class="row g-2">
+
+        <div class="col-md-2">
+          {{ form.start_time.label_tag }}
+          {{ form.start_time }}
+        </div>
+
+        <div class="col-md-5">
+          {{ form.session_name.label_tag }}
+          {{ form.session_name }}
+        </div>
+
+        <div class="col-md-5">
+          {{ form.sauna_name.label_tag }}
+          {{ form.sauna_name }}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+
   <button
     type="submit"
     name="action"
@@ -63,6 +93,7 @@
   >
     Zapisz
   </button>
+
 </form>
 
 {% endif %}
