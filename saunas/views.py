@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from .forms import SaunaAttendanceForm
 from .models import SaunaDay, SaunaSession
 from accounts.models import Area
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.utils.dateparse import parse_date
-from .utils import get_week_range
+from .utils import get_week_range, parse_polish_day_month
+from django.contrib import messages
+from .parser import parse_sauna_text, split_description_and_sauna
 
 
 @login_required
@@ -149,5 +151,94 @@ def sauna_week_view(request):
             "week": week,
             "start": start,
             "end": end,
+        },
+    )
+
+@login_required
+def sauna_import_view(request):
+
+    preview = request.session.get("sauna_import_preview")
+    if request.user.area.code != "SA":
+        messages.error(request, "Brak uprawnień do importu seansów.")
+        return redirect("saunas")
+    if request.method == "POST":
+
+        action = request.POST.get("action")
+
+        # =====================
+        # 1. PREVIEW
+        # =====================
+        if action == "preview":
+
+            raw_text = request.POST.get("raw_text", "")
+            parsed = parse_sauna_text(raw_text)
+
+            request.session["sauna_import_preview"] = parsed
+
+            return redirect("sauna_import")
+
+        # =====================
+        # 2. SAVE
+        # =====================
+        if action == "save" and preview:
+
+            parsed_date = parse_polish_day_month(preview.get("date"))
+
+            if not parsed_date:
+                messages.error(
+                    request,
+                    "Nie udało się odczytać daty z importu."
+                )
+                return redirect("sauna_import")
+
+            target_area = Area.objects.get(code="SA")
+
+            sauna_day, _ = SaunaDay.objects.get_or_create(
+                area=target_area,
+                date=parsed_date,
+            )
+
+            # nadpisujemy plan dnia
+            sauna_day.sessions.all().delete()
+
+            for item in preview["sessions"]:
+
+                try:
+                    start_time = datetime.strptime(
+                        item["time"],
+                        "%H:%M"
+                    ).time()
+                except Exception:
+                    continue  # pomiń zepsuty wpis
+
+                start_dt = datetime.strptime(item["time"], "%H:%M")
+                end_dt = start_dt + timedelta(minutes=15)
+
+                start_time = start_dt.time()
+                end_time = end_dt.time()
+
+                desc, sauna = split_description_and_sauna(item["description"])
+
+                SaunaSession.objects.create(
+                    sauna_day=sauna_day,
+                    session_name=desc,
+                    start_time=start_time,
+                    end_time=end_time,
+                    sauna_name=sauna,
+                    leader_name=preview.get("leader", ""),
+                    created_by=request.user,
+                )
+
+            request.session.pop("sauna_import_preview", None)
+
+            messages.success(request, "Import zapisany.")
+
+            return redirect("saunas")
+
+    return render(
+        request,
+        "saunas/import.html",
+        {
+            "preview": preview,
         },
     )

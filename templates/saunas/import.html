@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Import seansów{% endblock %}
+
+{% block content %}
+
+<h4 class="section-title mb-3">
+  Import seansów
+</h4>
+
+<form method="post">
+  {% csrf_token %}
+
+  <textarea
+    name="raw_text"
+    class="form-control mb-3"
+    rows="10"
+    placeholder="Wklej tekst z Canvy..."
+  ></textarea>
+
+  <button
+    type="submit"
+    name="action"
+    value="preview"
+    class="btn btn-primary"
+  >
+    Podgląd
+  </button>
+
+</form>
+
+{% if preview %}
+
+<hr>
+
+<h5>Podgląd</h5>
+
+<div class="card mb-3">
+  <div class="card-body">
+
+    <strong>Data:</strong> {{ preview.date }}<br>
+    <strong>Lider:</strong> {{ preview.leader }}
+
+  </div>
+</div>
+
+{% for s in preview.sessions %}
+<div class="card mb-2">
+  <div class="card-body">
+
+    {{ s.time }} — {{ s.description }}
+
+  </div>
+</div>
+{% endfor %}
+
+<form method="post">
+  {% csrf_token %}
+  <button
+    type="submit"
+    name="action"
+    value="save"
+    class="btn btn-success"
+  >
+    Zapisz
+  </button>
+</form>
+
+{% endif %}
+
+{% endblock %}
