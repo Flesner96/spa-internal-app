@@ -25,7 +25,7 @@ class AreaMessage(models.Model):
     content = models.TextField()
 
     attachment = models.FileField(
-        upload_to="area_messages_upload_path",
+        upload_to=area_message_upload_path,
         blank=True,
         null=True
     )
