@@ -5,18 +5,24 @@ from django.core.paginator import Paginator
 from .models import AreaMessage
 from django.utils import timezone
 from django.http import HttpResponseForbidden, FileResponse, Http404
-from django.urls import reverse
+
+
+from .permissions import (
+    can_view_notebook,
+    can_post_message,
+    can_edit_message,
+)
+
 
 @login_required
 def edit_area_message(request, pk):
     message = get_object_or_404(AreaMessage, pk=pk)
 
-    # TYLKO autor może edytować
-    if message.author != request.user:
+    if not can_edit_message(request.user, message):
         return HttpResponseForbidden("Nie masz uprawnień do edycji tego wpisu.")
 
     if request.method == "POST":
-        form = AreaMessageForm(request.POST, instance=message)
+        form = AreaMessageForm(request.POST, request.FILES, instance=message)
         if form.is_valid():
             msg = form.save(commit=False)
             msg.is_edited = True
@@ -36,6 +42,10 @@ def edit_area_message(request, pk):
 def notebook_view(request):
     area = request.user.area
 
+    if not can_view_notebook(request.user):
+        return HttpResponseForbidden()
+
+
     messages_qs = (
         AreaMessage.objects
         .filter(area=area)
@@ -47,6 +57,8 @@ def notebook_view(request):
     messages = paginator.get_page(page_number)
 
     if request.method == "POST":
+        if not can_post_message(request.user):
+            return HttpResponseForbidden()
 
         form = AreaMessageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -54,7 +66,8 @@ def notebook_view(request):
             msg.author = request.user
             msg.area = area
             msg.save()
-            return redirect(f"{reverse('notebook')}?page={messages.number}")
+            return redirect("notebook")
+
 
     else:
         form = AreaMessageForm()
@@ -70,9 +83,11 @@ def notebook_view(request):
 
 @login_required
 def download_area_message_attachment(request, pk):
+    if not can_view_notebook(request.user):
+        raise Http404()
+    
     msg = get_object_or_404(AreaMessage, pk=pk)
 
-    # 🔒 bezpieczeństwo: tylko ta sama area
     if msg.area != request.user.area:
         raise Http404()
 
