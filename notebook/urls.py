@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [   
     path("", views.notebook_view, name="notebook"), 
     path(
-        "notebook/message/<int:pk>/edit/",
+        "message/<int:pk>/edit/",
         views.edit_area_message,
         name="edit_area_message",
     ),

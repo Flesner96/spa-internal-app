@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from .models import AreaMessage
 from django.utils import timezone
 from django.http import HttpResponseForbidden, FileResponse, Http404
+from django.urls import reverse
 
 @login_required
 def edit_area_message(request, pk):
@@ -21,7 +22,7 @@ def edit_area_message(request, pk):
             msg.is_edited = True
             msg.edited_at = timezone.now()
             msg.save()
-            return redirect("dashboard")
+            return redirect("notebook")
     else:
         form = AreaMessageForm(instance=message)
 
@@ -46,8 +47,6 @@ def notebook_view(request):
     messages = paginator.get_page(page_number)
 
     if request.method == "POST":
-        if not request.user.is_authenticated:
-            return redirect("login")
 
         form = AreaMessageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -55,7 +54,8 @@ def notebook_view(request):
             msg.author = request.user
             msg.area = area
             msg.save()
-            return redirect("notebook")
+            return redirect(f"{reverse('notebook')}?page={messages.number}")
+
     else:
         form = AreaMessageForm()
 
