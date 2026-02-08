@@ -7,7 +7,34 @@ import secrets
 
 User = get_user_model()
 
-class UserCreateForm(forms.ModelForm):
+class BaseUserForm(forms.ModelForm):
+    base_widgets = {
+        "first_name": forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Imię"
+        }),
+        "last_name": forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Nazwisko"
+        }),
+        "email": forms.EmailInput(attrs={
+            "class": "form-control",
+            "placeholder": "Email"
+        }),
+        "phone": forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Numer telefonu"
+        }),
+        "area": forms.Select(attrs={
+            "class": "form-select"
+        }),
+        "is_active": forms.CheckboxInput(attrs={
+            "class": "form-check-input"
+        }),
+    }
+
+class UserCreateForm(BaseUserForm):
+
     roles = forms.ModelMultipleChoiceField(
         queryset=Role.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -23,8 +50,8 @@ class UserCreateForm(forms.ModelForm):
             "last_name",
             "phone",
             "area",
-            "is_active",
         ]
+        widgets = BaseUserForm.base_widgets
 
     def clean_roles(self):
         roles = self.cleaned_data.get("roles")
@@ -40,6 +67,8 @@ class UserCreateForm(forms.ModelForm):
         temp_password = secrets.token_urlsafe(8)
         user.set_password(temp_password)
         user.must_change_password = True
+        user.is_active = True
+
 
         if commit:
             user.save()
@@ -52,30 +81,11 @@ class UserCreateForm(forms.ModelForm):
         return user, temp_password
 
 
-class UserProfileForm(forms.ModelForm):
+class UserProfileForm(BaseUserForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email", "phone"]
-
-        widgets = {
-            "first_name": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Imię"
-            }),
-            "last_name": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Nazwisko"
-            }),
-            "email": forms.EmailInput(attrs={
-                "class": "form-control",
-                "placeholder": "Email"
-            }),
-            "phone": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Numer telefonu"
-            }),
-        }
-
+        widgets = BaseUserForm.base_widgets
 
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
