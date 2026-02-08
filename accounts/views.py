@@ -78,6 +78,7 @@ def root_view(request):
 def dashboard_view(request):
     user = request.user
     area_code = user.area.code
+    credentials = request.session.pop("new_user_credentials", None)
 
     visible_tools = []
 
@@ -98,8 +99,9 @@ def dashboard_view(request):
         request,
         "accounts/dashboard.html",
         {
-            "tools": visible_tools
-        }
+            "tools": visible_tools,
+            "new_user_credentials": credentials,
+        },
     )
 
 
@@ -146,12 +148,13 @@ def user_create_view(request):
         if form.is_valid():
             user, temp_password = form.save()
 
-            messages.success(
-                request,
-                f"Konto utworzone: {user.email} | Hasło tymczasowe: {temp_password}"
-            )
+            request.session["new_user_credentials"] = {
+                "email": user.email,
+                "password": temp_password,
+            }
 
             return redirect("dashboard")
+
 
     else:
         form = UserCreateForm()

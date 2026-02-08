@@ -44,4 +44,78 @@
     </p>
   </div>
 </div>
+
+{% if new_user_credentials %}
+
+<div class="modal fade" id="newUserModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Nowe konto utworzone</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <p><strong>Email:</strong></p>
+        <input id="newUserEmail"
+               class="form-control mb-3"
+               value="{{ new_user_credentials.email }}"
+               readonly>
+
+        <p><strong>Hasło tymczasowe:</strong></p>
+        <div class="input-group">
+          <input id="newUserPassword"
+                 class="form-control"
+                 value="{{ new_user_credentials.password }}"
+                 readonly>
+
+          <button class="btn btn-outline-secondary"
+                  type="button"
+                  onclick="copyPassword()">
+            Kopiuj
+          </button>
+        </div>
+
+        <small class="text-muted mt-2 d-block">
+          Hasło pokaże się tylko raz.
+        </small>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-dismiss="modal">
+          OK
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+
+{% endblock %}
+{% block scripts %}
+
+{% if new_user_credentials %}
+<script>
+function copyPassword() {
+  const input = document.getElementById("newUserPassword");
+  input.select();
+  input.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(input.value);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const modal = new bootstrap.Modal(
+    document.getElementById("newUserModal")
+  );
+  modal.show();
+});
+</script>
+{% endif %}
+
 {% endblock %}
