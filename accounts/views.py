@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 
 def root_view(request):
@@ -151,3 +153,16 @@ def profile_view(request):
     )
 
 
+
+class ForcedPasswordChangeView(PasswordChangeView):
+    template_name = "accounts/password_change.html"
+    success_url = reverse_lazy("dashboard")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # reset flagi hasła
+        self.request.user.must_change_password = False
+        self.request.user.save(update_fields=["must_change_password"])
+
+        return response

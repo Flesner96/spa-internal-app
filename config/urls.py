@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, reverse_lazy
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view
+from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -37,6 +37,18 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path(
+    "password-change/",
+    ForcedPasswordChangeView.as_view(),
+    name="password_change",
+    ),
+    path(
+    "password-change/done/",
+    auth_views.PasswordChangeDoneView.as_view(
+        template_name="accounts/password_change_done.html",
+    ),
+    name="password_change_done",
+    ),
     path("admin/", admin.site.urls),
     path("profile/", profile_view, name="profile"),
     path(
@@ -44,7 +56,7 @@ urlpatterns = [
         auth_views.PasswordResetView.as_view(
             template_name="accounts/password_reset.html",
             email_template_name="accounts/password_reset_email.html",
-            success_url="/password-reset/done/",
+            success_url=reverse_lazy("password_reset_done"),
         ),
         name="password_reset",
     ),

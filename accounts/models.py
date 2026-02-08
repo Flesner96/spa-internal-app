@@ -25,6 +25,7 @@ class User(AbstractUser):
 
     area = models.ForeignKey(Area, on_delete=models.PROTECT)
     phone = models.CharField(max_length=20, blank=True)
+    must_change_password = models.BooleanField(default=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

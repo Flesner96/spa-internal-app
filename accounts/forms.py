@@ -2,6 +2,7 @@ from django import forms
 from .models import User, Role, UserRole
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
+import secrets
 
 class UserCreateForm(forms.ModelForm):
     roles = forms.ModelMultipleChoiceField(
@@ -81,4 +82,20 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
+class AdminCreateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["email", "area"]
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        temp_password = secrets.token_urlsafe(8)
+        user.set_password(temp_password)
+        user.must_change_password = True
+
+        if commit:
+            user.save()
+
+        self.temp_password = temp_password
+        return user

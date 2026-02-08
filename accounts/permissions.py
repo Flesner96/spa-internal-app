@@ -7,7 +7,7 @@ class Capability:
     VIEW_NOTEBOOK = "view_notebook"
     POST_NOTEBOOK = "post_notebook"
     EDIT_NOTEBOOK = "edit_notebook"
-
+    MANAGE_USERS = "manage_users"
 
 ROLE_CAPABILITIES = {
     "BS": {
