@@ -8,6 +8,11 @@ from django.utils.dateparse import parse_date
 from .utils import get_week_range, parse_polish_day_month
 from django.contrib import messages
 from .parser import parse_sauna_text, split_description_and_sauna
+from django.http import HttpResponseForbidden
+from .permissions import (
+    can_edit_saunas,
+    can_import_saunas,
+)
 
 
 
@@ -65,23 +70,24 @@ def sauna_day_view(request, date):
 @login_required
 def sauna_session_detail(request, pk):
     session = get_object_or_404(SaunaSession, pk=pk)
-
-    # blokada cross-area
+    
     if (
         session.sauna_day.area != request.user.area
-        and request.user.area.code != "SA"
+        and not request.user.is_sys_admin
     ):
-        return redirect("saunas")
+        return HttpResponseForbidden()
 
-    user_area = request.user.area.code
 
-    # 🔥 TU BYŁ BUG
     can_edit = (
-        user_area == "SA"
+        can_edit_saunas(request.user)
         and session.sauna_day.is_editable()
     )
 
-    if request.method == "POST" and can_edit:
+
+    if request.method == "POST":
+        if not can_edit:
+            return HttpResponseForbidden()
+
         form = SaunaAttendanceForm(request.POST, instance=session)
 
         if form.is_valid():
@@ -158,10 +164,8 @@ def sauna_week_view(request):
 @login_required
 def sauna_import_view(request):
 
-    if not request.user.is_sa_supervisor:
-        messages.error(request, "Brak uprawnień.")
-        return redirect("saunas")
-
+    if not can_import_saunas(request.user):
+        return HttpResponseForbidden()
 
     meta = request.session.get("sauna_import_meta")
 
@@ -247,7 +251,6 @@ def sauna_import_view(request):
                 messages.success(request, "Import zapisany.")
                 return redirect("saunas")
 
-    # ✅ GET fallback (ZAWSZE MUSI BYĆ)
     return render(
         request,
         "saunas/import.html",
