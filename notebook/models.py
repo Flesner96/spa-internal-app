@@ -1,6 +1,11 @@
 from django.db import models
 from django.conf import settings
+import time
 
+def area_message_upload_path(instance, filename):
+    area_code = instance.area.code
+    ts = int(time.time())
+    return f"area_messages/{area_code}/{ts}_{filename}"
 
 class AreaMessage(models.Model):
     area = models.ForeignKey(
@@ -20,7 +25,7 @@ class AreaMessage(models.Model):
     content = models.TextField()
 
     attachment = models.FileField(
-        upload_to="area_messages/",
+        upload_to="area_messages_upload_path",
         blank=True,
         null=True
     )
