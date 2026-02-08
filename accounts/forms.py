@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Role, UserRole, AreaMessage
+from .models import User, Role, UserRole
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 
@@ -40,10 +40,6 @@ class UserCreateForm(forms.ModelForm):
 
 
 User = get_user_model()
-
-# forms.py
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm
 
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
@@ -86,18 +82,3 @@ class UserProfileForm(forms.ModelForm):
 
 
 
-class AreaMessageForm(forms.ModelForm):
-    class Meta:
-        model = AreaMessage
-        fields = ["content", "attachment"]
-
-        widgets = {
-            "content": forms.Textarea(attrs={
-                "class": "form-control",
-                "rows": 3,
-                "placeholder": "Dodaj ważną informację dla zespołu..."
-            }),
-            "attachment": forms.ClearableFileInput(attrs={
-                "class": "form-control"
-            }),
-        }

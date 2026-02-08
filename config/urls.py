@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view, edit_area_message, board_view, download_area_message_attachment
+from accounts.views import dashboard_view, root_view, profile_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -27,7 +27,6 @@ urlpatterns = [
     path("", root_view, name="root"),
     path("dashboard/", dashboard_view, name="dashboard"),
     # ACCOUNT APP
-
     path(
         "login/",
         auth_views.LoginView.as_view(
@@ -70,20 +69,9 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path(
-        "dashboard/message/<int:pk>/edit/",
-        edit_area_message,
-        name="edit_area_message",
-    ),
-    path("board/", board_view, name="board"),
-    path(
-    "messages/<int:pk>/attachment/",
-    download_area_message_attachment,
-    name="download_area_message_attachment",
-    ),
-
-    # SAUNA APP
+    
     path("saunas/", include("saunas.urls")),
+    path("notebook/", include("notebook.urls")),
 ]
 
 if settings.DEBUG:
