@@ -3,22 +3,23 @@
 
 {% block content %}
 
+<div class="col-6 col-md-4 col-lg-3 mb-3"></div>
+
 <div class="row">
   {% for tool in tools %}
     <div class="col-6 col-md-4 col-lg-3 mb-3">
 
-      {% if tool.enabled %}
+      {% if tool.status == "active" %}
         <a href="{% url tool.url %}" class="tool-tile">
           <i class="bi {{ tool.icon }}"></i>
           <span>{{ tool.name }}</span>
         </a>
-      {% else %}
-        <div class="tool-tile disabled">
-          <i class="bi {{ tool.icon }}"></i>
-          <span>{{ tool.name }}</span>
-        </div>
       {% endif %}
-
+      {% if tool.status == "planned" %}
+      <div class="opacity-50">  
+        <span class="badge bg-secondary">WKRÓTCE</span>
+      </div>
+      {% endif %} 
     </div>
   {% empty %}
     <div class="text-muted">

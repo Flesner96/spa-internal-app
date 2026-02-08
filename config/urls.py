@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, reverse_lazy
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView
+from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView, user_create_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -82,7 +82,7 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    
+    path("users/create/", user_create_view, name="user_create"),
     path("saunas/", include("saunas.urls")),
     path("notebook/", include("notebook.urls")),
 ]

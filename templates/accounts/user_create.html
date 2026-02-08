@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Dodaj Użytkownika{% endblock %}
+
+{% block content %}
+<div class="col-6 col-md-4 col-lg-3 mb-3"></div>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card">
+      <div class="card-body">
+        
+        <h4 class="card-title mb-4">Dodaj Użytkownika</h4>
+  
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Imię</label>
+                {{ form.first_name }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nazwisko</label>
+                {{ form.last_name }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Numer telefonu</label>
+                {{ form.phone }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Area Tag</label>
+                {{ form.area }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Role</label>
+                {{ form.roles }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Utwórz konto
+            </button>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

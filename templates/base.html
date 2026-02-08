@@ -1,4 +1,6 @@
 {% load static %}
+{% load permissions %}
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -31,7 +33,17 @@
 
 <body>
 
-<nav class="navbar spa-navbar navbar-expand-lg px-3">
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<nav class="navbar spa-navbar navbar-expand-lg navbar-light px-3" role="navigation">
   <div class="container-fluid">
 
     <!-- LEWA STRONA -->
@@ -51,54 +63,66 @@
   </button>
 
     <!-- PRAWA STRONA / MOBILE MENU -->
-    {% if request.user.is_authenticated %}
-    <div class="collapse navbar-collapse" id="spaNavbar">
-      
-      <ul class="navbar-nav ms-auto spa-nav-actions">
+{% if user.is_authenticated %}
+<div class="collapse navbar-collapse" id="spaNavbar">
 
-        {% if request.user.is_sa_supervisor %}
-          <li class="nav-item">
-            <a href="{% url 'sauna_import' %}" class="spa-nav-link nav-link">
-                <i class="bi bi-upload"></i>
-              <span>Import Seansów</span>
-            </a>
-          </li>
-        {% endif %}
+  <ul class="navbar-nav ms-auto spa-nav-actions">
 
-        <li class="nav-item">
-          <a href="{% url 'profile' %}" class="spa-nav-link nav-link">
-            <i class="bi bi-person"></i>
-            <span>Twój profil</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'password_reset' %}" class="spa-nav-link nav-link">
-            <i class="bi bi-key"></i>
-            <span>Zmiana hasła</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}" class="m-0">
-            {% csrf_token %}
-            <button type="submit" class="spa-nav-link spa-logout nav-link">
-              <i class="bi bi-box-arrow-right"></i>
-              <span>Wyloguj</span>
-            </button>
-          </form>
-        </li>
-
-      </ul>
-    </div>
+    {# SA ASup - Import seansów #}
+    {% if request.user|can:"import_saunas" %}
+      <li class="nav-item">
+        <a href="{% url 'sauna_import' %}" class="spa-nav-link nav-link">
+          <i class="bi bi-upload"></i>
+          <span>Import Seansów</span>
+        </a>
+      </li>
     {% endif %}
+
+    {#  SysA — dodaj użytkownika #}
+    {% if request.user|can:"manage_users" %}
+      <li class="nav-item">
+        <a href="{% url 'user_create' %}" class="spa-nav-link nav-link">
+          <i class="bi bi-plus"></i>
+          <span>Dodaj Użytkownika</span>
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="nav-item">
+      <a href="{% url 'profile' %}" class="spa-nav-link nav-link">
+        <i class="bi bi-person"></i>
+        <span>Twój profil</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'password_change' %}" class="spa-nav-link nav-link">
+        <i class="bi bi-key"></i>
+        <span>Zmiana hasła</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <form method="post" action="{% url 'logout' %}" class="m-0">
+        {% csrf_token %}
+        <button type="submit" class="spa-nav-link spa-logout nav-link">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Wyloguj</span>
+        </button>
+      </form>
+    </li>
+
+  </ul>
+</div>
+{% endif %}
+
 
   </div>
 </nav>
 
 
 
-<main class="container">
+<main class="container py-4">
     {% block content %}{% endblock %}
 </main>
 

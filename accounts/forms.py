@@ -4,6 +4,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 import secrets
 
+
+User = get_user_model()
+
 class UserCreateForm(forms.ModelForm):
     roles = forms.ModelMultipleChoiceField(
         queryset=Role.objects.all(),
@@ -25,36 +28,28 @@ class UserCreateForm(forms.ModelForm):
 
     def clean_roles(self):
         roles = self.cleaned_data.get("roles")
-        if not roles or roles.count() == 0:
-            raise forms.ValidationError("Musisz przypisać co najmniej jedną rolę.")
+        if not roles:
+            raise forms.ValidationError(
+                "Musisz przypisać co najmniej jedną rolę."
+            )
         return roles
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        
-        user.set_password(User.objects.make_random_password())
+
+        temp_password = secrets.token_urlsafe(8)
+        user.set_password(temp_password)
+        user.must_change_password = True
+
         if commit:
             user.save()
+
+            UserRole.objects.filter(user=user).delete()
+
             for role in self.cleaned_data["roles"]:
                 UserRole.objects.create(user=user, role=role)
-        return user
 
-
-User = get_user_model()
-
-class EmailAuthenticationForm(AuthenticationForm):
-    username = forms.EmailField(
-        widget=forms.EmailInput(attrs={
-            "class": "form-control",
-            "placeholder": "Email"
-        })
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control",
-            "placeholder": "Hasło"
-        })
-    )
+        return user, temp_password
 
 
 class UserProfileForm(forms.ModelForm):
@@ -82,20 +77,16 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
-class AdminCreateUserForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ["email", "area"]
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-
-        temp_password = secrets.token_urlsafe(8)
-        user.set_password(temp_password)
-        user.must_change_password = True
-
-        if commit:
-            user.save()
-
-        self.temp_password = temp_password
-        return user
+class EmailAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            "class": "form-control",
+            "placeholder": "Email"
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "Hasło"
+        })
+    )

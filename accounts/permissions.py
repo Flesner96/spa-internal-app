@@ -8,6 +8,7 @@ class Capability:
     POST_NOTEBOOK = "post_notebook"
     EDIT_NOTEBOOK = "edit_notebook"
     MANAGE_USERS = "manage_users"
+    IMPORT_SAUNAS = 'import_saunas'
 
 ROLE_CAPABILITIES = {
     "BS": {

@@ -36,9 +36,7 @@ class User(AbstractUser):
 
     @property
     def role_codes(self) -> set[str]:
-        """
-        Cached set of role codes assigned to the user.
-        """
+        
         if not hasattr(self, "_cached_role_codes"):
             self._cached_role_codes = set(
                 self.userrole_set.values_list("role__code", flat=True)
@@ -53,16 +51,12 @@ class User(AbstractUser):
 
     @property
     def is_sys_admin(self) -> bool:
-        """
-        Semantic helper — SysA is a global override role.
-        """
+        
         return self.has_role("SysA")
 
     @property
     def is_sa_supervisor(self) -> bool:
-        """
-        Domain-specific helper (business rule).
-        """
+        
         return (
             self.area
             and self.area.code == "SA"
@@ -70,10 +64,12 @@ class User(AbstractUser):
         )
 
     def can(self, capability: str) -> bool:
-        """
-        Capability-based RBAC check.
-        """
+        
         from .permissions import user_has_capability
+
+        if self.is_sys_admin:
+            return True
+
         return user_has_capability(self, capability)
 
 

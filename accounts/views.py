@@ -3,7 +3,69 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from django.contrib import messages
+from .forms import UserCreateForm
+from .permissions import require_capability, Capability
 
+
+ALL_TOOLS = [
+    {
+        "name": "Zeszyt",
+        "icon": "bi-journal-text",
+        "url": "notebook",
+        "status": "active",
+        "areas": ["RC", "SP", "SA", "BD"],
+    },
+    {
+        "name": "Grafik",
+        "icon": "bi-calendar-week",
+        "url": "schedule",
+        "status": "planned",
+        "areas": ["RC", "SA", "SP", "BD"],        
+    },
+    {
+        "name": "Vouchery",
+        "icon": "bi-card-list",
+        "url": "voucher",
+        "status": "planned",
+        "areas": ["RC"],
+    },
+    {
+        "name": "Stan gotówki",
+        "icon": "bi-currency-exchange",
+        "url": "balance",
+        "status": "planned",
+        "areas": ["RC"],
+    },
+    {
+        "name": "Formularze",
+        "icon": "bi-ui-checks",
+        "url": "forms",
+        "status": "planned",
+        "areas": ["RC", "SA", "BD"],
+    },
+    {
+        "name": "Raporty",
+        "icon": "bi-graph-up",
+        "url": "reports",
+        "status": "planned",
+        "areas": ["RC", "SA", "SP", "BD"],
+    },
+    {
+        "name": "Seanse saunowe",
+        "icon": "bi-thermometer-half",
+        "url": "saunas",
+        "status": "active",
+        "areas": ["RC", "SA", "BD"],
+    },
+    {
+        "name": "Zajęcia",
+        "icon": "bi-person-arms-up",
+        "url": "classes",
+        "status": "planned",
+        "areas": ["RC", "BD"],
+    },
+]
 
 def root_view(request):
     if request.user.is_authenticated:
@@ -12,124 +74,31 @@ def root_view(request):
 
 
 @login_required
+@login_required
 def dashboard_view(request):
-    area_code = request.user.area.code  # np. "RECEPTION", "SPA", "MANAGER"
+    user = request.user
+    area_code = user.area.code
 
-    tools_by_area = {
-        "RC": [
-            {
-                "name": "Zeszyt",
-                "icon": "bi-journal-text",
-                "url": "notebook",
-                "enabled": True,
-            },
-            {
-                "name": "Grafik",
-                "icon": "bi-calendar-week",
-                "url": "schedule",
-                "enabled": False,
-            },
-            {
-                "name": "Vouchery",
-                "icon": "bi-card-list",
-                "url": "voucher",
-                "enabled": False,
-            },
-            {
-                "name": "Stan gotówki",
-                "icon": "bi-currency-exchange",
-                "url": "balance",
-                "enabled": False,
-            },
-            {
-                "name": "Formularze",
-                "icon": "bi-ui-checks",
-                "url": "forms",
-                "enabled": False,
-            },
-            {
-                "name": "Raporty",
-                "icon": "bi-graph-up",
-                "url": "reports",
-                "enabled": False,
-            },
-            {
-                "name": "Seanse saunowe",
-                "icon": "bi-thermometer-half",
-                "url": "saunas",
-                "enabled": True,
-            },
-            {
-                "name": "Zajęcia",
-                "icon": "bi-person-arms-up",
-                "url": "classes",
-                "enabled": False,
-            },
-        ],
-        "SP": [
-            {
-                "name": "Zeszyt",
-                "icon": "bi-journal-text",
-                "url": "notebook",
-                "enabled": True,
-            },
-            
-        ],
-        "SA": [
-            {
-                "name": "Zeszyt",
-                "icon": "bi-journal-text",
-                "url": "notebook",
-                "enabled": True,
-            },
-            {
-                "name": "Grafik",
-                "icon": "bi-calendar-week",
-                "url": "schedule",
-                "enabled": False,
-            },
-            {
-                "name": "Formularze",
-                "icon": "bi-ui-checks",
-                "url": "forms",
-                "enabled": False,
-            },
-            {
-                "name": "Seanse saunowe",
-                "icon": "bi-thermometer-half",
-                "url": "saunas",
-                "enabled": True,
-            },
-        ],
-        "BD": [
-            {
-                "name": "Zeszyt",
-                "icon": "bi-journal-text",
-                "url": "notebook",
-                "enabled": True,
-            },
-            {
-                "name": "Grafik",
-                "icon": "bi-calendar-week",
-                "url": "schedule",
-                "enabled": False,
-            },
-            {
-                "name": "Raporty",
-                "icon": "bi-graph-up",
-                "url": "reports",
-                "enabled": False,
-            },
-        ],
-    }
+    visible_tools = []
 
-    tools = tools_by_area.get(area_code, [])
+    for tool in ALL_TOOLS:
+
+        if tool["status"] == "planned" and not user.is_sys_admin:
+            continue
+
+        if "areas" in tool and area_code not in tool["areas"]:
+            continue
+
+        if "capability" in tool and not user.can(tool["capability"]):
+            continue
+
+        visible_tools.append(tool)
 
     return render(
         request,
         "accounts/dashboard.html",
         {
-            "tools": tools
+            "tools": visible_tools
         }
     )
 
@@ -166,3 +135,32 @@ class ForcedPasswordChangeView(PasswordChangeView):
         self.request.user.save(update_fields=["must_change_password"])
 
         return response
+    
+
+@require_capability(Capability.MANAGE_USERS)
+def user_create_view(request):
+
+    if request.method == "POST":
+        form = UserCreateForm(request.POST)
+
+        if form.is_valid():
+            user, temp_password = form.save()
+
+            messages.success(
+                request,
+                f"Konto utworzone: {user.email} | Hasło tymczasowe: {temp_password}"
+            )
+
+            return redirect("dashboard")
+
+    else:
+        form = UserCreateForm()
+
+    return render(
+        request,
+        "accounts/user_create.html",
+        {
+            "form": form,
+        },
+    )
+
