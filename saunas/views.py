@@ -9,11 +9,7 @@ from .utils import get_week_range, parse_polish_day_month
 from django.contrib import messages
 from .parser import parse_sauna_text, split_description_and_sauna
 from django.http import HttpResponseForbidden
-from .permissions import (
-    can_edit_saunas,
-    can_import_saunas,
-)
-
+from accounts.permissions import Capability
 
 
 @login_required
@@ -73,15 +69,18 @@ def sauna_session_detail(request, pk):
     
     if (
         session.sauna_day.area != request.user.area
-        and not request.user.is_sys_admin
-    ):
+        and not request.user.can(Capability.VIEW_SAUNAS)
+):
         return HttpResponseForbidden()
 
 
+
     can_edit = (
-        can_edit_saunas(request.user)
+        request.user.can(Capability.EDIT_SAUNA_ATTENDANCE)
+        and request.user.area.code == "SA"
         and session.sauna_day.is_editable()
     )
+
 
 
     if request.method == "POST":
@@ -164,8 +163,9 @@ def sauna_week_view(request):
 @login_required
 def sauna_import_view(request):
 
-    if not can_import_saunas(request.user):
+    if not request.user.can(Capability.IMPORT_SAUNAS):
         return HttpResponseForbidden()
+
 
     meta = request.session.get("sauna_import_meta")
 

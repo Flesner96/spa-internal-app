@@ -9,19 +9,27 @@ class Capability:
     EDIT_NOTEBOOK = "edit_notebook"
     MANAGE_USERS = "manage_users"
     IMPORT_SAUNAS = 'import_saunas'
+    VIEW_SAUNAS = "view_saunas"
+    EDIT_SAUNA_ATTENDANCE = "edit_sauna_attendance"
 
 ROLE_CAPABILITIES = {
     "BS": {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
+        Capability.VIEW_SAUNAS,
+        Capability.EDIT_SAUNA_ATTENDANCE,
     },
     "ASup": {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
+        Capability.VIEW_SAUNAS,
+        Capability.EDIT_SAUNA_ATTENDANCE,
+        Capability.IMPORT_SAUNAS,
     },
     "Ma": {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
+        Capability.VIEW_SAUNAS,
     },
 }
 
