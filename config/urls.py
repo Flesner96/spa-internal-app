@@ -85,6 +85,7 @@ urlpatterns = [
     path("users/create/", user_create_view, name="user_create"),
     path("saunas/", include("saunas.urls")),
     path("notebook/", include("notebook.urls")),
+    path("classes/", include("classes.urls")),
 ]
 
 if settings.DEBUG:

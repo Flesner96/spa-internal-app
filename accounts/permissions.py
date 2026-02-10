@@ -11,6 +11,8 @@ class Capability:
     IMPORT_SAUNAS = 'import_saunas'
     VIEW_SAUNAS = "view_saunas"
     EDIT_SAUNA_ATTENDANCE = "edit_sauna_attendance"
+    VIEW_CLASSES = "view_classe"
+    MANAGE_CLASSES = "manage_classes"     
 
 ROLE_CAPABILITIES = {
     "BS": {
@@ -18,6 +20,7 @@ ROLE_CAPABILITIES = {
         Capability.POST_NOTEBOOK,
         Capability.VIEW_SAUNAS,
         Capability.EDIT_SAUNA_ATTENDANCE,
+        Capability.VIEW_CLASSES,
     },
     "ASup": {
         Capability.VIEW_NOTEBOOK,
@@ -30,6 +33,13 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
         Capability.VIEW_SAUNAS,
+    },
+    "BD": {
+        Capability.VIEW_NOTEBOOK,
+        Capability.POST_NOTEBOOK,
+        Capability.VIEW_SAUNAS,
+        Capability.VIEW_CLASSES,
+        Capability.MANAGE_CLASSES,
     },
 }
 

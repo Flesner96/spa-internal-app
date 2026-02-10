@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load classes_extras %}
+
+{% block title %}
+Harmonogram zajęć
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Harmonogram zajęć</h1>
+
+  <div class="btn-group">
+    <a
+      href="?type=CL"
+      class="btn btn-sm {% if event_type == 'CL' %}btn-warning{% else %}btn-outline-warning{% endif %}"
+    >
+      Zajęcia
+    </a>
+
+
+<a
+  href="?type=SW"
+  class="btn btn-sm {% if event_type == 'SW' %}btn-warning{% else %}btn-outline-warning{% endif %}"
+>
+  Nauka pływania
+</a>
+
+
+  </div>
+</div>
+
+<div class="schedule-wrapper">
+
+  <table class="table schedule-table">
+
+<colgroup>
+  <col />
+  <col span="7" />
+</colgroup>
+
+<thead>
+  <tr>
+    <th class="time-col">Godzina</th>
+
+    {% for day in week %}
+      <th>{{ day.name }}</th>
+    {% endfor %}
+  </tr>
+</thead>
+
+<tbody>
+
+  {% for slot in time_slots %}
+  <tr>
+
+    <td class="time-col">
+      {{ slot|time:"H:i" }}
+    </td>
+
+    {% for day in week %}
+    <td>
+
+      {% with slot_key=slot|time:"H:i" %}
+      {% with event=day.grid|get_item:slot_key %}
+
+        {% if event %}
+          <div class="event-card">
+
+            <div class="event-name">
+              {{ event.name }}
+            </div>
+
+            <div class="event-time">
+              {{ event.start_time|time:"H:i" }}
+              —
+              {{ event.end_time|time:"H:i" }}
+            </div>
+
+            {% if event.instructor %}
+              <div class="event-instructor">
+                {{ event.instructor }}
+              </div>
+            {% endif %}
+
+          </div>
+        {% else %}
+          <div class="empty-cell"></div>
+        {% endif %}
+
+      {% endwith %}
+      {% endwith %}
+
+    </td>
+    {% endfor %}
+
+  </tr>
+  {% endfor %}
+
+</tbody>
+
+  </table>
+
+</div>
+
+{% endblock %}
