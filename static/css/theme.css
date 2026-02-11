@@ -364,3 +364,11 @@ input[type="file"]::file-selector-button:hover {
 .schedule-table col:not(:first-child) {
     width: calc((100% - 80px) / 7);
 }
+
+.event-card {
+  margin-bottom: 6px;
+}
+
+.event-card:last-child {
+  margin-bottom: 0;
+}

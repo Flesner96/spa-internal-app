@@ -62,34 +62,37 @@ Harmonogram zajęć
     <td>
 
       {% with slot_key=slot|time:"H:i" %}
-      {% with event=day.grid|get_item:slot_key %}
+      {% with events=day.grid|get_item:slot_key %}
 
-        {% if event %}
-          <div class="event-card">
+        {% if events %}
+          {% for event in events %}
+            <div class="event-card">
 
-            <div class="event-name">
-              {{ event.name }}
-            </div>
-
-            <div class="event-time">
-              {{ event.start_time|time:"H:i" }}
-              —
-              {{ event.end_time|time:"H:i" }}
-            </div>
-
-            {% if event.instructor %}
-              <div class="event-instructor">
-                {{ event.instructor }}
+              <div class="event-name">
+                {{ event.name }}
               </div>
-            {% endif %}
 
-          </div>
+              <div class="event-time">
+                {{ event.start_time|time:"H:i" }}
+                —
+                {{ event.end_time|time:"H:i" }}
+              </div>
+
+              {% if event.instructor %}
+                <div class="event-instructor">
+                  {{ event.instructor }}
+                </div>
+              {% endif %}
+
+            </div>
+          {% endfor %}
         {% else %}
           <div class="empty-cell"></div>
         {% endif %}
 
       {% endwith %}
       {% endwith %}
+
 
     </td>
     {% endfor %}
