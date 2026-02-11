@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import PoolEvent
-from .utils import generate_hour_slots, build_hour_grid, build_lane_conflict_grid
+from .utils import generate_hour_slots, build_hour_grid, build_combined_grid
 from accounts.permissions import Capability
 from django.http import HttpResponseForbidden
 from datetime import date
@@ -75,7 +75,7 @@ def combined_view(request):
     events = PoolEvent.objects.filter(day_of_week=day)
 
     hour_slots = generate_hour_slots()
-    grid = build_lane_conflict_grid(events, hour_slots)
+    grid = build_combined_grid(events, hour_slots)
 
     return render(
         request,

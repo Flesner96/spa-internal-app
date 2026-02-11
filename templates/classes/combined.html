@@ -45,15 +45,17 @@
 
       {% for lane in grid|get_item:key %}
       <td>
+        {% if lane.conflict %}
+            <div class="conflict-warning">🚨</div>
+        {% endif %}
 
-        {% for event in lane %}
-          <div class="event-card">
-            {{ event.name }}
-          </div>
+        {% for event in lane.events %}
+            <div class="event-card {% if lane.conflict %}event-conflict{% endif %}">
+                {{ event.name }}
+            </div>
         {% empty %}
-          <div class="empty-cell"></div>
+            <div class="empty-cell"></div>
         {% endfor %}
-
       </td>
       {% endfor %}
 

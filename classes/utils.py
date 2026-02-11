@@ -37,35 +37,42 @@ def build_hour_grid(events, hour_slots):
 
     return grid
 
-def build_lane_conflict_grid(events, hour_slots):
-    """
-    grid[godzina][tor] = lista eventów
-    """
 
-    LANES = 4
+
+
+def build_combined_grid(events, hour_slots):
+    """
+    Grid dla widoku combined:
+    {
+        "HH:MM": [
+            {"events": [...], "conflict": bool},
+            ...
+        ]
+    }
+    """
 
     grid = {}
 
     for slot in hour_slots:
         key = slot.strftime("%H:%M")
-        grid[key] = [[] for _ in range(LANES)]
+        grid[key] = [
+            {"events": [], "conflict": False}
+            for _ in range(4)
+        ]
 
     for event in events:
+        key = f"{event.start_time.hour:02d}:00"
 
-        start = event.start_time.hour
-        end = event.end_time.hour
+        if key not in grid:
+            continue
 
-        for hour in range(start, end):
+        for lane in range(event.lane_start - 1, event.lane_end):
+            grid[key][lane]["events"].append(event)
 
-            key = f"{hour:02d}:00"
-
-            if key not in grid:
-                continue
-
-            for lane in range(
-                event.lane_start - 1,
-                event.lane_end
-            ):
-                grid[key][lane].append(event)
+    # konflikt detection
+    for key in grid:
+        for lane in grid[key]:
+            if len(lane["events"]) > 1:
+                lane["conflict"] = True
 
     return grid
