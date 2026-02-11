@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import PoolEvent
-from .utils import generate_hour_slots, build_hour_grid
+from .utils import generate_hour_slots, build_hour_grid, build_lane_conflict_grid
 from accounts.permissions import Capability
 from django.http import HttpResponseForbidden
 
@@ -50,4 +50,28 @@ def schedule_view(request):
 
 
 
+@login_required
+def combined_view(request):
+
+    if not request.user.can(Capability.VIEW_CLASSES):
+        return HttpResponseForbidden()
+
+    # domyślnie dziś → można później dodać picker
+    day = int(request.GET.get("day", 0))
+
+    events = PoolEvent.objects.filter(day_of_week=day)
+
+    hour_slots = generate_hour_slots()
+
+    grid = build_lane_conflict_grid(events, hour_slots)
+
+    return render(
+        request,
+        "classes/combined.html",
+        {
+            "grid": grid,
+            "hour_slots": hour_slots,
+            "day": day,
+        },
+    )
 

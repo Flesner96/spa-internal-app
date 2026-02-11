@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load classes_extras %}
+{% block title %}Widok połączony{% endblock %}
+
+{% block content %}
+
+<h1>Widok połączony</h1>
+
+<table class="table schedule-table">
+
+  <thead>
+    <tr>
+      <th>Godzina</th>
+      <th>Tor 1</th>
+      <th>Tor 2</th>
+      <th>Tor 3</th>
+      <th>Tor 4</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  {% for slot in hour_slots %}
+
+    {% with key=slot|time:"H:i" %}
+    <tr>
+
+      <td>{{ key }}</td>
+
+      {% for lane in grid|get_item:key %}
+      <td>
+
+        {% for event in lane %}
+          <div class="event-card">
+            {{ event.name }}
+          </div>
+        {% empty %}
+          <div class="empty-cell"></div>
+        {% endfor %}
+
+      </td>
+      {% endfor %}
+
+    </tr>
+    {% endwith %}
+
+  {% endfor %}
+
+  </tbody>
+
+</table>
+
+{% endblock %}

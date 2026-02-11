@@ -9,25 +9,21 @@ Harmonogram zajęć
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1>Harmonogram zajęć</h1>
-
+    <a href="{% url 'classes_combined' %}"
+      class="btn btn-sm btn-outline-info">
+      Widok połączony
+    </a>
   <div class="btn-group">
-    <a
-      href="?type=CL"
-      class="btn btn-sm {% if event_type == 'CL' %}btn-warning{% else %}btn-outline-warning{% endif %}"
-    >
+    <a href="?type=CL"
+      class="btn btn-sm {% if event_type == 'CL' %}btn-warning{% else %}btn-outline-warning{% endif %}">
       Zajęcia
     </a>
-
-
-<a
-  href="?type=SW"
-  class="btn btn-sm {% if event_type == 'SW' %}btn-warning{% else %}btn-outline-warning{% endif %}"
->
-  Nauka pływania
-</a>
-
-
+    <a href="?type=SW"
+      class="btn btn-sm {% if event_type == 'SW' %}btn-warning{% else %}btn-outline-warning{% endif %}">
+      Nauka pływania
+    </a>
   </div>
+    
 </div>
 
 <div class="schedule-wrapper">

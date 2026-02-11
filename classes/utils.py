@@ -29,3 +29,36 @@ def build_hour_grid(events, hour_slots):
 
     return grid
 
+
+def build_lane_conflict_grid(events, hour_slots):
+    """
+    grid[godzina][tor] = lista eventów
+    """
+
+    LANES = 4
+
+    grid = {}
+
+    for slot in hour_slots:
+        key = slot.strftime("%H:%M")
+        grid[key] = [[] for _ in range(LANES)]
+
+    for event in events:
+
+        start = event.start_time.hour
+        end = event.end_time.hour
+
+        for hour in range(start, end):
+
+            key = f"{hour:02d}:00"
+
+            if key not in grid:
+                continue
+
+            for lane in range(
+                event.lane_start - 1,
+                event.lane_end
+            ):
+                grid[key][lane].append(event)
+
+    return grid
