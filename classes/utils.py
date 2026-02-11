@@ -10,25 +10,32 @@ def generate_hour_slots(start=6, end=22):
 
 def build_hour_grid(events, hour_slots):
     """
-    Grid: { "HH:MM": [event1, event2, ...] }
+    Grid:
+    {
+        "16:00": [event1, event2],
+        "17:00": [],
+    }
     """
 
     grid = {}
 
-    # inicjalizacja pustych list
+    # inicjalizacja
     for slot in hour_slots:
         key = slot.strftime("%H:%M")
         grid[key] = []
 
     # przypisanie eventów
     for event in events:
-        key = f"{event.start_time.hour:02d}:00"
+        start_hour = event.start_time.hour
+        end_hour = event.end_time.hour
 
-        if key in grid:
-            grid[key].append(event)
+        for hour in range(start_hour, end_hour):
+            key = f"{hour:02d}:00"
+
+            if key in grid:
+                grid[key].append(event)
 
     return grid
-
 
 def build_lane_conflict_grid(events, hour_slots):
     """

@@ -4,7 +4,23 @@
 
 {% block content %}
 
-<h1>Widok połączony</h1>
+
+
+<div class="d-flex align-items-center justify-content-center gap-5 mb-3">
+
+  <a href="?day={{ prev_day }}" class="day-nav-arrow">
+    <i class="bi bi-chevron-left"></i>
+  </a>
+
+  <h1 class="m-0">
+    {{ day_name }}
+  </h1>
+
+  <a href="?day={{ next_day }}" class="day-nav-arrow">
+    <i class="bi bi-chevron-right"></i>
+  </a>
+
+</div>
 
 <table class="table schedule-table">
 

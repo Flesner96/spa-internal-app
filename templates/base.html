@@ -33,15 +33,7 @@
 
 <body>
 
-{% if messages %}
-  <div class="container mt-3">
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
+
 
 <nav class="navbar spa-navbar navbar-expand-lg navbar-light px-3" role="navigation">
   <div class="container-fluid">

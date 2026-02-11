@@ -4,6 +4,9 @@ from .models import PoolEvent
 from .utils import generate_hour_slots, build_hour_grid, build_lane_conflict_grid
 from accounts.permissions import Capability
 from django.http import HttpResponseForbidden
+from datetime import date
+
+
 
 @login_required
 def schedule_view(request):
@@ -48,21 +51,30 @@ def schedule_view(request):
         },
     )
 
-
+DAY_NAMES = [
+    "Poniedziałek",
+    "Wtorek",
+    "Środa",
+    "Czwartek",
+    "Piątek",
+    "Sobota",
+    "Niedziela",
+    ]
 
 @login_required
 def combined_view(request):
-
     if not request.user.can(Capability.VIEW_CLASSES):
         return HttpResponseForbidden()
 
-    # domyślnie dziś → można później dodać picker
-    day = int(request.GET.get("day", 0))
+    day = int(request.GET.get("day", date.today().weekday()))
+    day = max(0, min(day, 6))  # clamp safety
+
+    prev_day = (day - 1) % 7
+    next_day = (day + 1) % 7
 
     events = PoolEvent.objects.filter(day_of_week=day)
 
     hour_slots = generate_hour_slots()
-
     grid = build_lane_conflict_grid(events, hour_slots)
 
     return render(
@@ -72,6 +84,10 @@ def combined_view(request):
             "grid": grid,
             "hour_slots": hour_slots,
             "day": day,
+            "day_name": DAY_NAMES[day],
+            "day_names": DAY_NAMES,
+            "prev_day": prev_day,
+            "next_day": next_day,
         },
     )
 

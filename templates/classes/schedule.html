@@ -9,10 +9,12 @@ Harmonogram zajęć
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1>Harmonogram zajęć</h1>
+
     <a href="{% url 'classes_combined' %}"
       class="btn btn-sm btn-outline-info">
       Widok połączony
     </a>
+    
   <div class="btn-group">
     <a href="?type=CL"
       class="btn btn-sm {% if event_type == 'CL' %}btn-warning{% else %}btn-outline-warning{% endif %}">
