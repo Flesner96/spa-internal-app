@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'notebook',
     'saunas',
     'classes',
+    'balance',
 ]
 
 MIDDLEWARE = [

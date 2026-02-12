@@ -34,7 +34,7 @@ ALL_TOOLS = [
         "name": "Stan gotówki",
         "icon": "bi-currency-exchange",
         "url": "balance",
-        "status": "planned",
+        "status": "active",
         "areas": ["RC"],
     },
     {
