@@ -42,3 +42,24 @@ class AreaMessage(models.Model):
     def __str__(self):
         return f"{self.author} | {self.created_at:%Y-%m-%d %H:%M}"
     
+
+
+class AreaMessageReply(models.Model):
+    message = models.OneToOneField(
+        AreaMessage,
+        on_delete=models.CASCADE,
+        related_name="reply",
+    )
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+    )
+
+    content = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reply to #{self.message.id}"
+  

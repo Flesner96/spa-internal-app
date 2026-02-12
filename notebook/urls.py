@@ -13,4 +13,10 @@ urlpatterns = [
     views.download_area_message_attachment,
     name="download_area_message_attachment",
     ),
+    path(
+    "reply/<int:pk>/",
+    views.reply_area_message,
+    name="reply_message",
+),
+
 ]

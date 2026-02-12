@@ -12,7 +12,8 @@ class Capability:
     VIEW_SAUNAS = "view_saunas"
     EDIT_SAUNA_ATTENDANCE = "edit_sauna_attendance"
     VIEW_CLASSES = "view_classe"
-    MANAGE_CLASSES = "manage_classes"     
+    MANAGE_CLASSES = "manage_classes" 
+    REPLY_NOTEBOOK = "reply_notebook"    
 
 ROLE_CAPABILITIES = {
     "BS": {
@@ -28,11 +29,13 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_SAUNAS,
         Capability.EDIT_SAUNA_ATTENDANCE,
         Capability.IMPORT_SAUNAS,
+        Capability.REPLY_NOTEBOOK,
     },
     "Ma": {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
         Capability.VIEW_SAUNAS,
+        Capability.REPLY_NOTEBOOK,
     },
     "BD": {
         Capability.VIEW_NOTEBOOK,
@@ -40,6 +43,7 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_SAUNAS,
         Capability.VIEW_CLASSES,
         Capability.MANAGE_CLASSES,
+        Capability.REPLY_NOTEBOOK,
     },
 }
 

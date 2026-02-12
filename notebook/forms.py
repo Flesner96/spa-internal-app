@@ -1,5 +1,5 @@
 from django import forms
-from .models import AreaMessage
+from .models import AreaMessage, AreaMessageReply
 
 class AreaMessageForm(forms.ModelForm):
     class Meta:
@@ -15,4 +15,17 @@ class AreaMessageForm(forms.ModelForm):
             "attachment": forms.ClearableFileInput(attrs={
                 "class": "form-control"
             }),
+        }
+
+
+class AreaMessageReplyForm(forms.ModelForm):
+    class Meta:
+        model = AreaMessageReply
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 3,
+                "placeholder": "Odpowiedź..."
+            })
         }

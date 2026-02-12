@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load permissions %}
 {% block title %}Zeszyt{% endblock %}
 {% block content %}
 <!-- =====================
@@ -47,12 +48,12 @@
 
         <div>
           <strong>
-  {% if msg.author.first_name or msg.author.last_name %}
-    {{ msg.author.first_name }} {{ msg.author.last_name }}
-  {% else %}
-    {{ msg.author.email }}
-  {% endif %}
-</strong>
+            {% if msg.author.first_name or msg.author.last_name %}
+              {{ msg.author.first_name }} {{ msg.author.last_name }}
+            {% else %}
+              {{ msg.author.email }}
+            {% endif %}
+          </strong>
           <span class="text-muted small ms-2">
             {{ msg.created_at|date:"d.m.Y H:i" }}
           </span>
@@ -77,6 +78,28 @@
       <div class="mb-2">
         {{ msg.content|linebreaksbr }}
       </div>
+        {% if msg.reply %}
+          <div class="reply-box text-end mt-2">
+            <div class="reply-card">
+              {{ msg.reply.content }}
+              <div class="small text-muted">
+                {{ msg.reply.author }} ·
+                {{ msg.reply.created_at|date:"d.m H:i" }}
+              </div>
+            </div>
+          </div>
+        {% elif request.user|can:"reply_notebook" %}
+          <form method="post"
+              action="{% url 'reply_message' msg.id %}"
+              class="mt-2">
+            {% csrf_token %}
+            {{ reply_form }}
+            <button class="btn btn-sm btn-warning mt-1">
+              Odpowiedz
+            </button>
+          </form>
+        {% endif %}
+
 
       {% if msg.attachment %}
         <div class="mt-2">
