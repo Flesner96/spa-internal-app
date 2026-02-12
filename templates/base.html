@@ -79,6 +79,14 @@
         </a>
       </li>
     {% endif %}
+    {% if request.user|can:"manage_classes" %}
+      <li class="nav-item">
+        <a href="{% url 'classes_manage' %}" class="spa-nav-link nav-link">
+          <i class="bi bi-plus"></i>
+          <span>Zajęcia</span>
+        </a>
+      </li>
+    {% endif %}
 
     <li class="nav-item">
       <a href="{% url 'profile' %}" class="spa-nav-link nav-link">
