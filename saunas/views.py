@@ -150,6 +150,9 @@ def sauna_week_view(request):
         })
         current += timedelta(days=1)
 
+    prev_week = start - timedelta(days=7)
+    next_week = start + timedelta(days=7)
+
     return render(
         request,
         "saunas/week.html",
@@ -157,6 +160,8 @@ def sauna_week_view(request):
             "week": week,
             "start": start,
             "end": end,
+            "prev_week": prev_week,
+            "next_week": next_week,
         },
     )
 

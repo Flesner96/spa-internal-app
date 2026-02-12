@@ -2,11 +2,24 @@
 {% block title %}Tydzień saun{% endblock %}
 
 {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
 
+  <a href="?date={{ prev_week|date:'Y-m-d' }}"
+     class="btn btn-outline-light">
+    ← Poprzedni tydzień
+  </a>
 
-<h4 class="section-title mb-3">
-  Tydzień: {{ start }} – {{ end }}
-</h4>
+  <h2 class="mb-0 text-center">
+    {{ start|date:"d.m" }} – {{ end|date:"d.m.Y" }}
+  </h2>
+
+  <a href="?date={{ next_week|date:'Y-m-d' }}"
+     class="btn btn-outline-light">
+    Następny tydzień →
+  </a>
+
+</div>
+
 
 <div class="row g-3">
 
