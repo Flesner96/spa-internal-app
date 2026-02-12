@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load permissions %}
 {% block title %}Stan kasy{% endblock %}
 
 {% block content %}
@@ -11,7 +12,6 @@
   <button class="btn btn-outline-warning btn-sm fw-semibold"
           data-bs-toggle="collapse"
           data-bs-target="#lastBalance">
-
     Ostatni stan kasy
   </button>
   {% endif %}
@@ -37,7 +37,6 @@
 </div>
 {% endif %}
 
-
 <form method="post">
   {% csrf_token %}
 
@@ -54,15 +53,14 @@
 
   </div>
 
-  <button class="btn btn-primary mt-3">
-    Zapisz
-  </button>
+  
+    {% if request.user|can:"balance_calculate" %}
+        <button type="submit" class="btn btn-primary mt-3">
+            Oblicz
+        </button>
+    {% endif %}
 
 </form>
-
-
-
-
 
 
 {% if saved_total %}
@@ -71,7 +69,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Stan kasy zapisany</h5>
+        <h5 class="modal-title">Twój stan kasy</h5>
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"></button>
@@ -84,7 +82,7 @@
         <div class="input-group">
           <input id="savedTotal"
                  class="form-control"
-                 value="{{ saved_total }} zł"
+                 value="{{ saved_total }}"
                  readonly>
 
           <button class="btn btn-outline-secondary"

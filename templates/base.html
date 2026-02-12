@@ -69,6 +69,15 @@
         </a>
       </li>
     {% endif %}
+    {# RC ASup - Historia Stanów kasy #}
+    {% if request.user|can:"balance_history" %}
+      <li class="nav-item">
+        <a href="{% url 'balance_history' %}" class="spa-nav-link nav-link">
+          <i class="bi bi-book"></i>
+          <span>Historia stanów kasy</span>
+        </a>
+      </li>
+    {% endif %}
 
     {#  SysA — dodaj użytkownika #}
     {% if request.user|can:"manage_users" %}

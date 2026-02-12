@@ -13,7 +13,12 @@ class Capability:
     EDIT_SAUNA_ATTENDANCE = "edit_sauna_attendance"
     VIEW_CLASSES = "view_classe"
     MANAGE_CLASSES = "manage_classes" 
-    REPLY_NOTEBOOK = "reply_notebook"    
+    REPLY_NOTEBOOK = "reply_notebook"
+    VIEW_BALANCE = "view_balance"
+    CREATE_BALANCE = "create_balance"    
+    BALANCE_HISTORY = "balance_history"
+
+
 
 ROLE_CAPABILITIES = {
     "BS": {
@@ -22,6 +27,8 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_SAUNAS,
         Capability.EDIT_SAUNA_ATTENDANCE,
         Capability.VIEW_CLASSES,
+        Capability.VIEW_BALANCE,
+        Capability.CREATE_BALANCE,
     },
     "ASup": {
         Capability.VIEW_NOTEBOOK,
@@ -30,6 +37,9 @@ ROLE_CAPABILITIES = {
         Capability.EDIT_SAUNA_ATTENDANCE,
         Capability.IMPORT_SAUNAS,
         Capability.REPLY_NOTEBOOK,
+        Capability.BALANCE_HISTORY,
+        Capability.VIEW_BALANCE,
+        Capability.CREATE_BALANCE,
     },
     "Ma": {
         Capability.VIEW_NOTEBOOK,
