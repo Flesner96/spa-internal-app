@@ -9,6 +9,14 @@ from .utils import calculate_total
 
 @login_required
 def balance_view(request):
+    last_count = (
+        CashCount.objects
+        .filter(area=request.user.area)
+        .first()
+    )
+
+    saved_total = None
+
     if request.method == "POST":
         form = CashCountForm(request.POST)
 
@@ -16,19 +24,16 @@ def balance_view(request):
             breakdown = form.cleaned_data
             total = calculate_total(breakdown)
 
-            CashCount.objects.create(
+            count = CashCount.objects.create(
                 user=request.user,
                 area=request.user.area,
                 breakdown=breakdown,
                 total=total,
             )
 
-            messages.success(
-                request,
-                f"Stan kasy zapisany: {total} zł"
-            )
-
-            return redirect("balance")
+            saved_total = total
+            last_count = count
+            form = CashCountForm()  # reset form
 
     else:
         form = CashCountForm()
@@ -36,5 +41,9 @@ def balance_view(request):
     return render(
         request,
         "balance/calculator.html",
-        {"form": form},
+        {
+            "form": form,
+            "saved_total": saved_total,
+            "last_count": last_count,
+        },
     )

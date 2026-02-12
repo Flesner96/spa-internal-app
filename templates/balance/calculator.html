@@ -3,7 +3,40 @@
 
 {% block content %}
 
-<h1>Stan kasy</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+  <h1 class="mb-0">Stan kasy</h1>
+
+  {% if last_count %}
+  <button class="btn btn-outline-warning btn-sm fw-semibold"
+          data-bs-toggle="collapse"
+          data-bs-target="#lastBalance">
+
+    Ostatni stan kasy
+  </button>
+  {% endif %}
+
+</div>
+
+{% if last_count %}
+<div id="lastBalance" class="collapse mb-4">
+
+  <div class="card card-body">
+
+    <p class="mb-1">
+      <strong>{{ last_count.total }} zł</strong>
+    </p>
+
+    <small class="text-muted">
+      {{ last_count.created_at|date:"d.m.Y H:i" }}
+      · {{ last_count.user }}
+    </small>
+
+  </div>
+
+</div>
+{% endif %}
+
 
 <form method="post">
   {% csrf_token %}
@@ -26,5 +59,74 @@
   </button>
 
 </form>
+
+
+
+
+
+
+{% if saved_total %}
+<div class="modal fade" id="balanceModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Stan kasy zapisany</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <p><strong>Stan kasy:</strong></p>
+
+        <div class="input-group">
+          <input id="savedTotal"
+                 class="form-control"
+                 value="{{ saved_total }} zł"
+                 readonly>
+
+          <button class="btn btn-outline-secondary"
+                  type="button"
+                  onclick="copyBalance()">
+            Kopiuj
+          </button>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary"
+                data-bs-dismiss="modal">
+          OK
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
+{% block scripts %}
+{% if saved_total %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const modal = new bootstrap.Modal(
+    document.getElementById("balanceModal")
+  );
+  modal.show();
+});
+
+function copyBalance() {
+  const input = document.getElementById("savedTotal");
+  input.select();
+  input.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(input.value);
+}
+</script>
+{% endif %}
 
 {% endblock %}
