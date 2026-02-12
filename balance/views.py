@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from accounts.permissions import Capability
@@ -13,34 +13,44 @@ def balance_view(request):
     if not request.user.can(Capability.VIEW_BALANCE):
         return HttpResponseForbidden()
 
-    last_count = (
-        CashCount.objects
-        .filter(area=request.user.area)
-        .first()
-    )
-
-    saved_total = None
+    # 👉 odbieramy saved_total z poprzedniego POST (jeśli był)
+    saved_total = request.session.pop("saved_total", None)
 
     if request.method == "POST":
+
+        if not request.user.can(Capability.CREATE_BALANCE):
+            return HttpResponseForbidden()
+
         form = CashCountForm(request.POST)
 
         if form.is_valid():
+
             breakdown = form.cleaned_data
             total = calculate_total(breakdown)
 
-            count = CashCount.objects.create(
+            CashCount.objects.create(
                 user=request.user,
                 area=request.user.area,
                 breakdown=breakdown,
                 total=total,
             )
 
-            saved_total = total
-            last_count = count
-            form = CashCountForm()  # reset form
+            # 👉 zapisujemy do session
+            request.session["saved_total"] = str(total)
+
+            # 👉 redirect after POST
+            return redirect("balance")
 
     else:
         form = CashCountForm()
+
+    # 👉 zawsze pobieramy ostatni stan po redirect
+    last_count = (
+        CashCount.objects
+        .filter(area=request.user.area)
+        .order_by("-created_at")
+        .first()
+    )
 
     return render(
         request,
