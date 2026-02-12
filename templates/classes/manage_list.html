@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Manage zajęcia</h1>
+
+<a href="{% url 'classes_create' %}" class="btn btn-success mb-3">
+  Dodaj zajęcia
+</a>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Dzień</th>
+      <th>Godzina</th>
+      <th>Nazwa</th>
+      <th>Tor</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for e in events %}
+    <tr>
+      <td>{{ e.get_day_of_week_display }}</td>
+      <td>{{ e.start_time }} – {{ e.end_time }}</td>
+      <td>{{ e.name }}</td>
+      <td>{{ e.lane_start }}–{{ e.lane_end }}</td>
+      <td>
+        <a href="{% url 'classes_edit' e.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{% url 'classes_delete' e.pk %}" class="btn btn-sm btn-danger">Delete</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

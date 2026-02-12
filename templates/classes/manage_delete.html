@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Usuń zajęcia</h1>
+
+<p>Czy na pewno usunąć "{{ event.name }}"?</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button class="btn btn-danger">Usuń</button>
+  <a href="{% url 'classes_manage' %}" class="btn btn-secondary">Anuluj</a>
+</form>
+
+{% endblock %}

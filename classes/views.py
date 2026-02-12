@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import PoolEvent
+from .forms import PoolEventForm
 from .utils import generate_hour_slots, build_hour_grid, build_combined_grid
 from accounts.permissions import Capability
 from django.http import HttpResponseForbidden
@@ -91,3 +92,74 @@ def combined_view(request):
         },
     )
 
+
+@login_required
+def manage_list(request):
+    if not request.user.can(Capability.MANAGE_CLASSES):
+        return HttpResponseForbidden()
+
+    events = PoolEvent.objects.all().order_by(
+        "day_of_week", "start_time"
+    )
+
+    return render(
+        request,
+        "classes/manage_list.html",
+        {"events": events},
+    )
+
+
+@login_required
+def manage_create(request):
+    if not request.user.can(Capability.MANAGE_CLASSES):
+        return HttpResponseForbidden()
+
+    form = PoolEventForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        return redirect("classes_manage")
+
+    return render(
+        request,
+        "classes/manage_form.html",
+        {"form": form, "title": "Dodaj zajęcia"},
+    )
+
+
+@login_required
+def manage_edit(request, pk):
+    if not request.user.can(Capability.MANAGE_CLASSES):
+        return HttpResponseForbidden()
+
+    event = get_object_or_404(PoolEvent, pk=pk)
+
+    form = PoolEventForm(request.POST or None, instance=event)
+
+    if form.is_valid():
+        form.save()
+        return redirect("classes_manage")
+
+    return render(
+        request,
+        "classes/manage_form.html",
+        {"form": form, "title": "Edytuj zajęcia"},
+    )
+
+
+@login_required
+def manage_delete(request, pk):
+    if not request.user.can(Capability.MANAGE_CLASSES):
+        return HttpResponseForbidden()
+
+    event = get_object_or_404(PoolEvent, pk=pk)
+
+    if request.method == "POST":
+        event.delete()
+        return redirect("classes_manage")
+
+    return render(
+        request,
+        "classes/manage_delete.html",
+        {"event": event},
+    )
