@@ -73,7 +73,6 @@ def root_view(request):
 
 
 @login_required
-@login_required
 def dashboard_view(request):
     user = request.user
     area_code = user.area.code
