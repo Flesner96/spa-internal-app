@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://web-production-49863.up.railway.app",
+    "https://hevelia.up.railway.app",
 ]
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CSRF_COOKIE_SECURE = True
