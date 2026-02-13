@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-from django.contrib import messages
 from .forms import UserCreateForm
 from .permissions import require_capability, Capability
 
