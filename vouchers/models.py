@@ -123,6 +123,9 @@ class Voucher(models.Model):
 
         if self.type == self.Type.SPV and self.value_remaining:
             raise ValidationError("SPV nie może mieć value_remaining.")
+        if self.type == self.Type.SPV and not self.service_name:
+            raise ValidationError("SPV musi mieć nazwę usługi.")
+        
 
         # EXPIRY AUTO
         if not self.expiry_date:
@@ -148,7 +151,7 @@ class Voucher(models.Model):
 
     def is_expired(self):
         effective_expiry = self.extended_until or self.expiry_date
-        return effective_expiry < timezone.localdate()
+        return effective_expiry and effective_expiry < timezone.localdate()
 
     class Meta:
         indexes = [
@@ -187,19 +190,31 @@ class MPVTransaction(models.Model):
 
     def save(self, *args, **kwargs):
 
+        if self.voucher.type != Voucher.Type.MPV:
+            raise ValidationError("Transakcje tylko dla MPV.")
+
+        if self.amount <= Decimal("0.00"):
+            raise ValidationError("Kwota musi być dodatnia.")
+
+        voucher = self.voucher
+
+        if voucher.value_remaining is None:
+            raise ValidationError("Voucher nie ma ustawionego salda.")
+
+        if self.amount > voucher.value_remaining:
+            raise ValidationError("Kwota przekracza dostępne saldo.")
+
         is_new = self.pk is None
         super().save(*args, **kwargs)
 
         if is_new:
-            voucher = self.voucher
-
             voucher.value_remaining -= self.amount
 
-            if voucher.value_remaining <= Decimal("0.00"):
-                voucher.value_remaining = Decimal("0.00")
+            if voucher.value_remaining == Decimal("0.00"):
                 voucher.status = Voucher.Status.ZERO_NOT_RETURNED
 
             voucher.save()
+
 
     def __str__(self):
         return f"{self.voucher} – {self.amount}"
