@@ -87,6 +87,7 @@ urlpatterns = [
     path("notebook/", include("notebook.urls")),
     path("classes/", include("classes.urls")),
     path("balance/", include("balance.urls")),
+    path("vouchers/", include("vouchers.urls")),
 ]
 
 if settings.DEBUG:

@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'saunas',
     'classes',
     'balance',
+    'vouchers',
 ]
 
 MIDDLEWARE = [

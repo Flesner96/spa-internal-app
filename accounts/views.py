@@ -25,9 +25,9 @@ ALL_TOOLS = [
     {
         "name": "Vouchery",
         "icon": "bi-card-list",
-        "url": "voucher",
+        "url": "vouchers",
         "status": "planned",
-        "areas": ["RC"],
+        "areas": ["RC", "BD"],
     },
     {
         "name": "Stan gotówki",
