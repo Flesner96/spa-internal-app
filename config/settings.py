@@ -174,4 +174,3 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Hevelia Internal <hev.inte
 
 
 
-
