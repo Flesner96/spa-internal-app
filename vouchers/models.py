@@ -53,7 +53,7 @@ class Voucher(models.Model):
 
     issue_date = models.DateTimeField(auto_now_add=True)
 
-    expiry_date = models.DateField()
+    expiry_date = models.DateField(blank=True, null=True)
     extended_until = models.DateField(null=True, blank=True)
     extended_reason = models.CharField(max_length=255, blank=True)
 

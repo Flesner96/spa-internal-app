@@ -2,52 +2,57 @@
 {% block content %}
 
 <h1>Dodaj voucher</h1>
+{% if form.errors %}
+<div style="color:red">
+  {{ form.errors }}
+</div>
+{% endif %}
 
 <form method="post">
   {% csrf_token %}
 
   <div class="mb-3">
-    <label>Typ</label>
+    <label class="form-label">Typ</label>
     {{ form.type }}
   </div>
 
   <div id="code" class="mb-3">
-    <label>Kod</label>
+    <label class="form-label">Kod</label>
     {{ form.code }}
   </div>
 
   <div id="mpv_card_code" class="mb-3">
-    <label>Karta MPV</label>
+    <label class="form-label">Karta MPV</label>
     {{ form.mpv_card_code }}
   </div>
 
   <div id="value_total" class="mb-3">
-    <label>Wartość</label>
+    <label class="form-label">Wartość</label>
     {{ form.value_total }}
   </div>
 
   <div class="mb-3">
-    <label>Imię i nazwisko klienta</label>
+    <label class="form-label">Imię i nazwisko klienta</label>
     {{ form.client_name }}
   </div>
 
   <div id="service_name" class="mb-3">
-    <label>Nazwa usługi</label>
+    <label class="form-label">Nazwa usługi</label>
     {{ form.service_name }}
   </div>
 
   <div id="receipt_number" class="mb-3">
-    <label>Nr paragonu</label>
+    <label class="form-label">Nr paragonu</label>
     {{ form.receipt_number }}
   </div>
 
   <div id="expiry_date" class="mb-3">
-    <label>Data ważności</label>
+    <label class="form-label">Data ważności</label>
     {{ form.expiry_date }}
   </div>
 
   <div class="mb-3">
-    <label>Notatki</label>
+    <label class="form-label">Notatki</label>
     {{ form.notes }}
   </div>
 

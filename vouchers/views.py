@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from datetime import timedelta
 from django.db.models import Q, Case, When, IntegerField
 from .forms import VoucherCreateForm
 from .models import Voucher
@@ -17,20 +15,6 @@ def voucher_create_view(request):
         if form.is_valid():
             voucher = form.save(commit=False)
             voucher.seller = request.user
-
-            # expiry auto logic
-            today = timezone.localdate()
-
-            if voucher.type == Voucher.Type.MPV:
-                voucher.expiry_date = today + timedelta(days=180)
-                voucher.value_remaining = voucher.value_total
-
-            elif voucher.type == Voucher.Type.SPV:
-                voucher.expiry_date = today + timedelta(days=90)
-            
-            elif voucher.type == Voucher.Type.OLD:
-                pass
-
             voucher.save()
 
             return redirect("voucher_create")

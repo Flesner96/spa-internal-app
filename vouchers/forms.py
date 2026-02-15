@@ -28,9 +28,13 @@ class VoucherCreateForm(forms.ModelForm):
             "notes",
         ]
         widgets = {
-            "expiry_date": forms.DateInput(
-                attrs={"type": "date", "class": "form-control"}
-            )
+            "code": forms.TextInput(attrs={"class": "form-control"}),
+            "client_name": forms.TextInput(attrs={"class": "form-control"}),
+            "service_name": forms.TextInput(attrs={"class": "form-control"}),
+            "receipt_number": forms.TextInput(attrs={"class": "form-control"}),
+            "value_total": forms.NumberInput(attrs={"class": "form-control"}),
+            "expiry_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+            "type": forms.Select(attrs={"class": "form-select"}),
         }
 
     def clean(self):
@@ -107,6 +111,10 @@ class VoucherCreateForm(forms.ModelForm):
                 raise ValidationError(
                     "Dla OLD musisz ręcznie ustawić datę ważności."
                 )
+            
+        if not cleaned_data.get("expiry_date"):
+            raise ValidationError("Data ważności nie została ustawiona.")
+
 
         return cleaned_data
 
