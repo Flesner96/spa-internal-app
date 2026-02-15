@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Dodaj voucher</h1>
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label>Typ</label>
+    {{ form.type }}
+  </div>
+
+  <div id="codeField" class="mb-3">
+    <label>Kod</label>
+    {{ form.code }}
+  </div>
+
+  <div id="mpvCardField" class="mb-3">
+    <label>Karta MPV</label>
+    {{ form.mpv_card }}
+  </div>
+
+  <div id="valueField" class="mb-3">
+    <label>Wartość</label>
+    {{ form.value_total }}
+  </div>
+
+  <div class="mb-3">
+    <label>Imię i nazwisko klienta</label>
+    {{ form.client_name }}
+  </div>
+
+  <div class="mb-3">
+    <label>Nr paragonu</label>
+    {{ form.receipt_number }}
+  </div>
+
+  <div id="serviceField" class="mb-3">
+    <label>Nazwa usługi</label>
+    {{ form.service_name }}
+  </div>
+
+  <div class="mb-3">
+    <label>Notatki</label>
+    {{ form.notes }}
+  </div>
+
+  <button type="submit" class="btn btn-primary">
+    Zapisz
+  </button>
+
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const typeSelect = document.getElementById("id_type");
+
+  const codeField = document.getElementById("codeField");
+  const mpvCardField = document.getElementById("mpvCardField");
+  const valueField = document.getElementById("valueField");
+  const serviceField = document.getElementById("serviceField");
+
+  function toggleFields() {
+    const type = typeSelect.value;
+
+    if (type === "MPV") {
+      mpvCardField.style.display = "block";
+      valueField.style.display = "block";
+      codeField.style.display = "none";
+      serviceField.style.display = "none";
+    }
+
+    else if (type === "SPV") {
+      mpvCardField.style.display = "none";
+      valueField.style.display = "none";
+      codeField.style.display = "block";
+      serviceField.style.display = "block";
+    }
+
+    else if (type === "OLD") {
+      mpvCardField.style.display = "none";
+      valueField.style.display = "none";
+      serviceField.style.display = "none";
+      codeField.style.display = "block";
+    }
+  }
+
+  toggleFields();
+  typeSelect.addEventListener("change", toggleFields);
+});
+</script>
+{% endblock %}
