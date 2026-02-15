@@ -23,8 +23,8 @@ class VoucherCreateForm(forms.ModelForm):
             "client_name",
             "service_name",
             "receipt_number",
-            "value_total",
             "expiry_date",
+            "value_total",
             "notes",
         ]
         widgets = {

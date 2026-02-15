@@ -11,17 +11,17 @@
     {{ form.type }}
   </div>
 
-  <div id="codeField" class="mb-3">
+  <div id="code" class="mb-3">
     <label>Kod</label>
     {{ form.code }}
   </div>
 
-  <div id="mpvCardField" class="mb-3">
+  <div id="mpv_card_code" class="mb-3">
     <label>Karta MPV</label>
     {{ form.mpv_card_code }}
   </div>
 
-  <div id="valueField" class="mb-3">
+  <div id="value_total" class="mb-3">
     <label>Wartość</label>
     {{ form.value_total }}
   </div>
@@ -31,21 +31,21 @@
     {{ form.client_name }}
   </div>
 
-  <div id="serviceField" class="mb-3">
+  <div id="service_name" class="mb-3">
     <label>Nazwa usługi</label>
     {{ form.service_name }}
   </div>
 
-  <div id="receiptField" class="mb-3">
+  <div id="receipt_number" class="mb-3">
     <label>Nr paragonu</label>
     {{ form.receipt_number }}
   </div>
 
-  <div id="expiryField" class="mb-3">
+  <div id="expiry_date" class="mb-3">
     <label>Data ważności</label>
     {{ form.expiry_date }}
   </div>
-  
+
   <div class="mb-3">
     <label>Notatki</label>
     {{ form.notes }}
@@ -65,41 +65,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const typeSelect = document.getElementById("id_type");
 
-  const codeField = document.getElementById("codeField");
-  const mpvCardField = document.getElementById("mpvCardField");
-  const valueField = document.getElementById("valueField");
-  const serviceField = document.getElementById("serviceField");
-  const receiptField = document.getElementById("receiptField");
-  const expiryField = document.getElementById("expiryField");
-  
+  const codeField = document.getElementById("code");
+  const mpvCardField = document.getElementById("mpv_card_code");
+  const valueField = document.getElementById("value_total");
+  const serviceField = document.getElementById("service_name");
+  const receiptField = document.getElementById("receipt_number");
+  const expiryField = document.getElementById("expiry_date");
+
   function toggleFields() {
+
     const type = typeSelect.value;
+
+    // reset wszystko
+    codeField.style.display = "none";
+    mpvCardField.style.display = "none";
+    valueField.style.display = "none";
+    serviceField.style.display = "none";
+    receiptField.style.display = "none";
+    expiryField.style.display = "none";
 
     if (type === "MPV") {
       mpvCardField.style.display = "block";
       valueField.style.display = "block";
-      codeField.style.display = "none";
-      serviceField.style.display = "none";
       receiptField.style.display = "block";
-      expiryField.style.display - "none";
     }
 
     else if (type === "SPV") {
-      mpvCardField.style.display = "none";
-      valueField.style.display = "none";
       codeField.style.display = "block";
       serviceField.style.display = "block";
       receiptField.style.display = "block";
-      expiryField.style.display - "none";
     }
 
     else if (type === "OLD") {
-      mpvCardField.style.display = "none";
-      valueField.style.display = "none";
-      serviceField.style.display = "block";
       codeField.style.display = "block";
-      receiptField.style.display = "none";
-      expiryField.style.display - "block";
+      serviceField.style.display = "block";
+      expiryField.style.display = "block";
     }
   }
 
@@ -107,4 +107,5 @@ document.addEventListener("DOMContentLoaded", function () {
   typeSelect.addEventListener("change", toggleFields);
 });
 </script>
+
 {% endblock %}

@@ -27,6 +27,9 @@ def voucher_create_view(request):
 
             elif voucher.type == Voucher.Type.SPV:
                 voucher.expiry_date = today + timedelta(days=90)
+            
+            elif voucher.type == Voucher.Type.OLD:
+                pass
 
             voucher.save()
 
