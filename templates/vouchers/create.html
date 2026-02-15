@@ -18,7 +18,7 @@
 
   <div id="mpvCardField" class="mb-3">
     <label>Karta MPV</label>
-    {{ form.mpv_card }}
+    {{ form.mpv_card_code }}
   </div>
 
   <div id="valueField" class="mb-3">
@@ -40,7 +40,10 @@
     <label>Nr paragonu</label>
     {{ form.receipt_number }}
   </div>
-
+  <div id="expiryField" class="mb-3">
+    <label>Data ważności</label>
+    {{ form.expiry_date }}
+  </div>
   <div class="mb-3">
     <label>Notatki</label>
     {{ form.notes }}
@@ -65,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const valueField = document.getElementById("valueField");
   const serviceField = document.getElementById("serviceField");
   const receiptField = document.getElementById("receiptField");
+  const expiryField = document.getElementById("expiryField");
   
   function toggleFields() {
     const type = typeSelect.value;
@@ -75,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
       codeField.style.display = "none";
       serviceField.style.display = "none";
       receiptField.style.display = "block";
+      expiryField.style.display - "none";
     }
 
     else if (type === "SPV") {
@@ -83,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
       codeField.style.display = "block";
       serviceField.style.display = "block";
       receiptField.style.display = "block";
+      expiryField.style.display - "none";
     }
 
     else if (type === "OLD") {
@@ -91,6 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
       serviceField.style.display = "block";
       codeField.style.display = "block";
       receiptField.style.display = "none";
+      expiryField.style.display - "block";
     }
   }
 
