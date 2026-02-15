@@ -35,6 +35,7 @@ class VoucherCreateForm(forms.ModelForm):
             "value_total": forms.NumberInput(attrs={"class": "form-control"}),
             "expiry_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
             "type": forms.Select(attrs={"class": "form-select"}),
+            "notes": forms.TextInput(attrs={"class": "form-control", "rows": 4}),
         }
 
     def clean(self):
