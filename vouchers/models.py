@@ -36,8 +36,10 @@ class Voucher(models.Model):
 
     type = models.CharField(max_length=3, choices=Type.choices)
 
+    # SPV / OLD
     code = models.CharField(max_length=20, blank=True)
 
+    # MPV
     mpv_card = models.ForeignKey(
         MPVCard,
         on_delete=models.PROTECT,
@@ -47,11 +49,11 @@ class Voucher(models.Model):
     )
 
     client_name = models.CharField(max_length=150)
-
     receipt_number = models.CharField(max_length=50, blank=True)
 
     issue_date = models.DateTimeField(auto_now_add=True)
-    expiry_date = models.DateField(blank=True)
+
+    expiry_date = models.DateField()
     extended_until = models.DateField(null=True, blank=True)
     extended_reason = models.CharField(max_length=255, blank=True)
 
@@ -68,6 +70,7 @@ class Voucher(models.Model):
         default=Status.ACTIVE,
     )
 
+    # MPV
     value_total = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -82,15 +85,41 @@ class Voucher(models.Model):
         blank=True,
     )
 
+    # SPV
     service_name = models.CharField(max_length=200, blank=True)
-
     redeemed_at = models.DateTimeField(null=True, blank=True)
 
     notes = models.TextField(blank=True)
-
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["code"]),
+            models.Index(fields=["client_name"]),
+            models.Index(fields=["status"]),
+        ]
+
+    # ======================================
+    # PROPERTY: is_expired
+    # ======================================
+
+    @property
+    def is_expired(self):
+        today = timezone.localdate()
+        effective_expiry = self.extended_until or self.expiry_date
+        return effective_expiry < today
+
+    # ======================================
+    # CLEAN LOGIC
+    # ======================================
+
     def clean(self):
+
+        today = timezone.localdate()
+
+        # -----------------------------
+        # TYPE VALIDATION
+        # -----------------------------
 
         if self.type == self.Type.MPV:
 
@@ -100,6 +129,14 @@ class Voucher(models.Model):
             if self.value_total is None:
                 raise ValidationError("MPV musi mieć wartość początkową.")
 
+            if self.value_total < Decimal("0.00"):
+                raise ValidationError("Wartość MPV nie może być ujemna.")
+
+            # ustawienie początkowego salda przy tworzeniu
+            if self.pk is None:
+                self.value_remaining = self.value_total
+
+            # blokada aktywnej karty
             existing_active = Voucher.objects.filter(
                 mpv_card=self.mpv_card,
                 type=self.Type.MPV,
@@ -115,22 +152,30 @@ class Voucher(models.Model):
                 )
 
         else:
+            # SPV / OLD muszą mieć kod
             if not self.code:
                 raise ValidationError("Voucher musi mieć kod.")
 
-        if self.type != self.Type.MPV and self.mpv_card:
-            raise ValidationError("Tylko MPV może mieć kartę.")
+            if self.mpv_card:
+                raise ValidationError("Tylko MPV może mieć kartę.")
 
-        if self.type == self.Type.SPV and self.value_remaining:
-            raise ValidationError("SPV nie może mieć value_remaining.")
-        if self.type == self.Type.SPV and not self.service_name:
-            raise ValidationError("SPV musi mieć nazwę usługi.")
-        
+        # -----------------------------
+        # SPV SPECIFIC
+        # -----------------------------
 
-        # EXPIRY AUTO
+        if self.type == self.Type.SPV:
+
+            if not self.service_name:
+                raise ValidationError("SPV musi mieć nazwę usługi.")
+
+            if self.value_remaining:
+                raise ValidationError("SPV nie może mieć value_remaining.")
+
+        # -----------------------------
+        # EXPIRY DEFAULT
+        # -----------------------------
+
         if not self.expiry_date:
-
-            today = timezone.localdate()
 
             if self.type == self.Type.MPV:
                 self.expiry_date = today + timedelta(days=180)
@@ -138,28 +183,17 @@ class Voucher(models.Model):
             elif self.type == self.Type.SPV:
                 self.expiry_date = today + timedelta(days=90)
 
-    def save(self, *args, **kwargs):
+        # -----------------------------
+        # AUTO STATUS EXPIRED
+        # -----------------------------
 
-        self.full_clean()
+        if self.is_expired and self.status == self.Status.ACTIVE:
+            self.status = self.Status.EXPIRED
 
-        is_new = self.pk is None
-
-        if is_new and self.type == self.Type.MPV:
-            self.value_remaining = self.value_total
-
-        super().save(*args, **kwargs)
-
-    def is_expired(self):
-        effective_expiry = self.extended_until or self.expiry_date
-        return effective_expiry and effective_expiry < timezone.localdate()
-
-    class Meta:
-        indexes = [
-            models.Index(fields=["code"]),
-            models.Index(fields=["client_name"]),
-            models.Index(fields=["status"]),
-        ]
-
+    def __str__(self):
+        if self.type == self.Type.MPV:
+            return f"MPV {self.mpv_card.code} – {self.client_name}"
+        return f"{self.type} {self.code} – {self.client_name}"
 
 
 class MPVTransaction(models.Model):
@@ -188,33 +222,36 @@ class MPVTransaction(models.Model):
     class Meta:
         ordering = ["-created_at"]
 
-    def save(self, *args, **kwargs):
-
+    def clean(self):
         if self.voucher.type != Voucher.Type.MPV:
             raise ValidationError("Transakcje tylko dla MPV.")
 
         if self.amount <= Decimal("0.00"):
             raise ValidationError("Kwota musi być dodatnia.")
 
-        voucher = self.voucher
+        if self.voucher.value_remaining is None:
+            raise ValidationError("Voucher nie ma salda.")
 
-        if voucher.value_remaining is None:
-            raise ValidationError("Voucher nie ma ustawionego salda.")
+        if self.amount > self.voucher.value_remaining:
+            raise ValidationError("Brak wystarczających środków.")
 
-        if self.amount > voucher.value_remaining:
-            raise ValidationError("Kwota przekracza dostępne saldo.")
+    def save(self, *args, **kwargs):
+
+        self.full_clean()
 
         is_new = self.pk is None
+
         super().save(*args, **kwargs)
 
         if is_new:
+            voucher = self.voucher
             voucher.value_remaining -= self.amount
 
-            if voucher.value_remaining == Decimal("0.00"):
+            if voucher.value_remaining <= Decimal("0.00"):
+                voucher.value_remaining = Decimal("0.00")
                 voucher.status = Voucher.Status.ZERO_NOT_RETURNED
 
             voucher.save()
-
 
     def __str__(self):
         return f"{self.voucher} – {self.amount}"
