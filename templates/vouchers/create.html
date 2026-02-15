@@ -31,14 +31,14 @@
     {{ form.client_name }}
   </div>
 
-  <div class="mb-3">
-    <label>Nr paragonu</label>
-    {{ form.receipt_number }}
-  </div>
-
   <div id="serviceField" class="mb-3">
     <label>Nazwa usługi</label>
     {{ form.service_name }}
+  </div>
+
+  <div id="receiptField" class="mb-3">
+    <label>Nr paragonu</label>
+    {{ form.receipt_number }}
   </div>
 
   <div class="mb-3">
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const mpvCardField = document.getElementById("mpvCardField");
   const valueField = document.getElementById("valueField");
   const serviceField = document.getElementById("serviceField");
-
+  const receiptField = document.getElementById("receiptField")
   function toggleFields() {
     const type = typeSelect.value;
 
@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
       valueField.style.display = "block";
       codeField.style.display = "none";
       serviceField.style.display = "none";
+      receiptField.style.display = "block";
     }
 
     else if (type === "SPV") {
@@ -80,13 +81,15 @@ document.addEventListener("DOMContentLoaded", function () {
       valueField.style.display = "none";
       codeField.style.display = "block";
       serviceField.style.display = "block";
+      receiptField.style.display = "block";
     }
 
     else if (type === "OLD") {
       mpvCardField.style.display = "none";
       valueField.style.display = "none";
-      serviceField.style.display = "none";
+      serviceField.style.display = "block";
       codeField.style.display = "block";
+      receiptField.style.display = "none";
     }
   }
 
