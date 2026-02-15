@@ -25,7 +25,7 @@ ALL_TOOLS = [
     {
         "name": "Vouchery",
         "icon": "bi-card-list",
-        "url": "vouchers",
+        "url": "vouchers:voucher_search",
         "status": "active",
         "areas": ["RC", "BD"],
     },
