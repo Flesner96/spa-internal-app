@@ -48,3 +48,5 @@ class VoucherCreateForm(forms.ModelForm):
                 self.add_error("service_name", "SPV musi mieć nazwę usługi.")
 
         return cleaned
+
+

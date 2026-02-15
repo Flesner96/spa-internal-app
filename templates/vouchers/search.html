@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Wyszukaj voucher</h1>
+
+<form method="get" class="mb-4">
+  <div class="input-group">
+    <input type="text"
+           name="q"
+           value="{{ query }}"
+           class="form-control"
+           placeholder="Kod / MPV karta / Klient">
+    <button class="btn btn-primary">
+      Szukaj
+    </button>
+  </div>
+</form>
+
+{% if query %}
+
+  <h5>Wyniki: {{ results|length }}</h5>
+
+  {% for v in results %}
+    <div class="card mb-3">
+      <div class="card-body">
+
+        <strong>
+          {% if v.type == "MPV" %}
+            MPV – {{ v.mpv_card.code }}
+          {% else %}
+            {{ v.type }} – {{ v.code }}
+          {% endif %}
+        </strong>
+
+        <div>
+          {{ v.client_name }}
+        </div>
+
+        <div>
+          Status: {{ v.status }}
+        </div>
+
+        <div>
+          Wydany: {{ v.issue_date|date:"d.m.Y H:i" }}
+        </div>
+
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">Brak wyników</p>
+  {% endfor %}
+
+{% endif %}
+
+{% endblock %}
