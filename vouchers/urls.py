@@ -1,8 +1,8 @@
 from django.urls import path
-from . import views
+from .views import voucher_search_view, voucher_create_view
 
 urlpatterns = [ 
-    path ("", views.voucher_search_view, name="voucher_search"),
-    path("create", views.voucher_create_view , name="voucher_create"),
+    path ("", voucher_search_view, name="voucher_search"),
+    path("create/", voucher_create_view , name="voucher_create"),
 
 ]
