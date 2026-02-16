@@ -145,6 +145,12 @@ class Voucher(models.Model):
             "OLD": "STARY",
         }
         return mapping.get(self.type, self.type)
+    
+    @property
+    def display_seller(self):
+        if not self.seller:
+            return "-"
+        return self.seller.first_name or self.seller.email
 
 
     # ======================================

@@ -55,7 +55,7 @@
               <strong>{{ v.client_name }}</strong>
             </div>
 
-            <div class="text-muted small mt-1">
+            <div class="mt-2">
               {% if v.type == "MPV" %}
                 Saldo: {{ v.value_remaining }} / {{ v.value_total }}
               {% else %}
@@ -73,7 +73,7 @@
                 {{ v.expiry_date|date:"d.m.Y" }}
               {% endif %}
               |
-              Sprzedawca: {{ v.seller }}
+              Sprzedawca: {{ v.display_seller }}
             </div>
 
           </div>
