@@ -25,7 +25,7 @@ class Voucher(models.Model):
     class Type(models.TextChoices):
         MPV = "MPV", "MPV"
         SPV = "SPV", "SPV"
-        OLD = "OLD", "OLD"
+        OLD = "OLD", "STARY"
 
     class Status(models.TextChoices):
         ACTIVE = "active", "Active"
@@ -121,6 +121,23 @@ class Voucher(models.Model):
         if self.status == self.Status.ACTIVE and self.is_expired:
             return self.Status.EXPIRED
         return self.Status
+    
+    # ======================================
+    # PROPERTY: display_status
+    # ======================================
+
+
+    @property
+    def display_status(self):
+        mapping = {
+            "active": "AKTYWNY",
+            "used": "ZUŻYTY",
+            "expired": "WYGASŁ",
+            "zero_not_returned": "WYKORZYSTANY – KARTA NIEODDANA",
+            "zero_returned": "WYKORZYSTANY – KARTA ZWRÓCONA",
+        }
+        return mapping.get(self.effective_status, self.effective_status)
+
 
 
     # ======================================
