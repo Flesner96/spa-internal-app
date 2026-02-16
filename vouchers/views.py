@@ -174,7 +174,7 @@ def voucher_extend_view(request, pk):
                 voucher=voucher,
                 action=VoucherLog.Action.EXTENDED,
                 performed_by=request.user,
-                description="Zmieniono client_name"
+                description="Zmieniono expiry_date"
             )
 
 
