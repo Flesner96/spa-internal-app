@@ -17,6 +17,13 @@ class Capability:
     VIEW_BALANCE = "view_balance"
     CREATE_BALANCE = "create_balance"    
     BALANCE_HISTORY = "balance_history"
+    VIEW_VOUCHERS = "view_vouchers"
+    CREATE_VOUCHERS = "create_vouchers"
+    EDIT_VOUCHERS = "edit_vouchers"
+    EXTEND_VOUCHERS = "extend_vouchers"
+    REDEEM_VOUCHERS = "redeem_vouchers"
+    MPV_TRANSACTIONS = "mpv_transactions"
+    VIEW_VOUCHER_LOGS = "view_voucher_logs"
 
 
 
@@ -29,6 +36,12 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_CLASSES,
         Capability.VIEW_BALANCE,
         Capability.CREATE_BALANCE,
+        Capability.VIEW_VOUCHERS,
+        Capability.CREATE_VOUCHERS,
+        Capability.EDIT_VOUCHERS,
+        Capability.REDEEM_VOUCHERS,
+        Capability.MPV_TRANSACTIONS,
+        Capability.EXTEND_VOUCHERS,
     },
     "ASup": {
         Capability.VIEW_NOTEBOOK,
@@ -40,12 +53,20 @@ ROLE_CAPABILITIES = {
         Capability.BALANCE_HISTORY,
         Capability.VIEW_BALANCE,
         Capability.CREATE_BALANCE,
+        Capability.VIEW_VOUCHERS,
+        Capability.CREATE_VOUCHERS,
+        Capability.EDIT_VOUCHERS,
+        Capability.REDEEM_VOUCHERS,
+        Capability.MPV_TRANSACTIONS,
+        Capability.EXTEND_VOUCHERS,
     },
     "Ma": {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
         Capability.VIEW_SAUNAS,
         Capability.REPLY_NOTEBOOK,
+        Capability.VIEW_VOUCHERS,
+        Capability.EXTEND_VOUCHERS,
     },
     "BD": {
         Capability.VIEW_NOTEBOOK,
@@ -54,6 +75,9 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_CLASSES,
         Capability.MANAGE_CLASSES,
         Capability.REPLY_NOTEBOOK,
+        Capability.VIEW_VOUCHERS,
+        Capability.EXTEND_VOUCHERS,
+        Capability.VIEW_VOUCHER_LOGS,
     },
 }
 
