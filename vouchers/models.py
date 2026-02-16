@@ -295,9 +295,8 @@ class MPVTransaction(models.Model):
 
             if voucher.value_remaining <= Decimal("0.00"):
                 voucher.value_remaining = Decimal("0.00")
-                voucher.status = Voucher.Status.ZERO_NOT_RETURNED
 
-            voucher.save(update_fields=["value_remaining", "status", "updated_at"])
+            voucher.save(update_fields=["value_remaining", "updated_at"])
 
     def __str__(self):
         return f"{self.voucher} – {self.amount}"
