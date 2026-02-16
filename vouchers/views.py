@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
 from .forms import VoucherCreateForm, VoucherEditForm, VoucherExtendForm, MPVTransactionForm
-from .models import Voucher
+from .models import Voucher, MPVTransaction
 from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -174,18 +174,25 @@ def voucher_transaction_view(request, pk):
         form = MPVTransactionForm(request.POST, voucher=voucher)
 
         if form.is_valid():
-            transaction = form.save(commit=False)
-            transaction.voucher = voucher
-            transaction.created_by = request.user
-            transaction.save()
+
+            amount = form.cleaned_data["amount"]
+            card_returned = form.cleaned_data.get("card_returned")
+
+            
+            MPVTransaction.objects.create(
+                voucher=voucher,
+                amount=amount,
+                note=form.cleaned_data.get("note", ""),
+                created_by=request.user,
+            )
 
             # aktualizacja salda
-            voucher.value_remaining -= transaction.amount
+            voucher.value_remaining -= amount
 
             if voucher.value_remaining <= 0:
                 voucher.value_remaining = 0
 
-                if form.cleaned_data.get("card_returned"):
+                if card_returned:
                     voucher.status = Voucher.Status.ZERO_RETURNED
                 else:
                     voucher.status = Voucher.Status.ZERO_NOT_RETURNED
@@ -202,4 +209,5 @@ def voucher_transaction_view(request, pk):
         "form": form,
         "voucher": voucher,
     })
+
 

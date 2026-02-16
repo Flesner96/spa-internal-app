@@ -238,6 +238,7 @@ class Voucher(models.Model):
         return f"{self.type} {self.code} – {self.client_name}"
 
 
+
 class MPVTransaction(models.Model):
 
     voucher = models.ForeignKey(
@@ -265,6 +266,9 @@ class MPVTransaction(models.Model):
         ordering = ["-created_at"]
 
     def clean(self):
+        if not self.voucher:
+            raise ValidationError("Brak powiązanego vouchera.")
+
         if self.voucher.type != Voucher.Type.MPV:
             raise ValidationError("Transakcje tylko dla MPV.")
 
@@ -279,10 +283,9 @@ class MPVTransaction(models.Model):
 
     def save(self, *args, **kwargs):
 
-        self.full_clean()
-
         is_new = self.pk is None
 
+        self.full_clean()
         super().save(*args, **kwargs)
 
         if is_new:
