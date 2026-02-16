@@ -266,13 +266,15 @@ class MPVTransaction(models.Model):
         ordering = ["-created_at"]
 
     def clean(self):
-        if not self.voucher:
-            raise ValidationError("Brak powiązanego vouchera.")
+
+        # 🔐 zabezpieczenie — jeśli voucher nie jest ustawiony
+        if not self.voucher_id:
+            raise ValidationError("Voucher nie został przypisany.")
 
         if self.voucher.type != Voucher.Type.MPV:
             raise ValidationError("Transakcje tylko dla MPV.")
 
-        if self.amount <= Decimal("0.00"):
+        if self.amount is None or self.amount <= Decimal("0.00"):
             raise ValidationError("Kwota musi być dodatnia.")
 
         if self.voucher.value_remaining is None:
@@ -285,7 +287,6 @@ class MPVTransaction(models.Model):
 
         is_new = self.pk is None
 
-        self.full_clean()
         super().save(*args, **kwargs)
 
         if is_new:
@@ -296,7 +297,8 @@ class MPVTransaction(models.Model):
                 voucher.value_remaining = Decimal("0.00")
                 voucher.status = Voucher.Status.ZERO_NOT_RETURNED
 
-            voucher.save()
+            voucher.save(update_fields=["value_remaining", "status", "updated_at"])
 
     def __str__(self):
         return f"{self.voucher} – {self.amount}"
+
