@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
-from .forms import VoucherCreateForm
+from .forms import VoucherCreateForm, VoucherEditForm
 from .models import Voucher
 from django.contrib import messages
 from django.utils import timezone
@@ -90,3 +90,36 @@ def voucher_redeem_view(request, pk):
     messages.success(request, "Voucher został oznaczony jako zużyty.")
 
     return redirect("vouchers:voucher_search")
+
+
+@login_required
+def voucher_edit_view(request, pk):
+    voucher = get_object_or_404(Voucher, pk=pk)
+
+    form = VoucherEditForm(
+        request.POST or None,
+        instance=voucher
+    )
+
+    if request.method == "POST":
+        if voucher.effective_status in [
+            Voucher.Status.USED,
+            Voucher.Status.ZERO_NOT_RETURNED,
+            Voucher.Status.ZERO_RETURNED,
+        ]:
+            messages.error(request, "Tego vouchera nie można edytować.")
+            return redirect("vouchers:voucher_search")
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Voucher został zaktualizowany.")
+            return redirect("vouchers:voucher_search")
+
+    return render(
+        request,
+        "vouchers/edit.html",
+        {
+            "form": form,
+            "voucher": voucher,
+        }
+    )

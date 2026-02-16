@@ -127,3 +127,47 @@ class VoucherCreateForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class VoucherEditForm(forms.ModelForm):
+
+    class Meta:
+        model = Voucher
+        fields = [
+            "client_name",
+            "service_name",
+            "receipt_number",
+            "expiry_date",
+            "notes",
+        ]
+        widgets = {
+            "expiry_date": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"}
+            ),
+            "notes": forms.Textarea(attrs={"class": "form-control"}),
+            "client_name": forms.TextInput(attrs={"class": "form-control"}),
+            "service_name": forms.TextInput(attrs={"class": "form-control"}),
+            "receipt_number": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        voucher = self.instance
+
+        # blokada gdy zużyty
+        if voucher.effective_status in [
+            Voucher.Status.USED,
+            Voucher.Status.ZERO_NOT_RETURNED,
+            Voucher.Status.ZERO_RETURNED,
+        ]:
+            for field in self.fields.values():
+                field.disabled = True
+
+        # expiry tylko dla OLD
+        if voucher.type != Voucher.Type.OLD:
+            self.fields["expiry_date"].widget = forms.HiddenInput()
+
+        # service tylko dla SPV / OLD
+        if voucher.type == Voucher.Type.MPV:
+            self.fields["service_name"].widget = forms.HiddenInput()

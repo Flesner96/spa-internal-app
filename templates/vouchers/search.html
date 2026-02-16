@@ -97,7 +97,7 @@
 
             {# ===== EDYCJA ===== #}
             {% if v.effective_status == "active" %}
-              <a href="#" class="btn btn-sm btn-outline-light">
+              <a href="{% url 'vouchers:voucher_edit' v.pk %}" class="btn btn-sm btn-outline-light">
                 Edycja
               </a>
             {% endif %}
