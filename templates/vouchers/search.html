@@ -104,7 +104,7 @@
 
             {# ===== PRZEDŁUŻ ===== #}
             {% if v.effective_status == "active" or v.effective_status == "expired" %}
-              <a href="#" class="btn btn-sm w-100 btn-outline-warning action-btn">
+              <a href="{% url 'vouchers:voucher_extend' v.pk %}" class="btn btn-sm w-100 btn-outline-warning action-btn">
                 Przedłuż
               </a>
             {% endif %}
