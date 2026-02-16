@@ -111,7 +111,16 @@ class Voucher(models.Model):
         today = timezone.localdate()
         effective_expiry = self.extended_until or self.expiry_date
         return effective_expiry < today
+    
+    # ======================================
+    # PROPERTY: effective_status
+    # ======================================
 
+    @property
+    def effective_status(self):
+        if self.status == self.Status.ACTIVE and self.is_expired:
+            return self.Status.EXPIRED
+        return self.Status
 
 
     # ======================================
