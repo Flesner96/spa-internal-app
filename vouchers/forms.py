@@ -2,13 +2,12 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
-from .models import Voucher
 from decimal import Decimal
+from .models import Voucher, MPVCard
 
 
 class VoucherCreateForm(forms.ModelForm):
 
-    # ZAMIANA ModelChoiceField → CharField
     mpv_card_code = forms.CharField(
         required=False,
         label="Kod karty MPV",
@@ -29,94 +28,91 @@ class VoucherCreateForm(forms.ModelForm):
             "notes",
         ]
         widgets = {
+            "type": forms.Select(attrs={"class": "form-control"}),
             "code": forms.TextInput(attrs={"class": "form-control"}),
             "client_name": forms.TextInput(attrs={"class": "form-control"}),
             "service_name": forms.TextInput(attrs={"class": "form-control"}),
             "receipt_number": forms.TextInput(attrs={"class": "form-control"}),
-            "value_total": forms.NumberInput(attrs={"class": "form-control"}),
             "expiry_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
-            "type": forms.Select(attrs={"class": "form-select"}),
-            "notes": forms.TextInput(attrs={"class": "form-control", "rows": 4}),
+            "value_total": forms.NumberInput(attrs={"class": "form-control"}),
+            "notes": forms.Textarea(attrs={"class": "form-control"}),
         }
 
     def clean(self):
+        cleaned_data = super().clean()
+
+        voucher_type = cleaned_data.get("type")
+        mpv_card_code = cleaned_data.get("mpv_card_code")
+        code = cleaned_data.get("code")
+        value_total = cleaned_data.get("value_total")
+        expiry_date = cleaned_data.get("expiry_date")
 
         today = timezone.localdate()
 
-    # =============================
-    # MPV
-    # =============================
+        # =============================
+        # MPV
+        # =============================
 
-        if self.type == self.Type.MPV:
+        if voucher_type == Voucher.Type.MPV:
 
-            if not self.mpv_card:
-                raise ValidationError("MPV musi mieć przypisaną kartę.")
+            if not mpv_card_code:
+                raise ValidationError("MPV musi mieć kod karty.")
 
-            if self.value_total is None:
-                raise ValidationError("MPV musi mieć wartość początkową.")
+            try:
+                card = MPVCard.objects.get(code=mpv_card_code)
+            except MPVCard.DoesNotExist:
+                raise ValidationError("Karta MPV o takim kodzie nie istnieje.")
 
-            if self.value_total < Decimal("0.00"):
-                raise ValidationError("Wartość MPV nie może być ujemna.")
-
-            # ustawienie początkowego salda
-            if self.pk is None:
-                self.value_remaining = self.value_total
-
-            existing_active = Voucher.objects.filter(
-                mpv_card=self.mpv_card,
-                type=self.Type.MPV,
+            existing = Voucher.objects.filter(
+                mpv_card=card,
                 status__in=[
-                    self.Status.ACTIVE,
-                    self.Status.ZERO_NOT_RETURNED
+                    Voucher.Status.ACTIVE,
+                    Voucher.Status.ZERO_NOT_RETURNED
                 ]
-            ).exclude(pk=self.pk)
+            )
 
-            if existing_active.exists():
+            if existing.exists():
                 raise ValidationError("Ta karta ma już aktywny voucher.")
 
-    # =============================
-    # SPV / OLD
-    # =============================
+            cleaned_data["mpv_card"] = card
 
-        else:
+            if value_total is None:
+                raise ValidationError("MPV musi mieć wartość.")
 
-            if not self.code:
-                raise ValidationError("Voucher musi mieć kod.")
+            if value_total <= Decimal("0.00"):
+                raise ValidationError("Wartość MPV musi być większa niż 0.")
 
-            if self.mpv_card:
-                raise ValidationError("Tylko MPV może mieć kartę.")
+            cleaned_data["value_remaining"] = value_total
 
-    # =============================
-    # SPV specific
-    # =============================
+            cleaned_data["expiry_date"] = today + timedelta(days=180)
 
-        if self.type == self.Type.SPV:
+        # =============================
+        # SPV
+        # =============================
 
-            if not self.service_name:
+        elif voucher_type == Voucher.Type.SPV:
+
+            if not code:
+                raise ValidationError("SPV musi mieć kod.")
+
+            if not cleaned_data.get("service_name"):
                 raise ValidationError("SPV musi mieć nazwę usługi.")
 
-            if self.value_remaining:
-                raise ValidationError("SPV nie może mieć value_remaining.")
+            cleaned_data["expiry_date"] = today + timedelta(days=90)
 
-    # =============================
-    # Expiry defaults
-    # =============================
+        # =============================
+        # OLD
+        # =============================
 
-        if not self.expiry_date:
+        elif voucher_type == Voucher.Type.OLD:
 
-            if self.type == self.Type.MPV:
-                self.expiry_date = today + timedelta(days=180)
+            if not code:
+                raise ValidationError("OLD musi mieć kod.")
 
-            elif self.type == self.Type.SPV:
-                self.expiry_date = today + timedelta(days=90)
+            if not expiry_date:
+                raise ValidationError("Dla OLD musisz ręcznie ustawić datę ważności.")
 
-    # =============================
-    # Auto expired
-    # =============================
-
-        if self.is_expired and self.status == self.Status.ACTIVE:
-            self.status = self.Status.EXPIRED
-   
+        return cleaned_data
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -128,9 +124,6 @@ class VoucherCreateForm(forms.ModelForm):
             instance.value_remaining = self.cleaned_data["value_remaining"]
 
         if commit:
-            instance.full_clean()
             instance.save()
 
         return instance
-
-  
