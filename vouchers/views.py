@@ -160,7 +160,11 @@ def voucher_edit_view(request, pk):
 def voucher_extend_view(request, pk):
     voucher = get_object_or_404(Voucher, pk=pk)
 
-    if voucher.effective_status not in ["active", "expired"]:
+    if voucher.effective_status not in [
+        Voucher.Status.ACTIVE,
+        Voucher.Status.EXPIRED,
+    ]:
+
         messages.error(request, "Nie można przedłużyć tego vouchera.")
         return redirect("vouchers:voucher_search")
 
