@@ -107,7 +107,10 @@ class Voucher(models.Model):
     def is_expired(self):
         today = timezone.localdate()
         effective_expiry = self.extended_until or self.expiry_date
+        if not effective_expiry:
+            return False
         return effective_expiry < today
+
 
     # ======================================
     # CLEAN LOGIC
@@ -156,8 +159,9 @@ class Voucher(models.Model):
             if not self.code:
                 raise ValidationError("Voucher musi mieć kod.")
 
-            if self.mpv_card:
-                raise ValidationError("Tylko MPV może mieć kartę.")
+            if self.type == self.Type.MPV and self.mpv_card is None:
+                raise ValidationError("MPV musi mieć przypisaną kartę.")
+
 
         # -----------------------------
         # SPV SPECIFIC
