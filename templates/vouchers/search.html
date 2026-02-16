@@ -95,25 +95,38 @@
           <!-- PRAWA STRONA – PRZYCISKI -->
           <div class="col-md-3 text-end d-flex flex-column gap-2">
 
-            <a href="#" class="btn btn-sm btn-outline-light">
-              Edycja
-            </a>
-
-            <a href="#" class="btn btn-sm btn-outline-warning">
-              Przedłuż
-            </a>
-
-            {% if v.type == "MPV" %}
-              <a href="#" class="btn btn-sm btn-outline-info">
-                Transakcje
+            {# ===== EDYCJA ===== #}
+            {% if v.effective_status == "active" %}
+              <a href="#" class="btn btn-sm btn-outline-light">
+                Edycja
               </a>
-            {% elif v.type == "SPV" or v.type == "OLD" %}
+            {% endif %}
+
+            {# ===== PRZEDŁUŻ ===== #}
+            {% if v.effective_status == "active" or v.effective_status == "expired" %}
+              <a href="#" class="btn btn-sm btn-outline-warning">
+                Przedłuż
+              </a>
+            {% endif %}
+
+            {# ===== MPV ===== #}
+            {% if v.type == "MPV" %}
+              {% if v.effective_status == "active" %}
+                <a href="#" class="btn btn-sm btn-outline-info">
+                  Transakcje
+                </a>
+              {% endif %}
+            {% endif %}
+
+            {# ===== SPV / OLD ===== #}
+            {% if v.type != "MPV" and v.effective_status == "active" %}
               <a href="#" class="btn btn-sm btn-outline-success">
                 Oznacz jako zużyty
               </a>
             {% endif %}
 
           </div>
+
 
         </div>
 
