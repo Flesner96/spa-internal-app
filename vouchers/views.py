@@ -6,12 +6,14 @@ from .models import Voucher, MPVTransaction, VoucherLog
 from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from accounts.permissions import require_capability, Capability
 
 
 
 
 
 @login_required
+@require_capability(Capability.CREATE_VOUCHERS)
 def voucher_create_view(request):
 
     if request.method == "POST":
@@ -41,6 +43,7 @@ def voucher_create_view(request):
 
 
 @login_required
+@require_capability(Capability.VIEW_VOUCHERS)
 def voucher_search_view(request):
 
     query = request.GET.get("q", "").strip()
@@ -77,6 +80,7 @@ def voucher_search_view(request):
 
 @login_required
 @require_POST
+@require_capability(Capability.REDEEM_VOUCHERS)
 def voucher_redeem_view(request, pk):
     voucher = get_object_or_404(Voucher, pk=pk)
 
@@ -108,6 +112,7 @@ def voucher_redeem_view(request, pk):
 
 
 @login_required
+@require_capability(Capability.EDIT_VOUCHERS)
 def voucher_edit_view(request, pk):
     voucher = get_object_or_404(Voucher, pk=pk)
 
@@ -151,6 +156,7 @@ def voucher_edit_view(request, pk):
 
 
 @login_required
+@require_capability(Capability.EXTEND_VOUCHERS)
 def voucher_extend_view(request, pk):
     voucher = get_object_or_404(Voucher, pk=pk)
 
@@ -191,6 +197,7 @@ def voucher_extend_view(request, pk):
 
 
 @login_required
+@require_capability(Capability.MPV_TRANSACTIONS)
 def voucher_transaction_view(request, pk):
     voucher = get_object_or_404(Voucher, pk=pk)
 
@@ -260,6 +267,7 @@ def voucher_transaction_view(request, pk):
 
 
 @login_required
+@require_capability(Capability.VIEW_VOUCHER_LOGS)
 def voucher_logs_view(request):
 
     if not request.user.is_superuser:
