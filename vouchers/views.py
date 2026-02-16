@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
 from .forms import VoucherCreateForm
 from .models import Voucher
+from django.contrib import messages
 
 
 
@@ -16,6 +17,8 @@ def voucher_create_view(request):
             voucher = form.save(commit=False)
             voucher.seller = request.user
             voucher.save()
+            
+            messages.success(request, "Vocher został dodany pomyślnie.")
 
             return redirect("vouchers:voucher_create")
 
