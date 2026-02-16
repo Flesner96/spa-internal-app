@@ -120,7 +120,7 @@ class Voucher(models.Model):
     def effective_status(self):
         if self.status == self.Status.ACTIVE and self.is_expired:
             return self.Status.EXPIRED
-        return self.Status
+        return self.status
     
     # ======================================
     # PROPERTY: display_status

@@ -37,8 +37,26 @@
         </div>
 
         <div>
-          {{ v.display_status }}
+          {% if v.effective_status == "used" %}
+            <span class="badge bg-success">{{ v.display_status }}</span>
+
+          {% elif v.effective_status == "expired" %}
+            <span class="badge bg-danger">{{ v.display_status }}</span>
+
+          {% elif v.effective_status == "active" %}
+            <span class="badge bg-primary">{{ v.display_status }}</span>
+
+          {% elif v.effective_status == "zero_not_returned" %}
+              <span class="badge bg-warning text-dark">{{ v.display_status }}</span>
+
+          {% elif v.effective_status == "zero_returned" %}
+            <span class="badge bg-secondary">{{ v.display_status }}</span>
+
+          {% else %}
+            <span class="badge bg-light text-dark">{{ v.display_status }}</span>
+          {% endif %}
         </div>
+
 
         <div>
           Wydany: {{ v.issue_date|date:"d.m.Y H:i" }}
