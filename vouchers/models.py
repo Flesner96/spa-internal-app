@@ -123,9 +123,8 @@ class Voucher(models.Model):
         return self.status
     
     # ======================================
-    # PROPERTY: display_status
+    # PROPERTY: display
     # ======================================
-
 
     @property
     def display_status(self):
@@ -138,6 +137,14 @@ class Voucher(models.Model):
         }
         return mapping.get(self.effective_status, self.effective_status)
 
+    @property
+    def display_type(self):
+        mapping = {
+            "MPV": "MPV",
+            "SPV": "SPV",
+            "OLD": "STARY",
+        }
+        return mapping.get(self.type, self.type)
 
 
     # ======================================
