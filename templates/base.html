@@ -106,7 +106,7 @@
     {% endif %}
     {% if request.user|can:"view_voucher_logs" %}
       <li class="nav-item">
-        <a href="{% url 'voucher_logs_view' %}" class="spa-nav-link nav-link">
+        <a href="{% url 'vouchers:voucher_logs_view' %}" class="spa-nav-link nav-link">
           <i class="bi bi-book"></i>
           <span>Vouchery Logi</span>
         </a>
