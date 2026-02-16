@@ -11,6 +11,11 @@
     <div class="mb-2">
         Saldo: {{ voucher.value_remaining }} / {{ voucher.value_total }}
     </div>
+    {% if form.errors %}
+     <div class="alert alert-danger">
+        {{ form.errors }}
+     </div>
+    {% endif %}
 
     <form method="post">
         {% csrf_token %}
