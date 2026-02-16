@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
-from .forms import VoucherCreateForm, VoucherEditForm
+from .forms import VoucherCreateForm, VoucherEditForm,  VoucherExtendForm
 from .models import Voucher
 from django.contrib import messages
 from django.utils import timezone
@@ -123,3 +123,37 @@ def voucher_edit_view(request, pk):
             "voucher": voucher,
         }
     )
+
+
+
+@login_required
+def voucher_extend_view(request, pk):
+    voucher = get_object_or_404(Voucher, pk=pk)
+
+    if voucher.effective_status not in ["active", "expired"]:
+        messages.error(request, "Nie można przedłużyć tego vouchera.")
+        return redirect("vouchers:voucher_search")
+
+    if request.method == "POST":
+        form = VoucherExtendForm(request.POST, instance=voucher)
+
+        if form.is_valid():
+            voucher = form.save(commit=False)
+
+            # jeżeli był expired — wraca do active
+            if voucher.status == Voucher.Status.EXPIRED:
+                voucher.status = Voucher.Status.ACTIVE
+
+            voucher.save()
+
+            messages.success(request, "Voucher został przedłużony.")
+            return redirect("vouchers:voucher_search")
+
+    else:
+        form = VoucherExtendForm(instance=voucher)
+
+    return render(request, "vouchers/extend.html", {
+        "form": form,
+        "voucher": voucher,
+    })
+

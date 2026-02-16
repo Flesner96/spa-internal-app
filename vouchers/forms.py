@@ -171,3 +171,33 @@ class VoucherEditForm(forms.ModelForm):
         # service tylko dla SPV / OLD
         if voucher.type == Voucher.Type.MPV:
             self.fields["service_name"].widget = forms.HiddenInput()
+
+
+class VoucherExtendForm(forms.ModelForm):
+    class Meta:
+        model = Voucher
+        fields = ["extended_until", "extended_reason"]
+
+        widgets = {
+            "extended_until": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"}
+            ),
+            "extended_reason": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+
+        new_date = cleaned.get("extended_until")
+
+        if not new_date:
+            raise forms.ValidationError("Musisz podać nową datę ważności.")
+
+        if new_date <= self.instance.expiry_date:
+            raise forms.ValidationError(
+                "Nowa data musi być późniejsza niż aktualna."
+            )
+
+        return cleaned
