@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 from decimal import Decimal
-from .models import Voucher, MPVCard
+from .models import Voucher, MPVCard, MPVTransaction
 
 
 class VoucherCreateForm(forms.ModelForm):
@@ -201,3 +201,43 @@ class VoucherExtendForm(forms.ModelForm):
             )
 
         return cleaned
+    
+
+class MPVTransactionForm(forms.ModelForm):
+
+    card_returned = forms.BooleanField(
+        required=False,
+        label="Karta oddana do recepcji?"
+    )
+
+    class Meta:
+        model = MPVTransaction
+        fields = ["amount", "note"]
+        widgets = {
+            "amount": forms.NumberInput(
+                attrs={"class": "form-control", "step": "0.01"}
+            ),
+            "note": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.voucher = kwargs.pop("voucher")
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned = super().clean()
+        amount = cleaned.get("amount")
+
+        if amount is None:
+            raise forms.ValidationError("Podaj kwotę.")
+
+        if amount <= Decimal("0.00"):
+            raise forms.ValidationError("Kwota musi być większa niż 0.")
+
+        if amount > self.voucher.value_remaining:
+            raise forms.ValidationError("Kwota przekracza dostępne saldo.")
+
+        return cleaned
+

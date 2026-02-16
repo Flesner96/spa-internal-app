@@ -112,7 +112,7 @@
             {# ===== MPV ===== #}
             {% if v.type == "MPV" %}
               {% if v.effective_status == "active" %}
-                <a href="#" class="btn btn-sm w-100 btn-outline-info action-btn">
+                <a href="{% url 'vouchers:voucher_transaction' v.pk %}" class="btn btn-sm w-100 btn-outline-info action-btn">
                   Transakcje
                 </a>
               {% endif %}

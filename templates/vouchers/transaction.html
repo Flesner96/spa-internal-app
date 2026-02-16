@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Transakcja MPV</h3>
+
+<div class="card p-4">
+
+    <strong>
+        MPV – {{ voucher.mpv_card.code }}
+    </strong>
+
+    <div class="mb-2">
+        Saldo: {{ voucher.value_remaining }} / {{ voucher.value_total }}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Kwota</label>
+            {{ form.amount }}
+        </div>
+
+        <div class="mb-3">
+            <label>Notatka</label>
+            {{ form.note }}
+        </div>
+
+        {% if voucher.value_remaining > 0 %}
+        <div class="form-check mb-3">
+            {{ form.card_returned }}
+            <label class="form-check-label">
+                Karta oddana do recepcji?
+            </label>
+        </div>
+        {% endif %}
+
+        <button class="btn btn-info w-100">
+            Zapisz transakcję
+        </button>
+    </form>
+</div>
+{% endblock %}

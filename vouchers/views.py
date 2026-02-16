@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
-from .forms import VoucherCreateForm, VoucherEditForm,  VoucherExtendForm
+from .forms import VoucherCreateForm, VoucherEditForm, VoucherExtendForm, MPVTransactionForm
 from .models import Voucher
 from django.contrib import messages
 from django.utils import timezone
@@ -153,6 +153,52 @@ def voucher_extend_view(request, pk):
         form = VoucherExtendForm(instance=voucher)
 
     return render(request, "vouchers/extend.html", {
+        "form": form,
+        "voucher": voucher,
+    })
+
+
+@login_required
+def voucher_transaction_view(request, pk):
+    voucher = get_object_or_404(Voucher, pk=pk)
+
+    if voucher.type != Voucher.Type.MPV:
+        messages.error(request, "Transakcje dostępne tylko dla MPV.")
+        return redirect("vouchers:voucher_search")
+
+    if voucher.effective_status != "active":
+        messages.error(request, "Transakcja możliwa tylko dla aktywnego MPV.")
+        return redirect("vouchers:voucher_search")
+
+    if request.method == "POST":
+        form = MPVTransactionForm(request.POST, voucher=voucher)
+
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.voucher = voucher
+            transaction.created_by = request.user
+            transaction.save()
+
+            # aktualizacja salda
+            voucher.value_remaining -= transaction.amount
+
+            if voucher.value_remaining <= 0:
+                voucher.value_remaining = 0
+
+                if form.cleaned_data.get("card_returned"):
+                    voucher.status = Voucher.Status.ZERO_RETURNED
+                else:
+                    voucher.status = Voucher.Status.ZERO_NOT_RETURNED
+
+            voucher.save()
+
+            messages.success(request, "Transakcja zapisana.")
+            return redirect("vouchers:voucher_search")
+
+    else:
+        form = MPVTransactionForm(voucher=voucher)
+
+    return render(request, "vouchers/transaction.html", {
         "form": form,
         "voucher": voucher,
     })
