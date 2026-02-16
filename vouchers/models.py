@@ -126,8 +126,8 @@ class Voucher(models.Model):
 
         if self.type == self.Type.MPV:
 
-            if self.mpv_card is None:
-                raise ValidationError("MPV musi mieć przypisaną kartę.")
+            # if self.mpv_card is None:
+            #     raise ValidationError("MPV musi mieć przypisaną kartę.")
 
             if self.value_total is None:
                 raise ValidationError("MPV musi mieć wartość początkową.")
