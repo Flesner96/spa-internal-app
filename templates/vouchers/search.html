@@ -21,52 +21,110 @@
   <h5>Wyniki: {{ results|length }}</h5>
 
   {% for v in results %}
-    <div class="card mb-3">
-      <div class="card-body">
+  <div class="card mb-3 shadow-sm border-0">
+    <div class="card-body">
 
-        <strong>
-          {% if v.type == "MPV" %}
-            MPV – {{ v.mpv_card.code }}
-          {% else %}
-            {{ v.display_type }} – {{ v.code }}
-          {% endif %}
-        </strong>
+      <div class="d-flex justify-content-between">
 
+        <!-- LEWA STRONA -->
         <div>
-          {{ v.client_name }}
-        </div>
 
-        <div>
-          {% if v.effective_status == "used" %}
-            <span class="badge bg-success">{{ v.display_status }}</span>
+          <div class="d-flex align-items-center gap-2">
 
-          {% elif v.effective_status == "expired" %}
-            <span class="badge bg-danger">{{ v.display_status }}</span>
+            <h5 class="mb-0 fw-bold">
+              {% if v.type == "MPV" %}
+                MPV – {{ v.mpv_card.code }}
+              {% else %}
+                {{ v.display_type }} – {{ v.code }}
+              {% endif %}
+            </h5>
 
-          {% elif v.effective_status == "active" %}
-            <span class="badge bg-primary">{{ v.display_status }}</span>
+            {% if v.effective_status == "used" %}
+              <span class="badge bg-success">{{ v.display_status }}</span>
 
-          {% elif v.effective_status == "zero_not_returned" %}
+            {% elif v.effective_status == "expired" %}
+              <span class="badge bg-danger">{{ v.display_status }}</span>
+
+            {% elif v.effective_status == "active" %}
+              <span class="badge bg-primary">{{ v.display_status }}</span>
+
+            {% elif v.effective_status == "zero_not_returned" %}
               <span class="badge bg-warning text-dark">{{ v.display_status }}</span>
 
-          {% elif v.effective_status == "zero_returned" %}
-            <span class="badge bg-secondary">{{ v.display_status }}</span>
+            {% elif v.effective_status == "zero_returned" %}
+              <span class="badge bg-secondary">{{ v.display_status }}</span>
 
-          {% else %}
-            <span class="badge bg-light text-dark">{{ v.display_status }}</span>
+            {% endif %}
+          </div>
+
+          <div class="mt-2">
+            <strong>{{ v.client_name }}</strong>
+          </div>
+
+          <div class="text-muted small mt-1">
+
+            {% if v.type == "MPV" %}
+              Saldo: {{ v.value_remaining }} / {{ v.value_total }}
+            {% else %}
+              {{ v.service_name }}
+            {% endif %}
+
+          </div>
+
+          <div class="text-muted small mt-1">
+            Wydany: {{ v.issue_date|date:"d.m.Y H:i" }}
+          </div>
+
+          <div class="text-muted small">
+            Wygasa:
+            {% if v.extended_until %}
+              {{ v.extended_until|date:"d.m.Y" }}
+            {% else %}
+              {{ v.expiry_date|date:"d.m.Y" }}
+            {% endif %}
+          </div>
+
+          {% if v.notes %}
+          <div class="mt-2 small">
+            <strong>Notatki:</strong> {{ v.notes }}
+          </div>
           {% endif %}
+
         </div>
 
 
-        <div>
-          Wydany: {{ v.issue_date|date:"d.m.Y H:i" }}
+        <!-- PRAWA STRONA – PRZYCISKI -->
+        <div class="d-flex flex-column gap-2 text-end">
+
+          <a href="#" class="btn btn-sm btn-outline-light">
+            Edycja
+          </a>
+
+          <a href="#" class="btn btn-sm btn-outline-warning">
+            Przedłuż
+          </a>
+
+          {% if v.type == "MPV" %}
+            <a href="#" class="btn btn-sm btn-outline-info">
+              Transakcje
+            </a>
+
+          {% elif v.type == "SPV" or v.type == "OLD" %}
+            <a href="#" class="btn btn-sm btn-outline-success">
+              Oznacz jako zużyty
+            </a>
+          {% endif %}
+
         </div>
 
       </div>
+
     </div>
+  </div>
   {% empty %}
-    <p class="text-muted">Brak wyników</p>
+  <p class="text-muted">Brak wyników</p>
   {% endfor %}
+
 
 {% endif %}
 
