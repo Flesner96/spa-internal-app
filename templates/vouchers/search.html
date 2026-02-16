@@ -120,10 +120,14 @@
 
             {# ===== SPV / OLD ===== #}
             {% if v.type != "MPV" and v.effective_status == "active" %}
-              <a href="#" class="btn btn-sm btn-outline-success">
-                Oznacz jako zużyty
-              </a>
+              <form method="post" action="{% url 'vouchers:voucher_redeem' v.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-success">
+                  Oznacz jako zużyty
+                </button>
+              </form>
             {% endif %}
+
 
           </div>
 

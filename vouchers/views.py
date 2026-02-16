@@ -1,9 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
 from .forms import VoucherCreateForm
 from .models import Voucher
 from django.contrib import messages
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+
 
 
 
@@ -62,3 +66,27 @@ def voucher_search_view(request):
     }
 
     return render(request, "vouchers/search.html", context)
+
+
+@login_required
+@require_POST
+def voucher_redeem_view(request, pk):
+    voucher = get_object_or_404(Voucher, pk=pk)
+
+    # tylko SPV / OLD
+    if voucher.type == Voucher.Type.MPV:
+        messages.error(request, "MPV nie można oznaczyć jako zużyty.")
+        return redirect("vouchers:voucher_search")
+
+    # tylko active
+    if voucher.effective_status != Voucher.Status.ACTIVE:
+        messages.error(request, "Voucher nie jest aktywny.")
+        return redirect("vouchers:voucher_search")
+
+    voucher.status = Voucher.Status.USED
+    voucher.redeemed_at = timezone.now()
+    voucher.save(update_fields=["status", "redeemed_at", "updated_at"])
+
+    messages.success(request, "Voucher został oznaczony jako zużyty.")
+
+    return redirect("vouchers:voucher_search")
