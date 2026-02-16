@@ -170,6 +170,18 @@ def voucher_transaction_view(request, pk):
         messages.error(request, "Transakcja możliwa tylko dla aktywnego MPV.")
         return redirect("vouchers:voucher_search")
 
+    # ====== CONFIRM CARD RETURN ======
+    if request.method == "POST" and "confirm_return" in request.POST:
+        if request.POST.get("confirm_return") == "yes":
+            voucher.status = Voucher.Status.ZERO_RETURNED
+        else:
+            voucher.status = Voucher.Status.ZERO_NOT_RETURNED
+
+        voucher.save()
+        messages.success(request, "Status karty zaktualizowany.")
+        return redirect("vouchers:voucher_search")
+
+    # ====== NORMAL TRANSACTION ======
     if request.method == "POST":
         form = MPVTransactionForm(request.POST)
 
@@ -184,13 +196,11 @@ def voucher_transaction_view(request, pk):
 
             transaction.save()
 
-            # jeśli saldo = 0 → pytamy o kartę
+            # jeśli saldo zeszło do 0 → pokazujemy modal
             if voucher.value_remaining == 0:
-                if form.cleaned_data.get("card_returned"):
-                    voucher.status = Voucher.Status.ZERO_RETURNED
-                else:
-                    voucher.status = Voucher.Status.ZERO_NOT_RETURNED
-                voucher.save()
+                return redirect(
+                    f"{request.path}?confirm_return=1"
+                )
 
             messages.success(request, "Transakcja zapisana.")
             return redirect("vouchers:voucher_search")
@@ -198,7 +208,10 @@ def voucher_transaction_view(request, pk):
     else:
         form = MPVTransactionForm()
 
+    show_modal = request.GET.get("confirm_return") == "1"
+
     return render(request, "vouchers/transaction.html", {
         "form": form,
         "voucher": voucher,
+        "show_modal": show_modal,
     })

@@ -30,18 +30,43 @@
             {{ form.note }}
         </div>
 
-        {% if voucher.value_remaining > 0 %}
-        <div class="form-check mb-3">
-            {{ form.card_returned }}
-            <label class="form-check-label">
-                Karta oddana do recepcji?
-            </label>
-        </div>
-        {% endif %}
-
         <button class="btn btn-info w-100">
             Zapisz transakcję
         </button>
     </form>
 </div>
+{% if show_modal %}
+<div class="modal fade show" style="display:block; background: rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Karta wyzerowana</h5>
+            </div>
+
+            <div class="modal-body">
+                Czy karta została oddana do recepcji?
+            </div>
+
+            <div class="modal-footer">
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="confirm_return" value="no">
+                    <button class="btn btn-warning">Nie</button>
+                </form>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="confirm_return" value="yes">
+                    <button class="btn btn-success">Tak</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
 {% endblock %}
