@@ -17,7 +17,7 @@ def voucher_create_view(request):
             voucher.seller = request.user
             voucher.save()
 
-            return redirect("voucher_create")
+            return redirect("vouchers:voucher_create")
 
     else:
         form = VoucherCreateForm()
