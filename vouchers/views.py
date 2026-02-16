@@ -172,7 +172,7 @@ def voucher_transaction_view(request, pk):
 
     if request.method == "POST":
         form = MPVTransactionForm(request.POST, voucher=voucher)
-
+        print(voucher)
         if form.is_valid():
             transaction = MPVTransaction(
                 voucher=voucher,  # ← przypisujemy NAJPIERW

@@ -213,31 +213,26 @@ class MPVTransactionForm(forms.ModelForm):
     class Meta:
         model = MPVTransaction
         fields = ["amount", "note"]
-        widgets = {
-            "amount": forms.NumberInput(
-                attrs={"class": "form-control", "step": "0.01"}
-            ),
-            "note": forms.TextInput(
-                attrs={"class": "form-control"}
-            ),
-        }
 
     def __init__(self, *args, **kwargs):
-        self.voucher = kwargs.pop("voucher")
+        self.voucher = kwargs.pop("voucher", None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        cleaned = super().clean()
-        amount = cleaned.get("amount")
+        cleaned_data = super().clean()
+
+        if not self.voucher:
+            raise ValidationError("Voucher nie został przypisany.")
+
+        amount = cleaned_data.get("amount")
 
         if amount is None:
-            raise forms.ValidationError("Podaj kwotę.")
+            raise ValidationError("Podaj kwotę.")
 
-        if amount <= Decimal("0.00"):
-            raise forms.ValidationError("Kwota musi być większa niż 0.")
+        if amount <= 0:
+            raise ValidationError("Kwota musi być dodatnia.")
 
         if amount > self.voucher.value_remaining:
-            raise forms.ValidationError("Kwota przekracza dostępne saldo.")
+            raise ValidationError("Brak wystarczających środków.")
 
-        return cleaned
-
+        return cleaned_data
