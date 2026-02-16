@@ -105,11 +105,13 @@ class Voucher(models.Model):
 
     @property
     def is_expired(self):
+        if not self.expiry_date and not self.extended_until:
+            return False
+
         today = timezone.localdate()
         effective_expiry = self.extended_until or self.expiry_date
-        if not effective_expiry:
-            return False
         return effective_expiry < today
+
 
 
     # ======================================
@@ -125,9 +127,6 @@ class Voucher(models.Model):
         # -----------------------------
 
         if self.type == self.Type.MPV:
-
-            # if self.mpv_card is None:
-            #     raise ValidationError("MPV musi mieć przypisaną kartę.")
 
             if self.value_total is None:
                 raise ValidationError("MPV musi mieć wartość początkową.")
