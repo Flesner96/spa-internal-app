@@ -174,30 +174,14 @@ def voucher_transaction_view(request, pk):
         form = MPVTransactionForm(request.POST, voucher=voucher)
 
         if form.is_valid():
-
-            amount = form.cleaned_data["amount"]
-            card_returned = form.cleaned_data.get("card_returned")
-
-            
-            MPVTransaction.objects.create(
-                voucher=voucher,
-                amount=amount,
+            transaction = MPVTransaction(
+                voucher=voucher,  # ← przypisujemy NAJPIERW
+                amount=form.cleaned_data["amount"],
                 note=form.cleaned_data.get("note", ""),
                 created_by=request.user,
             )
 
-            # aktualizacja salda
-            voucher.value_remaining -= amount
-
-            if voucher.value_remaining <= 0:
-                voucher.value_remaining = 0
-
-                if card_returned:
-                    voucher.status = Voucher.Status.ZERO_RETURNED
-                else:
-                    voucher.status = Voucher.Status.ZERO_NOT_RETURNED
-
-            voucher.save()
+            transaction.save()  # model zrobi full_clean + logikę salda
 
             messages.success(request, "Transakcja zapisana.")
             return redirect("vouchers:voucher_search")
@@ -209,5 +193,3 @@ def voucher_transaction_view(request, pk):
         "form": form,
         "voucher": voucher,
     })
-
-
