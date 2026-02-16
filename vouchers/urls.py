@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import voucher_search_view, voucher_create_view, voucher_redeem_view, voucher_edit_view, voucher_extend_view, voucher_transaction_view
+from .views import voucher_search_view, voucher_create_view, voucher_redeem_view, voucher_edit_view, voucher_extend_view, voucher_transaction_view, voucher_logs_view
 
 app_name = "vouchers"
 
@@ -18,4 +18,5 @@ urlpatterns = [
     ),
     path("<int:pk>/extend/", voucher_extend_view, name="voucher_extend"),
     path("<int:pk>/transaction/", voucher_transaction_view, name="voucher_transaction"),
+    path("logs/", voucher_logs_view, name="voucher_logs")
 ]

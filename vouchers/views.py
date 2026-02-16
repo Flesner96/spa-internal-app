@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, IntegerField
 from .forms import VoucherCreateForm, VoucherEditForm, VoucherExtendForm, MPVTransactionForm
-from .models import Voucher, MPVTransaction
+from .models import Voucher, MPVTransaction, VoucherLog
 from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -22,6 +22,13 @@ def voucher_create_view(request):
             voucher.seller = request.user
             voucher.save()
             
+            VoucherLog.objects.create(
+                voucher=voucher,
+                action=VoucherLog.Action.CREATED,
+                performed_by=request.user,
+            )
+
+
             messages.success(request, "Vocher został dodany pomyślnie.")
 
             return redirect("vouchers:voucher_create")
@@ -87,6 +94,14 @@ def voucher_redeem_view(request, pk):
     voucher.redeemed_at = timezone.now()
     voucher.save(update_fields=["status", "redeemed_at", "updated_at"])
 
+    VoucherLog.objects.create(
+        voucher=voucher,
+        action=VoucherLog.Action.STATUS_CHANGED,
+        performed_by=request.user,
+        description="Voucher oznaczony jako zużyty"
+    )
+
+
     messages.success(request, "Voucher został oznaczony jako zużyty.")
 
     return redirect("vouchers:voucher_search")
@@ -112,6 +127,15 @@ def voucher_edit_view(request, pk):
 
         if form.is_valid():
             form.save()
+
+            VoucherLog.objects.create(
+                voucher=voucher,
+                action=VoucherLog.Action.EDITED,
+                performed_by=request.user,
+                description="Zmieniono client_name"
+            )
+
+
             messages.success(request, "Voucher został zaktualizowany.")
             return redirect("vouchers:voucher_search")
 
@@ -145,6 +169,14 @@ def voucher_extend_view(request, pk):
                 voucher.status = Voucher.Status.ACTIVE
 
             voucher.save()
+
+            VoucherLog.objects.create(
+                voucher=voucher,
+                action=VoucherLog.Action.EXTENDED,
+                performed_by=request.user,
+                description="Zmieniono client_name"
+            )
+
 
             messages.success(request, "Voucher został przedłużony.")
             return redirect("vouchers:voucher_search")
@@ -196,6 +228,16 @@ def voucher_transaction_view(request, pk):
 
             transaction.save()
 
+            VoucherLog.objects.create(
+                voucher=voucher,
+                action=VoucherLog.Action.TRANSACTION,
+                performed_by=request.user,
+                description=f"Kwota: - {transaction.amount}"
+            )
+
+
+
+            voucher.refresh_from_db()
             # jeśli saldo zeszło do 0 → pokazujemy modal
             if voucher.value_remaining == 0:
                 return redirect(
@@ -214,4 +256,21 @@ def voucher_transaction_view(request, pk):
         "form": form,
         "voucher": voucher,
         "show_modal": show_modal,
+    })
+
+
+@login_required
+def voucher_logs_view(request):
+
+    if not request.user.is_superuser:
+        return redirect("dashboard")
+
+    logs = (
+        VoucherLog.objects
+        .select_related("voucher", "performed_by")
+        .order_by("-created_at")
+    )
+
+    return render(request, "vouchers/logs.html", {
+        "logs": logs
     })

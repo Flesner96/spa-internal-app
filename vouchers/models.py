@@ -301,3 +301,36 @@ class MPVTransaction(models.Model):
     def __str__(self):
         return f"{self.voucher} – {self.amount}"
 
+
+class VoucherLog(models.Model):
+
+    class Action(models.TextChoices):
+        CREATED = "created", "Created"
+        EDITED = "edited", "Edited"
+        EXTENDED = "extended", "Extended"
+        STATUS_CHANGED = "status_changed", "Status changed"
+        TRANSACTION = "transaction", "MPV transaction"
+
+    voucher = models.ForeignKey(
+        Voucher,
+        on_delete=models.CASCADE,
+        related_name="logs"
+    )
+
+    action = models.CharField(max_length=30, choices=Action.choices)
+
+    performed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    description = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.voucher} – {self.action}"
