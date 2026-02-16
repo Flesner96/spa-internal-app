@@ -129,6 +129,7 @@ class VoucherCreateForm(forms.ModelForm):
             instance.value_remaining = self.cleaned_data["value_remaining"]
 
         if commit:
+            instance.full_clean()
             instance.save()
 
         return instance
