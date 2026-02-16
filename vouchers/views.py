@@ -166,28 +166,37 @@ def voucher_transaction_view(request, pk):
         messages.error(request, "Transakcje dostępne tylko dla MPV.")
         return redirect("vouchers:voucher_search")
 
-    if voucher.effective_status != "active":
+    if voucher.effective_status != Voucher.Status.ACTIVE:
         messages.error(request, "Transakcja możliwa tylko dla aktywnego MPV.")
         return redirect("vouchers:voucher_search")
 
     if request.method == "POST":
-        form = MPVTransactionForm(request.POST, voucher=voucher)
-        print(voucher)
+        form = MPVTransactionForm(request.POST)
+
         if form.is_valid():
+
             transaction = MPVTransaction(
-                voucher=voucher,  # ← przypisujemy NAJPIERW
+                voucher=voucher,
                 amount=form.cleaned_data["amount"],
                 note=form.cleaned_data.get("note", ""),
                 created_by=request.user,
             )
 
-            transaction.save()  # model zrobi full_clean + logikę salda
+            transaction.save()
+
+            # jeśli saldo = 0 → pytamy o kartę
+            if voucher.value_remaining == 0:
+                if form.cleaned_data.get("card_returned"):
+                    voucher.status = Voucher.Status.ZERO_RETURNED
+                else:
+                    voucher.status = Voucher.Status.ZERO_NOT_RETURNED
+                voucher.save()
 
             messages.success(request, "Transakcja zapisana.")
             return redirect("vouchers:voucher_search")
 
     else:
-        form = MPVTransactionForm(voucher=voucher)
+        form = MPVTransactionForm()
 
     return render(request, "vouchers/transaction.html", {
         "form": form,

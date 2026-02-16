@@ -3,8 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 from decimal import Decimal
-from .models import Voucher, MPVCard, MPVTransaction
-
+from .models import Voucher, MPVCard
 
 class VoucherCreateForm(forms.ModelForm):
 
@@ -201,38 +200,25 @@ class VoucherExtendForm(forms.ModelForm):
             )
 
         return cleaned
-    
 
-class MPVTransactionForm(forms.ModelForm):
+
+class MPVTransactionForm(forms.Form):
+
+    amount = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        min_value=Decimal("0.01"),
+        label="Kwota",
+        widget=forms.NumberInput(attrs={"class": "form-control"})
+    )
+
+    note = forms.CharField(
+        required=False,
+        label="Notatka",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
 
     card_returned = forms.BooleanField(
         required=False,
         label="Karta oddana do recepcji?"
     )
-
-    class Meta:
-        model = MPVTransaction
-        fields = ["amount", "note"]
-
-    def __init__(self, *args, **kwargs):
-        self.voucher = kwargs.pop("voucher", None)
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        if not self.voucher:
-            raise ValidationError("Voucher nie został przypisany.")
-
-        amount = cleaned_data.get("amount")
-
-        if amount is None:
-            raise ValidationError("Podaj kwotę.")
-
-        if amount <= 0:
-            raise ValidationError("Kwota musi być dodatnia.")
-
-        if amount > self.voucher.value_remaining:
-            raise ValidationError("Brak wystarczających środków.")
-
-        return cleaned_data
