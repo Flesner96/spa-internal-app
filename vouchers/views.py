@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from accounts.permissions import require_capability, Capability
 from django.db import transaction
-
+from django.core.paginator import Paginator
 
 
 
@@ -47,7 +47,9 @@ def voucher_create_view(request):
 def voucher_search_view(request):
 
     query = request.GET.get("q", "").strip()
-    results = []
+    page_number = request.GET.get("page")
+
+    results = Voucher.objects.none()
 
     if query:
 
@@ -70,12 +72,17 @@ def voucher_search_view(request):
             .order_by("status_order", "-issue_date")
         )
 
+    paginator = Paginator(results, 10)  # 10 wyników na stronę
+    page_obj = paginator.get_page(page_number)
+
     context = {
         "query": query,
-        "results": results,
+        "results": page_obj,
+        "page_obj": page_obj,
     }
 
     return render(request, "vouchers/search.html", context)
+
 
 
 @login_required
