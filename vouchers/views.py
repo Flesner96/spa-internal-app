@@ -295,6 +295,11 @@ def voucher_logs_view(request):
         .order_by("-created_at")
     )
 
+    paginator = Paginator(logs, 25)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "vouchers/logs.html", {
-        "logs": logs
+        "logs": logs,
+        "page_obj": page_obj,
     })
