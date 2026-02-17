@@ -30,20 +30,49 @@
 
 
 
+{% if area_info %}
+
 <hr class="my-4">
 
 <h5 class="section-title mb-3">Area Info</h5>
 
 <div class="card">
   <div class="card-body">
-    <strong>Area Manager</strong>
-    <span class="text-muted small ms-2">timestamp</span>
+
+    <div class="d-flex justify-content-between align-items-start">
+
+      <div>
+        <strong>
+          {% if area_info.updated_by.first_name %}
+            {{ area_info.updated_by.first_name }}
+          {% else %}
+            {{ area_info.updated_by.email }}
+          {% endif %}
+        </strong>
+
+        <span class="text-muted small ms-2">
+          {{ area_info.updated_at|date:"d.m.Y H:i" }}
+        </span>
+      </div>
+
+      {% if request.user|can:"edit_area_info" %}
+        <a href="{% url 'edit_area_info' %}"
+           class="btn btn-sm btn-outline-light">
+          Edytuj
+        </a>
+      {% endif %}
+
+    </div>
 
     <p class="mt-2 mb-0">
-      info text
+      {{ area_info.content|linebreaksbr }}
     </p>
+
   </div>
 </div>
+
+{% endif %}
+
 
 {% if new_user_credentials %}
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
 
 class Area(models.Model):
     name = models.CharField(max_length=100)
@@ -103,4 +104,24 @@ class UserRole(models.Model):
 
 
 
+class AreaInfo(models.Model):
+    area = models.OneToOneField(
+        "Area",
+        on_delete=models.CASCADE,
+        related_name="info"
+    )
+
+    content = models.TextField()
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"Info – {self.area.name}"
 

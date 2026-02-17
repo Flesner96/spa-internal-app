@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import UserProfileForm
+from .forms import UserProfileForm, AreaInfoForm
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import UserCreateForm
 from .permissions import require_capability, Capability
+from .models import AreaInfo
+from django.http import HttpResponseForbidden
+from django.contrib import messages
 
 
 ALL_TOOLS = [
@@ -80,6 +83,12 @@ def dashboard_view(request):
 
     visible_tools = []
 
+    area_info = None
+
+    if request.user.area:
+        area_info = getattr(request.user.area, "info", None)
+
+
     for tool in ALL_TOOLS:
 
         if tool["status"] == "planned" and not user.is_sys_admin:
@@ -99,6 +108,7 @@ def dashboard_view(request):
         {
             "tools": visible_tools,
             "new_user_credentials": credentials,
+            "area_info": area_info,
         },
     )
 
@@ -165,3 +175,24 @@ def user_create_view(request):
         },
     )
 
+@login_required
+def edit_area_info_view(request):
+
+    if not request.user.can("edit_area_info"):
+        return HttpResponseForbidden()
+
+    area = request.user.area
+    info, _ = AreaInfo.objects.get_or_create(area=area)
+
+    if request.method == "POST":
+        form = AreaInfoForm(request.POST, instance=info)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.updated_by = request.user
+            obj.save()
+            messages.success(request, "Area Info zaktualizowane.")
+            return redirect("dashboard")
+    else:
+        form = AreaInfoForm(instance=info)
+
+    return render(request, "accounts/edit_area_info.html", {"form": form})

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, reverse_lazy
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView, user_create_view
+from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView, user_create_view, edit_area_info_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -27,6 +27,11 @@ urlpatterns = [
     # ROOT = LOGIN
     path("", root_view, name="root"),
     path("dashboard/", dashboard_view, name="dashboard"),
+    path(
+        "area-info/edit/",
+        edit_area_info_view,
+        name="edit_area_info"
+    ),
     # ACCOUNT APP
     path(
         "login/",

@@ -24,7 +24,7 @@ class Capability:
     REDEEM_VOUCHERS = "redeem_vouchers"
     MPV_TRANSACTIONS = "mpv_transactions"
     VIEW_VOUCHER_LOGS = "view_voucher_logs"
-
+    EDIT_AREA_INFO = "edit_area_info"
 
 
 ROLE_CAPABILITIES = {
@@ -59,6 +59,7 @@ ROLE_CAPABILITIES = {
         Capability.REDEEM_VOUCHERS,
         Capability.MPV_TRANSACTIONS,
         Capability.EXTEND_VOUCHERS,
+        Capability.EDIT_AREA_INFO,
     },
     "Ma": {
         Capability.VIEW_NOTEBOOK,

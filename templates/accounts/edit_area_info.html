@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4" style="max-width: 700px;">
+
+  <h4 class="mb-4">Edytuj Area Info</h4>
+
+  <div class="card">
+    <div class="card-body">
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          {{ form.content.label_tag }}
+          {{ form.content }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+
+          <a href="{% url 'dashboard' %}"
+             class="btn btn-outline-light">
+            Anuluj
+          </a>
+
+          <button type="submit"
+                  class="btn btn-warning">
+            Zapisz
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

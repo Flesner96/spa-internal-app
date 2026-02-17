@@ -1,9 +1,8 @@
 from django import forms
-from .models import User, Role, UserRole
+from .models import User, Role, UserRole,AreaInfo
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 import secrets
-
 
 User = get_user_model()
 
@@ -100,3 +99,24 @@ class EmailAuthenticationForm(AuthenticationForm):
             "placeholder": "Hasło"
         })
     )
+
+
+class AreaInfoForm(forms.ModelForm):
+
+    class Meta:
+        model = AreaInfo
+        fields = ["content"]
+
+        widgets = {
+            "content": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Wpisz wiadomość dla całego obszaru..."
+                }
+            )
+        }
+
+        labels = {
+            "content": "Treść wiadomości"
+        }
