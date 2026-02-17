@@ -1,8 +1,10 @@
 from django import forms
-from .models import User, Role, UserRole,AreaInfo
-from django.contrib.auth.forms import AuthenticationForm
+from .models import User, Role, UserRole, AreaInfo
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
 import secrets
+
+
 
 User = get_user_model()
 
@@ -120,3 +122,23 @@ class AreaInfoForm(forms.ModelForm):
         labels = {
             "content": "Treść wiadomości"
         }
+
+
+
+class StyledPasswordChangeForm(PasswordChangeForm):
+
+    old_password = forms.CharField(
+        label="Obecne hasło",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    new_password1 = forms.CharField(
+        label="Nowe hasło",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    new_password2 = forms.CharField(
+        label="Powtórz nowe hasło",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import UserProfileForm, AreaInfoForm
+from .forms import UserProfileForm, AreaInfoForm, StyledPasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import UserCreateForm
@@ -135,6 +135,7 @@ def profile_view(request):
 
 class ForcedPasswordChangeView(PasswordChangeView):
     template_name = "accounts/password_change.html"
+    form_class = StyledPasswordChangeForm
     success_url = reverse_lazy("dashboard")
 
     def form_valid(self, form):
