@@ -3,10 +3,11 @@
 {% block content %}
 
 <h3>Edytuj voucher</h3>
+<input type="hidden" name="next" value="{{ request.GET.next }}">
 
 <form method="post">
   {% csrf_token %}
-
+  
   {{ form.non_field_errors }}
 
   {% for field in form %}

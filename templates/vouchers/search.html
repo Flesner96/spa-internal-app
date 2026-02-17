@@ -105,7 +105,7 @@
 
             {# ===== EDYCJA ===== #}
             {% if request.user|can:"edit_vouchers" and v.effective_status == "active" %}
-              <a href="{% url 'vouchers:voucher_edit' v.pk %}" class="btn btn-sm w-100 btn-outline-light action-btn">
+              <a href="{% url 'vouchers:voucher_edit' v.pk %}?next={{ request.get_full_path }}" class="btn btn-sm w-100 btn-outline-light action-btn">
                 Edycja
               </a>
             {% endif %}
@@ -113,7 +113,7 @@
             {# ===== PRZEDŁUŻ ===== #}
             {% if request.user|can:"extend_vouchers" %}
               {% if v.effective_status == "active" or v.effective_status == "expired" %}
-                <a href="{% url 'vouchers:voucher_extend' v.pk %}"
+                <a href="{% url 'vouchers:voucher_extend' v.pk %}?next={{ request.get_full_path }}"
                   class="btn btn-sm w-100 btn-outline-warning action-btn">
                   Przedłuż
                 </a>
@@ -124,7 +124,7 @@
             {# ===== MPV ===== #}
             {% if request.user|can:"mpv_transactions" and v.type == "MPV" %}
               {% if v.effective_status == "active" %}
-                <a href="{% url 'vouchers:voucher_transaction' v.pk %}" class="btn btn-sm w-100 btn-outline-info action-btn">
+                <a href="{% url 'vouchers:voucher_transaction' v.pk %}?next={{ request.get_full_path }}" class="btn btn-sm w-100 btn-outline-info action-btn">
                   Transakcje
                 </a>
               {% endif %}
@@ -132,7 +132,7 @@
 
             {# ===== SPV / OLD ===== #}
             {% if request.user|can:"redeem_vouchers" and v.type != "MPV" and v.effective_status == "active" %}
-              <form method="post" action="{% url 'vouchers:voucher_redeem' v.pk %}">
+              <form method="post" action="{% url 'vouchers:voucher_redeem' v.pk %}?next={{ request.get_full_path }}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm w-100 btn-outline-success action-btn">
                   Oznacz jako zużyty

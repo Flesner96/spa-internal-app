@@ -19,7 +19,7 @@
 
     <form method="post">
         {% csrf_token %}
-
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
         <div class="mb-3">
             <label>Kwota</label>
             {{ form.amount }}

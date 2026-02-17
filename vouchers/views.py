@@ -115,7 +115,8 @@ def voucher_redeem_view(request, pk):
 
     messages.success(request, "Voucher został oznaczony jako zużyty.")
 
-    return redirect("vouchers:voucher_search")
+    next_url = request.POST.get("next") or request.GET.get("next")
+    return redirect(next_url or "vouchers:voucher_search")
 
 
 @login_required
@@ -149,7 +150,8 @@ def voucher_edit_view(request, pk):
 
 
             messages.success(request, "Voucher został zaktualizowany.")
-            return redirect("vouchers:voucher_search")
+            next_url = request.POST.get("next") or request.GET.get("next")
+            return redirect(next_url or "vouchers:voucher_search")
 
     return render(
         request,
@@ -196,7 +198,8 @@ def voucher_extend_view(request, pk):
 
 
             messages.success(request, "Voucher został przedłużony.")
-            return redirect("vouchers:voucher_search")
+            next_url = request.POST.get("next") or request.GET.get("next")
+            return redirect(next_url or "vouchers:voucher_search")
 
     else:
         form = VoucherExtendForm(instance=voucher)
@@ -234,7 +237,8 @@ def voucher_transaction_view(request, pk):
             voucher.save(update_fields=["status", "updated_at"])
 
         messages.success(request, "Status karty zaktualizowany.")
-        return redirect("vouchers:voucher_search")
+        next_url = request.POST.get("next") or request.GET.get("next")
+        return redirect(next_url or "vouchers:voucher_search")
 
     # ====== NORMAL TRANSACTION ======
     if request.method == "POST":
@@ -267,7 +271,8 @@ def voucher_transaction_view(request, pk):
                 return redirect(f"{request.path}?confirm_return=1")
 
             messages.success(request, "Transakcja zapisana.")
-            return redirect("vouchers:voucher_search")
+            next_url = request.POST.get("next") or request.GET.get("next")
+            return redirect(next_url or "vouchers:voucher_search")
 
     else:
         form = MPVTransactionForm()
