@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from accounts.permissions import require_capability, Capability
-
+from django.db import transaction
 
 
 
@@ -215,12 +215,17 @@ def voucher_transaction_view(request, pk):
 
     # ====== CONFIRM CARD RETURN ======
     if request.method == "POST" and "confirm_return" in request.POST:
-        if request.POST.get("confirm_return") == "yes":
-            voucher.status = Voucher.Status.ZERO_RETURNED
-        else:
-            voucher.status = Voucher.Status.ZERO_NOT_RETURNED
 
-        voucher.save()
+        with transaction.atomic():
+            voucher = Voucher.objects.select_for_update().get(pk=voucher.pk)
+
+            if request.POST.get("confirm_return") == "yes":
+                voucher.status = Voucher.Status.ZERO_RETURNED
+            else:
+                voucher.status = Voucher.Status.ZERO_NOT_RETURNED
+
+            voucher.save(update_fields=["status", "updated_at"])
+
         messages.success(request, "Status karty zaktualizowany.")
         return redirect("vouchers:voucher_search")
 
@@ -230,30 +235,29 @@ def voucher_transaction_view(request, pk):
 
         if form.is_valid():
 
-            transaction = MPVTransaction(
-                voucher=voucher,
-                amount=form.cleaned_data["amount"],
-                note=form.cleaned_data.get("note", ""),
-                created_by=request.user,
-            )
+            with transaction.atomic():
 
-            transaction.save()
+                voucher = Voucher.objects.select_for_update().get(pk=voucher.pk)
 
-            VoucherLog.objects.create(
-                voucher=voucher,
-                action=VoucherLog.Action.TRANSACTION,
-                performed_by=request.user,
-                description=f"Kwota: - {transaction.amount}"
-            )
-
-
-
-            voucher.refresh_from_db()
-            # jeśli saldo zeszło do 0 → pokazujemy modal
-            if voucher.value_remaining == 0:
-                return redirect(
-                    f"{request.path}?confirm_return=1"
+                transaction_obj = MPVTransaction.objects.create(
+                    voucher=voucher,
+                    amount=form.cleaned_data["amount"],
+                    note=form.cleaned_data.get("note", ""),
+                    created_by=request.user,
                 )
+
+                # saldo aktualizuje model save()
+                voucher.refresh_from_db()
+
+                VoucherLog.objects.create(
+                    voucher=voucher,
+                    action=VoucherLog.Action.TRANSACTION,
+                    performed_by=request.user,
+                    description=f"Kwota: {transaction_obj.amount}"
+                )
+
+            if voucher.value_remaining == 0:
+                return redirect(f"{request.path}?confirm_return=1")
 
             messages.success(request, "Transakcja zapisana.")
             return redirect("vouchers:voucher_search")
@@ -268,6 +272,7 @@ def voucher_transaction_view(request, pk):
         "voucher": voucher,
         "show_modal": show_modal,
     })
+
 
 
 @login_required
