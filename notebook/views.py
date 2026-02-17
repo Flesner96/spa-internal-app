@@ -60,7 +60,7 @@ def notebook_view(request):
 
     paginator = Paginator(messages_qs, 5)  # ⬅️ ile wpisów na stronę
     page_number = request.GET.get("page")
-    messages = paginator.get_page(page_number)
+    area_messages = paginator.get_page(page_number)
     reply_form = AreaMessageReplyForm()
 
     if request.method == "POST":
@@ -83,7 +83,7 @@ def notebook_view(request):
         request,
         "notebook/notebook.html",
         {
-            "messages": messages,
+            "area_messages": area_messages,
             "form": form,
             "reply_form": reply_form,
         }
