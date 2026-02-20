@@ -82,7 +82,10 @@ ROLE_CAPABILITIES = {
         Capability.MANAGE_USERS,
     },
 }
-
+CAPABILITY_AREA_SCOPE = {
+    Capability.IMPORT_SAUNAS: {"SA"},
+    Capability.BALANCE_HISTORY: {"RC"},
+}
 
 def user_has_capability(user, capability: str) -> bool:
     if not user.is_authenticated:
@@ -91,11 +94,26 @@ def user_has_capability(user, capability: str) -> bool:
     if "SysA" in user.role_codes:
         return True
 
+    
+    has_cap = False
     for role in user.role_codes:
         if capability in ROLE_CAPABILITIES.get(role, set()):
-            return True
+            has_cap = True
+            break
 
-    return False
+    if not has_cap:
+        return False
+
+    
+    allowed_areas = CAPABILITY_AREA_SCOPE.get(capability)
+
+    if not allowed_areas:
+        return True  
+
+    if not user.area:
+        return False
+
+    return user.area.code in allowed_areas
 
 
 def require_capability(capability):
