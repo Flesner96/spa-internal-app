@@ -50,8 +50,8 @@
         {% endif %}
 
         {% for event in lane.events %}
-            <div class="event-card {% if lane.conflict %}event-conflict{% endif %}">
-                {{ event.name }}
+            <div class="event-card{% if lane.conflict %} event-conflict{% elif event.event_type == 'SW' %} event-sw{% elif 'Senior' in event.name %} event-senior{% elif 'Aerobik' in event.name %} event-aerobik{% elif 'Spinning' in event.name %} event-spinning{% endif %}">
+              {{ event.name }}
             </div>
         {% empty %}
             <div class="empty-cell"></div>
