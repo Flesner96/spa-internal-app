@@ -65,7 +65,7 @@
           {% endif %}
         </div>
 
-        {% if msg.author == request.user %}
+        {% if msg.author == request.user and not msg.reply %}
           <a href="{% url 'edit_area_message' msg.id %}"
              class="spa-nav-link">
             <i class="bi bi-pen"></i>
