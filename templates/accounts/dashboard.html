@@ -62,7 +62,7 @@
 
     {% endif %}
 
-    {% if request.user|can:"manage_area_info" %}
+    {% if request.user|can:"edit_area_info" %}
       <div class="mt-3 text-end">
         <a href="{% url 'edit_area_info' %}" class="btn btn-sm btn-warning">
           Zapisz

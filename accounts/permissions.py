@@ -79,6 +79,7 @@ ROLE_CAPABILITIES = {
         Capability.VIEW_VOUCHERS,
         Capability.EXTEND_VOUCHERS,
         Capability.VIEW_VOUCHER_LOGS,
+        Capability.MANAGE_USERS,
     },
 }
 
