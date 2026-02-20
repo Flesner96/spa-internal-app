@@ -64,7 +64,8 @@ Harmonogram zajęć
 
         {% if events %}
           {% for event in events %}
-            <div class="event-card">
+            {% for event in events %}
+             <div class="event-card{% if event.event_type == 'SW' %} event-sw{% elif 'Senior' in event.name %} event-senior{% elif 'Aerobik' in event.name %} event-aerobik{% elif 'Spinning' in event.name %} event-spinning{% endif %}">
 
               <div class="event-name">
                 {{ event.name }}

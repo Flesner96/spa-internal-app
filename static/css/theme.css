@@ -415,3 +415,37 @@ input[type="file"]::file-selector-button:hover {
     justify-content: center;
     font-weight: 500;
 }
+
+/* ===== EVENT CARDS ===== */
+
+.event-card {
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* Aqua Senior – jasnożółty */
+.event-senior {
+    background-color: #fff4b8;
+    color: #5a4600;
+}
+
+/* Aqua Aerobik – błękit */
+.event-aerobik {
+    background-color: #d8ecff;
+    color: #0f3c5f;
+}
+
+/* Aqua Spinning – zielony */
+.event-spinning {
+    background-color: #d8f7d2;
+    color: #1c4a2b;
+}
+
+/* Nauka pływania – pastelowy czerwony */
+.event-sw {
+    background-color: #ffdcdc;
+    color: #5a1f1f;
+}
