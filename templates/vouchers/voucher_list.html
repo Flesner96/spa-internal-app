@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Lista voucherów{% endblock %}
+
+{% block content %}
+
+<h3 class="section-title mb-4">Lista voucherów</h3>
+
+<form method="get" class="row g-3 mb-4">
+
+  <div class="col-md-3">
+    <label class="form-label">Typ</label>
+    <select name="type" class="form-control">
+      <option value="ALL">Wszystkie</option>
+      <option value="SPV" {% if voucher_type == "SPV" %}selected{% endif %}>SPV</option>
+      <option value="MPV" {% if voucher_type == "MPV" %}selected{% endif %}>MPV</option>
+      <option value="OLD" {% if voucher_type == "OLD" %}selected{% endif %}>OLD</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Od</label>
+    <input type="date" name="from" value="{{ date_from }}" class="form-control">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Do</label>
+    <input type="date" name="to" value="{{ date_to }}" class="form-control">
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">Sortowanie</label>
+    <select name="order" class="form-control">
+      <option value="asc" {% if order == "asc" %}selected{% endif %}>
+        Najstarsze
+      </option>
+      <option value="desc" {% if order == "desc" %}selected{% endif %}>
+        Najnowsze
+      </option>
+    </select>
+  </div>
+
+  <div class="col-md-1 d-flex align-items-end">
+    <button type="submit" class="btn btn-primary w-100">
+      Filtruj
+    </button>
+  </div>
+
+</form>
+
+
+<div class="card">
+  <div class="card-body">
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Typ</th>
+          <th>Kod</th>
+          <th>Klient</th>
+          <th>Data</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for voucher in page_obj %}
+          <tr>
+            <td>{{ voucher.voucher_type }}</td>
+            <td>{{ voucher.code }}</td>
+            <td>{{ voucher.client_name }}</td>
+            <td>{{ voucher.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ voucher.status }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5">Brak wyników</td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-3">
+  <ul class="pagination">
+
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link"
+           href="?page={{ page_obj.previous_page_number }}">
+          ←
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <span class="page-link">
+        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+      </span>
+    </li>
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="?page={{ page_obj.next_page_number }}">
+          →
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

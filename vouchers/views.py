@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from accounts.permissions import require_capability, Capability
 from django.db import transaction
 from django.core.paginator import Paginator
+from django.utils.dateparse import parse_date
 
 
 
@@ -308,3 +309,47 @@ def voucher_logs_view(request):
         "logs": logs,
         "page_obj": page_obj,
     })
+
+@login_required
+@require_capability(Capability.VIEW_VOUCHERS)
+def voucher_list_view(request):
+
+    vouchers = Voucher.objects.all().select_related("seller")
+
+    # --- FILTR TYP ---
+    voucher_type = request.GET.get("type")
+    if voucher_type and voucher_type != "ALL":
+        vouchers = vouchers.filter(voucher_type=voucher_type)
+
+    # --- FILTR DAT ---
+    date_from = request.GET.get("from")
+    date_to = request.GET.get("to")
+
+    if date_from:
+        vouchers = vouchers.filter(created_at__date__gte=parse_date(date_from))
+
+    if date_to:
+        vouchers = vouchers.filter(created_at__date__lte=parse_date(date_to))
+
+    # --- SORTOWANIE ---
+    order = request.GET.get("order", "asc")
+
+    if order == "desc":
+        vouchers = vouchers.order_by("-created_at")
+    else:
+        vouchers = vouchers.order_by("created_at")
+
+    # --- PAGINACJA ---
+    paginator = Paginator(vouchers, 50)  # 50 na stronę
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj,
+        "voucher_type": voucher_type,
+        "date_from": date_from,
+        "date_to": date_to,
+        "order": order,
+    }
+
+    return render(request, "vouchers/voucher_list.html", context)
