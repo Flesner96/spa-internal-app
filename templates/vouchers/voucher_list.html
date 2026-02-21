@@ -65,7 +65,7 @@
 
         {% for voucher in page_obj %}
           <tr>
-            <td>{{ voucher.voucher_type }}</td>
+            <td>{{ voucher.display_type }}</td>
             <td>{{ voucher.code }}</td>
             <td>{{ voucher.client_name }}</td>
             <td>{{ voucher.issue_date|date:"d.m.Y H:i" }}</td>

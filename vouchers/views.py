@@ -319,7 +319,7 @@ def voucher_list_view(request):
     # --- FILTR TYP ---
     voucher_type = request.GET.get("type")
     if voucher_type and voucher_type != "ALL":
-        vouchers = vouchers.filter(voucher_type=voucher_type)
+        vouchers = vouchers.filter(type=voucher_type)
 
     # --- FILTR DAT ---
     date_from = request.GET.get("from")
