@@ -332,14 +332,6 @@ input[type="file"]::file-selector-button:hover {
   font-weight: 600;
 }
 
-.event-card {
-  background: #2b4c73;
-  border: 1px solid #f0c040;
-  padding: 4px;
-  font-size: 0.8rem;
-  border-radius: 4px;
-}
-
 .schedule-table {
     table-layout: fixed;
     width: 100%;
