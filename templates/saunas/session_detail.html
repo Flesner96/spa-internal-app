@@ -1,45 +1,80 @@
 {% extends "base.html" %}
-{% block title %}Seans{% endblock %}
+{% block title %}Szczegóły seansu{% endblock %}
 
 {% block content %}
 
-<h4 class="section-title mb-3">
-  {{ session.session_name }}
-</h4>
-<div class="card">
-  <div class="card-body">
+<div class="row justify-content-center">
+  <div class="col-md-6">
 
-    <h5 class="card-title mb-3">Frekwencja</h5>
+    <div class="card">
+      <div class="card-body">
 
-    {% if can_edit %}
+        <h4 class="card-title mb-4">
+          {{ session.session_name }}
+        </h4>
 
-      <form method="post">
-        {% csrf_token %}
+        <h5 class="section-title mb-3">
+          Frekwencja
+        </h5>
 
-        <div class="mb-3">
-          <label class="form-label">Kobiety</label>
-          {{ form.women }}
-        </div>
+        {% if can_edit %}
 
-        <div class="mb-3">
-          <label class="form-label">Mężczyźni</label>
-          {{ form.men }}
-        </div>
+          <form method="post">
+            {% csrf_token %}
 
-        <button type="submit" class="btn btn-primary">
-          Zapisz
-        </button>
+            <div class="mb-3">
+              <label class="form-label">Kobiety</label>
+              {{ form.women }}
+            </div>
 
-      </form>
+            <div class="mb-3">
+              <label class="form-label">Mężczyźni</label>
+              {{ form.men }}
+            </div>
 
-    {% else %}
+            <div class="mb-4">
+              <label class="form-label">Razem</label>
+              <input type="text"
+                     class="form-control"
+                     value="{{ session.total_people }}"
+                     readonly>
+            </div>
 
-      <p>Kobiety: <strong>{{ session.women }}</strong></p>
-      <p>Mężczyźni: <strong>{{ session.men }}</strong></p>
-      <p>Razem: <strong>{{ session.total_people }}</strong></p>
+            <button type="submit" class="btn btn-primary w-100">
+              Zapisz
+            </button>
 
-    {% endif %}
+          </form>
+
+        {% else %}
+
+          <div class="mb-3">
+            <label class="form-label">Kobiety</label>
+            <div class="form-control readonly">
+              {{ session.women }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mężczyźni</label>
+            <div class="form-control readonly">
+              {{ session.men }}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Razem</label>
+            <div class="form-control readonly">
+              {{ session.total_people }}
+            </div>
+          </div>
+
+        {% endif %}
+
+      </div>
+    </div>
 
   </div>
 </div>
+
 {% endblock %}
