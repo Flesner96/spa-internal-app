@@ -15,7 +15,7 @@
   {% for session in sessions %}
     <div class="col-6 col-md-4 col-lg-3 mb-3">
 
-      {% if request.user.area.code == "SA" %}
+      {% if request.user.area.code == "SA" or "SysA" in request.user.role_codes %}
         {% include "saunas/_session_card.html" with session=session clickable=True %}
       {% else %}  
         {% include "saunas/_session_card.html" with session=session clickable=False %}
