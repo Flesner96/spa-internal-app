@@ -14,7 +14,7 @@ class SaunaDay(models.Model):
 
     def is_editable(self):
         today = timezone.localdate()
-        return self.date >= today
+        return self.date == today
 
     class Meta:
         unique_together = ("area", "date")
