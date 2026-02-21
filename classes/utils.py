@@ -1,7 +1,7 @@
 from datetime import time
 
 
-def generate_hour_slots(start=6, end=22):
+def generate_hour_slots(start=8, end=22):
     """
     Generuje sloty godzinowe: 06:00–21:00
     """
