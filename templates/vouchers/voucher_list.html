@@ -68,7 +68,7 @@
             <td>{{ voucher.voucher_type }}</td>
             <td>{{ voucher.code }}</td>
             <td>{{ voucher.client_name }}</td>
-            <td>{{ voucher.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ voucher.issue_date|date:"d.m.Y H:i" }}</td>
             <td>{{ voucher.status }}</td>
           </tr>
         {% empty %}

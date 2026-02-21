@@ -326,18 +326,18 @@ def voucher_list_view(request):
     date_to = request.GET.get("to")
 
     if date_from:
-        vouchers = vouchers.filter(created_at__date__gte=parse_date(date_from))
+        vouchers = vouchers.filter(issue_date__date__gte=parse_date(date_from))
 
     if date_to:
-        vouchers = vouchers.filter(created_at__date__lte=parse_date(date_to))
+        vouchers = vouchers.filter(issue_date__date__lte=parse_date(date_to))
 
     # --- SORTOWANIE ---
     order = request.GET.get("order", "asc")
 
     if order == "desc":
-        vouchers = vouchers.order_by("-created_at")
+        vouchers = vouchers.order_by("-issue_date")
     else:
-        vouchers = vouchers.order_by("created_at")
+        vouchers = vouchers.order_by("issue_date")
 
     # --- PAGINACJA ---
     paginator = Paginator(vouchers, 50)  # 50 na stronę
