@@ -9,8 +9,17 @@ class PoolEvent(models.Model):
     ]
 
     event_type = models.CharField(max_length=2, choices=EVENT_TYPES)
+    DAY_CHOICES = [
+    (0, "Poniedziałek"),
+    (1, "Wtorek"),
+    (2, "Środa"),
+    (3, "Czwartek"),
+    (4, "Piątek"),
+    (5, "Sobota"),
+    (6, "Niedziela"),
+]
 
-    day_of_week = models.IntegerField()  # 0–6
+    day_of_week = models.IntegerField(choices=DAY_CHOICES)
 
     name = models.CharField(max_length=120)
     instructor = models.CharField(max_length=120, blank=True)

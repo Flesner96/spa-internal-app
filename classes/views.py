@@ -52,24 +52,16 @@ def schedule_view(request):
         },
     )
 
-DAY_NAMES = [
-    "Poniedziałek",
-    "Wtorek",
-    "Środa",
-    "Czwartek",
-    "Piątek",
-    "Sobota",
-    "Niedziela",
-    ]
+
 
 @login_required
 def combined_view(request):
     if not request.user.can(Capability.VIEW_CLASSES):
         return HttpResponseForbidden()
-
+    
     day = int(request.GET.get("day", date.today().weekday()))
     day = max(0, min(day, 6))  # clamp safety
-
+    day_label = dict(PoolEvent.DAY_CHOICES)[day]
     prev_day = (day - 1) % 7
     next_day = (day + 1) % 7
 
@@ -85,8 +77,7 @@ def combined_view(request):
             "grid": grid,
             "hour_slots": hour_slots,
             "day": day,
-            "day_name": DAY_NAMES[day],
-            "day_names": DAY_NAMES,
+            "day_name": day_label,
             "prev_day": prev_day,
             "next_day": next_day,
         },
