@@ -77,8 +77,14 @@ def sauna_session_detail(request, pk):
 
     can_edit = (
         request.user.can(Capability.EDIT_SAUNA_ATTENDANCE)
-        and request.user.area.code == "SA"
-        and session.sauna_day.is_editable()
+        and (
+            (
+                request.user.area
+                and request.user.area.code == "SA"
+                and session.sauna_day.is_editable()
+            )
+            or "SysA" in request.user.role_codes
+        )
     )
 
 
