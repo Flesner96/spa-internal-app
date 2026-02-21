@@ -56,7 +56,7 @@
                 {% for session in item.day.sessions.all %}
 
                   <div class="mt-2">
-                    {% if request.user.area.code == "SA" %}
+                    {% if request.user.area.code == "SA" or "SysA" in request.user.role_codes %}
                       {% include "saunas/_session_card.html" with session=session clickable=True %}
                     {% else %}
                       {% include "saunas/_session_card.html" with session=session clickable=False %}
