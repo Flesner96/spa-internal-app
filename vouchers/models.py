@@ -97,7 +97,7 @@ class Voucher(models.Model):
             models.Index(fields=["code"]),
             models.Index(fields=["client_name"]),
             models.Index(fields=["status"]),
-            models.Index(fields=["voucher_type"]),
+            models.Index(fields=["type"]),
             models.Index(fields=["issue_date"]),
         ]
 
