@@ -2,6 +2,7 @@
 {% block title %}Tydzień saun{% endblock %}
 
 {% block content %}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
 
   <a href="?date={{ prev_week|date:'Y-m-d' }}"
@@ -24,47 +25,61 @@
 <div class="row g-3">
 
   {% for item in week %}
-    <div class="col">
+    {% with weekday=item.date.weekday %}
+      {% if weekday != 0 and weekday != 1 %}
 
-      <div class="card h-100">
-        <div class="card-body">
+        <div class="col">
 
-          <strong>
-            <a href="{% url 'sauna_day' item.date|date:'Y-m-d' %}"
-               class="fw-bold text-decoration-none">
-              {{ item.date|date:"D d.m" }}
-            </a>
-          </strong>
+          <div class="card h-100">
+            <div class="card-body">
 
-          {% if item.day %}
+              <strong>
+                <a href="{% url 'sauna_day' item.date|date:'Y-m-d' %}"
+                   class="fw-bold text-decoration-none">
 
-            {% for session in item.day.sessions.all %}
+                  {% if weekday == 0 %}Pon
+                  {% elif weekday == 1 %}Wt
+                  {% elif weekday == 2 %}Śr
+                  {% elif weekday == 3 %}Czw
+                  {% elif weekday == 4 %}Pt
+                  {% elif weekday == 5 %}Sob
+                  {% elif weekday == 6 %}Nd
+                  {% endif %}
 
-              <div class="mt-2">
+                  {{ item.date|date:" d.m" }}
 
-                {% if request.user.area.code == "SA" %}
-                    {% include "saunas/_session_card.html" with session=session clickable=True %}
-                {% else %}
-                    {% include "saunas/_session_card.html" with session=session clickable=False %}
-                {% endif %}
+                </a>
+              </strong>
 
+              {% if item.day %}
 
-              </div>
+                {% for session in item.day.sessions.all %}
 
-            {% endfor %}
+                  <div class="mt-2">
+                    {% if request.user.area.code == "SA" %}
+                      {% include "saunas/_session_card.html" with session=session clickable=True %}
+                    {% else %}
+                      {% include "saunas/_session_card.html" with session=session clickable=False %}
+                    {% endif %}
+                  </div>
 
-          {% else %}
+                {% endfor %}
 
-            <p class="text-muted small mt-2">
-              Brak planu
-            </p>
+              {% else %}
 
-          {% endif %}
+                <p class="text-muted small mt-2">
+                  Brak planu
+                </p>
+
+              {% endif %}
+
+            </div>
+          </div>
 
         </div>
-      </div>
 
-    </div>
+      {% endif %}
+    {% endwith %}
   {% endfor %}
 
 </div>
