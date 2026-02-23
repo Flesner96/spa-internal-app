@@ -49,7 +49,7 @@ class Voucher(models.Model):
     )
 
     client_name = models.CharField(max_length=150)
-    receipt_number = models.CharField(max_length=50, blank=True)
+    receipt_number = models.CharField(max_length=150, blank=True)
 
     issue_date = models.DateTimeField(auto_now_add=True)
 
