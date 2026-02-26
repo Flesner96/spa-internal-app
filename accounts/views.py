@@ -50,8 +50,8 @@ ALL_TOOLS = [
         "name": "Raporty",
         "icon": "bi-graph-up",
         "url": "reports:reports_dashboard",
-        "status": "planned",
-        "areas": ["RC", "SA", "SP", "BD"],
+        "status": "active",
+        "areas": ["RC"],
     },
     {
         "name": "Seanse saunowe",
