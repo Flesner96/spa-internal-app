@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'classes',
     'balance',
     'vouchers',
+    'reports',
 ]
 
 MIDDLEWARE = [

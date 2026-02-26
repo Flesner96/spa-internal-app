@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Zamknięcie zmiany{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card">
+      <div class="card-body">
+
+        <h4 class="card-title mb-4">
+          Zamknięcie zmiany – {{ request.user.area.name }}
+        </h4>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Data</label>
+            {{ form.shift_date }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Zmiana</label>
+            {{ form.shift_type }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Stan kasy (końcowy)</label>
+            {{ form.closing_cash }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Wypłacona gotówka</label>
+            {{ form.cash_removed }}
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            {{ form.laundry_delivery }}
+            <label class="form-check-label">
+              Czy była dostawa prania?
+            </label>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">
+              Notatka (np. rozbieżność, uwaga do ASup)
+            </label>
+            {{ form.notes }}
+          </div>
+
+          <button type="submit"
+                  class="btn btn-primary w-100">
+            Zapisz raport
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
