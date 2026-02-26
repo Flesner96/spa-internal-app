@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from accounts.permissions import Capability
-
+from .forms import ShiftCloseReportForm
 
 
 @login_required
@@ -29,9 +29,43 @@ def reports_dashboard(request):
 
     return render(
         request,
-        "reports/dashboard.html",
+        "reports/reports_dashboard.html",
         {
             "note": note,
             "can_edit_note": can_edit,
+        },
+    )
+
+@login_required
+def shift_close_form(request):
+
+    if not request.user.can(Capability.VIEW_REPORTS):
+        return HttpResponseForbidden()
+
+    prefill_cash = request.GET.get("prefill")
+
+    if request.method == "POST":
+        form = ShiftCloseReportForm(request.POST)
+
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.area = request.user.area
+            report.created_by = request.user
+
+            if prefill_cash:
+                report.auto_prefilled = True
+
+            report.save()
+
+            return redirect("reports:reports_dashboard")
+
+    else:
+        form = ShiftCloseReportForm(prefill_cash=prefill_cash)
+
+    return render(
+        request,
+        "reports/shift_close_form.html",
+        {
+            "form": form,
         },
     )
