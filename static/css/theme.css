@@ -464,3 +464,18 @@ select.form-select option {
   background-color: var(--spa-bg);
   color: var(--spa-text);
 }
+
+/* =========================
+   REPORTS FORMS FIX
+========================= */
+
+.card .form-control,
+.card textarea {
+    width: 100%;
+    max-width: 100%;
+}
+
+.card textarea {
+    resize: vertical;
+    box-sizing: border-box;
+}
