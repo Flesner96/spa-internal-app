@@ -4,11 +4,6 @@ from .models import ShiftCloseReport
 
 class ShiftCloseReportForm(forms.ModelForm):
 
-    shift_type = forms.ChoiceField(
-        choices=ShiftCloseReport.ShiftType.choices,
-        widget=forms.RadioSelect,
-    )
-
     class Meta:
         model = ShiftCloseReport
         fields = [

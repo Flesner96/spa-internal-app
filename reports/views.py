@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden
 from accounts.permissions import Capability
 from .forms import ShiftCloseReportForm
 from django.utils import timezone
+from decimal import Decimal
 
 @login_required
 def reports_dashboard(request):
@@ -56,6 +57,7 @@ def shift_close_form(request):
 
             if prefill_cash:
                 report.auto_prefilled = True
+                report.closing_cash = Decimal(prefill_cash)
 
             report.save()
 

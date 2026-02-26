@@ -18,31 +18,30 @@
 
           <!-- SHIFT SWITCH -->
           <div class="mb-4">
-            <label class="form-label">Zmiana</label>
 
-            <div class="form-check form-switch">
-              <input class="form-check-input"
-                     type="radio"
-                     name="shift_type"
-                     value="morning"
-                     id="shiftMorning"
-                     {% if form.shift_type.value == "morning" %}checked{% endif %}>
-              <label class="form-check-label" for="shiftMorning">
-                Poranna
-              </label>
+            <label class="form-label d-block mb-2">
+              Zmiana
+            </label>
+
+            <div class="d-flex align-items-center gap-3">
+
+              <span>Poranna</span>
+
+              <div class="form-check form-switch m-0">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="shiftSwitch">
+              </div>
+
+              <span>Popołudniowa</span>
+
             </div>
 
-            <div class="form-check form-switch">
-              <input class="form-check-input"
-                     type="radio"
-                     name="shift_type"
-                     value="afternoon"
-                     id="shiftAfternoon"
-                     {% if form.shift_type.value == "afternoon" %}checked{% endif %}>
-              <label class="form-check-label" for="shiftAfternoon">
-                Popołudniowa
-              </label>
-            </div>
+            <input type="hidden"
+                   name="shift_type"
+                   id="shiftTypeHidden"
+                   value="morning">
+
           </div>
 
           <!-- CASH -->
@@ -85,4 +84,22 @@
   </div>
 </div>
 
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const switchInput = document.getElementById("shiftSwitch");
+  const hiddenField = document.getElementById("shiftTypeHidden");
+
+  switchInput.addEventListener("change", function () {
+      if (this.checked) {
+          hiddenField.value = "afternoon";
+      } else {
+          hiddenField.value = "morning";
+      }
+  });
+
+});
+</script>
 {% endblock %}
