@@ -35,7 +35,20 @@ class ShiftCloseReport(models.Model):
 
     laundry_delivery = models.BooleanField(default=False)
 
-    notes_for_next_shift = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
 
     class Meta:
         ordering = ["-shift_date", "-shift_type", "-created_at"]
+
+
+class ShiftHandoverNote(models.Model):
+    area = models.OneToOneField(Area, on_delete=models.CASCADE)
+    content = models.TextField(blank=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )

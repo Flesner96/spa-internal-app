@@ -11,12 +11,27 @@ def reports_dashboard(request):
     if not request.user.can(Capability.VIEW_REPORTS):
         return HttpResponseForbidden()
 
-    context = {
-        "area": request.user.area
-    }
+    from .models import ShiftHandoverNote
+
+    note, _ = ShiftHandoverNote.objects.get_or_create(
+        area=request.user.area
+    )
+
+    can_edit = (
+        request.user.has_role("BS")
+        and request.user.area == note.area
+    ) or request.user.is_sys_admin
+
+    if request.method == "POST" and can_edit:
+        note.content = request.POST.get("content", "")
+        note.updated_by = request.user
+        note.save()
 
     return render(
         request,
-        "reports/reports_dashboard.html",
-        context
+        "reports/dashboard.html",
+        {
+            "note": note,
+            "can_edit_note": can_edit,
+        },
     )

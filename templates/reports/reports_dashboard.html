@@ -37,9 +37,56 @@
       Porównanie zmian
     </a>
   </div> {% endcomment %}
-
 </div>
+<!-- =========================
+     PRZEKAZANIE ZMIANY
+========================= -->
 
+<div class="card mt-4">
+  <div class="card-body">
 
+    <h5 class="card-title mb-3">
+      Informacja dla następnej zmiany – {{ request.user.area.name }}
+    </h5>
 
+    {% if can_edit_note %}
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <textarea name="content"
+                    rows="4"
+                    class="form-control">{{ note.content }}</textarea>
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary">
+          Zapisz
+        </button>
+      </form>
+
+    {% else %}
+
+      {% if note.content %}
+        <div class="p-3"
+             style="background: rgba(255,255,255,0.05);
+                    border-radius: 8px;">
+          {{ note.content|linebreaksbr }}
+        </div>
+
+        <div class="small text-muted mt-2">
+          Aktualizacja:
+          {{ note.updated_at|date:"d.m.Y H:i" }}
+          · {{ note.updated_by }}
+        </div>
+      {% else %}
+        <p class="text-muted mb-0">
+          Brak informacji.
+        </p>
+      {% endif %}
+
+    {% endif %}
+
+  </div>
+</div>
 {% endblock %}
