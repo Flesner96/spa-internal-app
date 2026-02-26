@@ -16,12 +16,9 @@
         <form method="post">
           {% csrf_token %}
 
-          <!-- SHIFT SWITCH -->
           <div class="mb-4">
-
             <div class="d-flex align-items-center gap-3">
-
-              <span>Poranna</span>
+              <span class="fw-medium">Poranna</span>
 
               <div class="form-check form-switch m-0">
                 <input class="form-check-input"
@@ -29,20 +26,18 @@
                        id="shiftSwitch">
               </div>
 
-              <span>Popołudniowa</span>
-
+              <span class="fw-medium">Popołudniowa</span>
             </div>
 
             <input type="hidden"
                    name="shift_type"
                    id="shiftTypeHidden"
                    value="morning">
-
           </div>
 
           <!-- CASH -->
           <div class="mb-3">
-            <label class="form-label">Stan kasy (końcowy)</label>
+            <label class="form-label">Stan kasy</label>
             {{ form.closing_cash }}
           </div>
 
@@ -52,11 +47,21 @@
           </div>
 
           <!-- LAUNDRY -->
-          <div class="form-check form-switch mb-3">
-            <label class="form-check-label">
-              Dostawa praniana zmianie
+          <div class="mb-3">
+            <div class="d-flex align-items-center gap-2">
+
+            <label for="id_laundry_delivery"
+                   class="form-label mb-0">
+              Dostawa prania na zmianie
             </label>
+
             {{ form.laundry_delivery }}
+
+            <span class="text-muted small">
+              (zaznacz jeśli tak)
+            </span>
+
+            </div>
           </div>
 
           <!-- NOTES -->

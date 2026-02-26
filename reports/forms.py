@@ -14,7 +14,20 @@ class ShiftCloseReportForm(forms.ModelForm):
             "notes",
         ]
         widgets = {
-            "notes": forms.Textarea(attrs={"rows": 4}),
+            "laundry_delivery": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+                "id": "id_laundry_delivery"
+            }),
+            "closing_cash": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
+            "cash_removed": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
+            "notes": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 4
+            }),
         }
 
     def __init__(self, *args, **kwargs):
