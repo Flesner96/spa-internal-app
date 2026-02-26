@@ -1,14 +1,17 @@
 from django import forms
 from .models import ShiftCloseReport
-from django.utils import timezone
 
 
 class ShiftCloseReportForm(forms.ModelForm):
 
+    shift_type = forms.ChoiceField(
+        choices=ShiftCloseReport.ShiftType.choices,
+        widget=forms.RadioSelect,
+    )
+
     class Meta:
         model = ShiftCloseReport
         fields = [
-            "shift_date",
             "shift_type",
             "closing_cash",
             "cash_removed",
@@ -16,16 +19,12 @@ class ShiftCloseReportForm(forms.ModelForm):
             "notes",
         ]
         widgets = {
-            "shift_date": forms.DateInput(attrs={"type": "date"}),
             "notes": forms.Textarea(attrs={"rows": 4}),
         }
 
     def __init__(self, *args, **kwargs):
         prefill_cash = kwargs.pop("prefill_cash", None)
         super().__init__(*args, **kwargs)
-
-        if not self.instance.pk:
-            self.fields["shift_date"].initial = timezone.localdate()
 
         if prefill_cash:
             self.fields["closing_cash"].initial = prefill_cash

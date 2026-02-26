@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from accounts.permissions import Capability
 from .forms import ShiftCloseReportForm
-
+from django.utils import timezone
 
 @login_required
 def reports_dashboard(request):
@@ -36,6 +36,7 @@ def reports_dashboard(request):
         },
     )
 
+
 @login_required
 def shift_close_form(request):
 
@@ -51,6 +52,7 @@ def shift_close_form(request):
             report = form.save(commit=False)
             report.area = request.user.area
             report.created_by = request.user
+            report.shift_date = timezone.localdate()
 
             if prefill_cash:
                 report.auto_prefilled = True
@@ -65,7 +67,5 @@ def shift_close_form(request):
     return render(
         request,
         "reports/shift_close_form.html",
-        {
-            "form": form,
-        },
+        {"form": form}
     )
