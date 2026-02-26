@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Raporty{% endblock %}
+
+{% block content %}
+
+<h3 class="section-title mb-4">Raporty</h3>
+
+<!-- =========================
+     TOOLS
+========================= -->
+
+<div class="row g-3 mb-4">
+
+  <!-- Zamknięcie zmiany -->
+  <div class="col-6 col-md-4 col-lg-3">
+    <a href="#"
+       class="tool-tile">
+      <i class="bi bi-journal-check"></i>
+      Zamknięcie zmiany
+    </a>
+  </div>
+
+  <!-- Raport sprzedaży -->
+  <div class="col-6 col-md-4 col-lg-3">
+    <a href="#"
+       class="tool-tile disabled">
+      <i class="bi bi-graph-up"></i>
+      Raport sprzedaży
+    </a>
+  </div>
+
+  {% comment %} <!-- Porównanie raportów (future) -->
+  <div class="col-6 col-md-4 col-lg-3">
+    <a href="#"
+       class="tool-tile disabled">
+      <i class="bi bi-columns-gap"></i>
+      Porównanie zmian
+    </a>
+  </div> {% endcomment %}
+
+</div>
+
+
+
+{% endblock %}

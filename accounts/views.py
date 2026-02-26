@@ -49,7 +49,7 @@ ALL_TOOLS = [
     {
         "name": "Raporty",
         "icon": "bi-graph-up",
-        "url": "reports",
+        "url": "reports:reports_dashboard",
         "status": "planned",
         "areas": ["RC", "SA", "SP", "BD"],
     },
