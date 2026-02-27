@@ -166,7 +166,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
-EMAIL_HOST_USER = "apikey"
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = "Hevelia Internal <hev.internal@gmail.com>"
 
 
 
