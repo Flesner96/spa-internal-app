@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm, AreaInfoForm, StyledPasswordChangeForm
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView
+from django.urls import reverse_lazy, reverse
 from .forms import UserCreateForm
 from .permissions import require_capability, Capability
 from .models import AreaInfo
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
+from utils.email import send_email
 
 ALL_TOOLS = [
     {
@@ -197,3 +201,36 @@ def edit_area_info_view(request):
         form = AreaInfoForm(instance=info)
 
     return render(request, "accounts/edit_area_info.html", {"form": form})
+
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = "accounts/password_reset.html"
+
+    def form_valid(self, form):
+        for user in form.get_users(form.cleaned_data["email"]):
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+
+            reset_url = self.request.build_absolute_uri(
+                reverse(
+                    "password_reset_confirm",
+                    kwargs={"uidb64": uid, "token": token},
+                )
+            )
+
+            html_content = render_to_string(
+                "accounts/emails/password_reset_email.html",
+                {
+                    "user": user,
+                    "reset_url": reset_url,
+                },
+            )
+
+            send_email(
+                subject="Reset hasła – Hevelia Internal",
+                message="Użyj klienta obsługującego HTML.",
+                recipient_list=[user.email],
+                html_content=html_content,
+            )
+
+        return super().form_valid(form)
