@@ -240,6 +240,11 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-2px);
   text-decoration: none;
 }
+.tool-tile span {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
 
 /* WIP / disabled */
 .tool-tile.disabled {
