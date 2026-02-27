@@ -18,9 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from accounts.forms import EmailAuthenticationForm
-from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView, user_create_view, edit_area_info_view, CustomPasswordResetView
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts.views import dashboard_view, root_view, profile_view, ForcedPasswordChangeView, user_create_view, edit_area_info_view, CustomPasswordResetView
 from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetCompleteView, PasswordResetDoneView
 
 urlpatterns = [

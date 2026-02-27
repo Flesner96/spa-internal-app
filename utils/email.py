@@ -1,17 +1,19 @@
+import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
 
 
-def send_email(subject, message, recipient_list):
-    mail = Mail(
+def send_email(subject, message, recipient_list, html_content=None):
+    message_obj = Mail(
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_emails=recipient_list,
         subject=subject,
         plain_text_content=message,
+        html_content=html_content if html_content else message,
     )
 
     sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
-    response = sg.send(mail)
+    response = sg.send(message_obj)
 
     return response.status_code
