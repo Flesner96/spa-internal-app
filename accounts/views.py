@@ -219,7 +219,7 @@ class CustomPasswordResetView(PasswordResetView):
             )
 
             html_content = render_to_string(
-                "accounts/emails/password_reset_email.html",
+                "accounts/password_reset_email.html",
                 {
                     "user": user,
                     "reset_url": reset_url,
