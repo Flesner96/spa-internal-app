@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Grafiki{% endblock %}
+
+{% block content %}
+
+<h3>Grafik recepcji</h3>
+
+<table class="table table-bordered table-sm">
+
+{% for row in schedule %}
+<tr>
+
+{% for cell in row %}
+<td>{{ cell }}</td>
+{% endfor %}
+
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

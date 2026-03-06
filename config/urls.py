@@ -89,6 +89,7 @@ urlpatterns = [
     path("balance/", include("balance.urls")),
     path("vouchers/", include("vouchers.urls")),
     path("reports/", include("reports.urls")),
+    path("shedule/", include("schedule.urls")),
 ]
 
 if settings.DEBUG:
