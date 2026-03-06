@@ -22,8 +22,8 @@ def fetch_schedule():
 
     client = gspread.authorize(creds)
 
-    sheet = client.open_by_url(
-        "https://docs.google.com/spreadsheets/d/xzRT871M5bqXOS3atuNh9U9MDbfyCbwmUAGv5MZRa0"
+    sheet = client.open_by_key(
+        "15xzRT871M5bqXOS3atuNh9U9MDbfyCbwmUAGv5MZRa0"
     ).worksheet("Display")
 
     return sheet.get_all_values()
