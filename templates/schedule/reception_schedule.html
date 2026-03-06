@@ -3,9 +3,9 @@
 
 {% block content %}
 
-<h3>Grafik recepcji</h3>
+<div class="schedules-container">
 
-<table class="table table-bordered table-sm">
+<table class="table table-sm schedules-table">
 
 {% for row in schedule %}
 <tr>
@@ -18,5 +18,7 @@
 {% endfor %}
 
 </table>
+
+</div>
 
 {% endblock %}
