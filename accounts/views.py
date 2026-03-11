@@ -25,7 +25,7 @@ ALL_TOOLS = [
     {
         "name": "Grafik",
         "icon": "bi-calendar-week",
-        "url": "schedule",
+        "url": "schedule:schedule_view",
         "status": "planned",
         "areas": ["RC", "SA", "SP", "BD"],        
     },

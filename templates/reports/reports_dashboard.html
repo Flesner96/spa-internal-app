@@ -28,15 +28,19 @@
       Raport sprzedaży
     </a>
   </div>
+  {% if request.user.can("view_shift_report_list") %}
 
-  {% comment %} <!-- Porównanie raportów (future) -->
   <div class="col-6 col-md-4 col-lg-3">
-    <a href="#"
-       class="tool-tile disabled">
-      <i class="bi bi-columns-gap"></i>
-      Porównanie zmian
+    <a href="{% url 'reports:shift_report_list' %}"
+       class="tool-tile">
+
+      <i class="bi bi-table"></i>
+      Lista raportów
+
     </a>
-  </div> {% endcomment %}
+  </div>
+
+  {% endif %}
 </div>
 <!-- =========================
      PRZEKAZANIE ZMIANY

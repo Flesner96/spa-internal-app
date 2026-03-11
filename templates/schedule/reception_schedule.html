@@ -11,7 +11,9 @@
 <tr>
 
 {% for cell in row %}
-<td>{{ cell }}</td>
+<td class="schedule-module__cell {% if not cell %}schedule-module__empty{% endif %}">
+    {{ cell }}
+</td>
 {% endfor %}
 
 </tr>

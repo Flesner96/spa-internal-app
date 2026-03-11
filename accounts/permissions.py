@@ -11,7 +11,7 @@ class Capability:
     IMPORT_SAUNAS = 'import_saunas'
     VIEW_SAUNAS = "view_saunas"
     EDIT_SAUNA_ATTENDANCE = "edit_sauna_attendance"
-    VIEW_CLASSES = "view_classe"
+    VIEW_CLASSES = "view_classes"
     MANAGE_CLASSES = "manage_classes" 
     REPLY_NOTEBOOK = "reply_notebook"
     VIEW_BALANCE = "view_balance"
@@ -26,6 +26,14 @@ class Capability:
     VIEW_VOUCHER_LOGS = "view_voucher_logs"
     EDIT_AREA_INFO = "edit_area_info"
     VIEW_REPORTS = "view_reports"
+    CREATE_SHIFT_REPORT = "create_shift_report"
+    VIEW_SHIFT_REPORT_LIST = "view_shift_report_list"
+    VIEW_SHIFT_REPORT_DETAIL = "view_shift_report_detail"
+    COMPARE_SHIFT_REPORTS = "compare_shift_reports"
+
+
+
+
 
 ROLE_CAPABILITIES = {
     "BS": {
@@ -43,6 +51,7 @@ ROLE_CAPABILITIES = {
         Capability.MPV_TRANSACTIONS,
         Capability.EXTEND_VOUCHERS,
         Capability.VIEW_REPORTS,
+        Capability.CREATE_SHIFT_REPORT,
     },
     "ASup": {
         Capability.VIEW_NOTEBOOK,
@@ -62,12 +71,15 @@ ROLE_CAPABILITIES = {
         Capability.EXTEND_VOUCHERS,
         Capability.EDIT_AREA_INFO,
         Capability.VIEW_REPORTS,
+        Capability.VIEW_SHIFT_REPORT_LIST,
+        Capability.VIEW_SHIFT_REPORT_DETAIL,
+        Capability.COMPARE_SHIFT_REPORTS,
     },
     "Ma": {
         Capability.VIEW_NOTEBOOK,
         Capability.POST_NOTEBOOK,
-        Capability.VIEW_SAUNAS,
         Capability.REPLY_NOTEBOOK,
+        Capability.VIEW_SAUNAS,
         Capability.VIEW_VOUCHERS,
         Capability.EXTEND_VOUCHERS,
     },
@@ -87,6 +99,11 @@ ROLE_CAPABILITIES = {
 CAPABILITY_AREA_SCOPE = {
     Capability.IMPORT_SAUNAS: {"SA"},
     Capability.BALANCE_HISTORY: {"RC"},
+
+    Capability.CREATE_SHIFT_REPORT: {"RC"},
+    Capability.VIEW_SHIFT_REPORT_LIST: {"RC"},
+    Capability.VIEW_SHIFT_REPORT_DETAIL: {"RC"},
+    Capability.COMPARE_SHIFT_REPORTS: {"RC"},
 }
 
 def user_has_capability(user, capability: str) -> bool:

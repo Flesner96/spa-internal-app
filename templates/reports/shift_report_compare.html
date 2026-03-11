@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Raport zmiany{% endblock %}
+
+{% block content %}
+
+<h3>Porównanie raportów</h3>
+<div class="card">
+  <div class="card-body">
+    <table class="table">
+
+    <tr>
+    <th>Data</th>
+    <th>Osoba</th>
+    <th>Stan kasy</th>
+    <th>Wypłata</th>
+    <th>Pranie</th>
+    </tr>
+
+    {% for r in reports %}
+    <tr>
+    <td>{{ r.shift_date }}</td>
+    <td>{{ r.created_by }}</td>
+    <td>{{ r.closing_cash }}</td>
+    <td>{{ r.cash_removed }}</td>
+    <td>{{ r.laundry_delivery }}</td>
+    </tr>
+    {% endfor %}
+
+    </table>
+  </div>
+</div>
+{% endblock %}

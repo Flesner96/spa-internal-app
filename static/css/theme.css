@@ -544,3 +544,14 @@ select.form-select option {
     background: #2c2c2c;
 
 }
+.schedule-module__empty {
+
+    background: #3a3a3a;
+    opacity: 0.5;
+
+}
+.schedule-module__table tr:nth-child(even) {
+
+    background: rgba(255,255,255,0.03);
+
+}

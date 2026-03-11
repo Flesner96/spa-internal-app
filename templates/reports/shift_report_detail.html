@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Raport zmiany{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card">
+      <div class="card-body">
+
+        <h4 class="card-title mb-4">
+          Raport zmiany – {{ report.shift_date|date:"d.m.Y" }}
+        </h4>
+
+        <p><strong>Zmiana:</strong> {{ report.get_shift_type_display }}</p>
+
+        <p><strong>Osoba:</strong> {{ report.created_by }}</p>
+
+        <p><strong>Stan kasy:</strong> {{ report.closing_cash }} zł</p>
+
+        <p><strong>Wypłacono:</strong> {{ report.cash_removed }} zł</p>
+
+        <p><strong>Dostawa prania:</strong>
+          {% if report.laundry_delivery %}
+            TAK
+          {% else %}
+            NIE
+          {% endif %}
+        </p>
+
+        <p><strong>Notatki:</strong></p>
+
+        <div class="card p-2">
+          {{ report.notes|default:"—" }}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from accounts.permissions import Capability
 from .forms import ShiftCloseReportForm
 from django.utils import timezone
 from decimal import Decimal
+from .models import ShiftCloseReport
 
 @login_required
 def reports_dashboard(request):
@@ -41,7 +42,7 @@ def reports_dashboard(request):
 @login_required
 def shift_close_form(request):
 
-    if not request.user.can(Capability.VIEW_REPORTS):
+    if not request.user.can(Capability.CREATE_SHIFT_REPORT):
         return HttpResponseForbidden()
 
     prefill_cash = request.GET.get("prefill")
@@ -70,4 +71,62 @@ def shift_close_form(request):
         request,
         "reports/shift_close_form.html",
         {"form": form}
+    )
+
+@login_required
+def shift_report_list(request):
+
+    if not request.user.can(Capability.VIEW_SHIFT_REPORT_LIST):
+        return HttpResponseForbidden()
+
+    reports = ShiftCloseReport.objects.filter(
+        area=request.user.area
+    ).select_related("created_by").order_by(
+        "-shift_date",
+        "-created_at"
+    )
+
+    return render(
+        request,
+        "reports/shift_report_list.html",
+        {"reports": reports},
+    )
+
+
+@login_required
+def shift_report_detail(request, report_id):
+
+    if not request.user.can(Capability.VIEW_SHIFT_REPORT_DETAIL):
+        return HttpResponseForbidden()
+    
+    report = get_object_or_404(
+        ShiftCloseReport,
+        id=report_id,
+        area=request.user.area
+    )
+
+    return render(
+        request,
+        "reports/shift_report_detail.html",
+        {"report": report},
+    )
+
+
+@login_required
+def compare_shift_reports(request):
+
+    if not request.user.can(Capability.COMPARE_SHIFT_REPORTS):
+        return HttpResponseForbidden()
+    
+    ids = request.GET.getlist("ids")
+
+    reports = ShiftCloseReport.objects.filter(
+        id__in=ids,
+        area=request.user.area
+    )
+
+    return render(
+        request,
+        "reports/shift_report_compare.html",
+        {"reports": reports},
     )
