@@ -8,55 +8,66 @@
 </h3>
 
 <div class="card">
-  <div class="card-body">
+<div class="card-body">
 
-    <table class="table table-sm align-middle">
+<form method="get" action="{% url 'reports:compare_shift_reports' %}">
 
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Zmiana</th>
-          <th>Osoba</th>
-          <th>Stan kasy</th>
-          <th>Wypłata</th>
-          <th></th>
-        </tr>
-      </thead>
+<table class="table table-sm align-middle">
 
-      <tbody>
+<thead>
+<tr>
+<th></th>
+<th>Data</th>
+<th>Zmiana</th>
+<th>Osoba</th>
+<th>Stan kasy</th>
+<th>Wypłata</th>
+<th></th>
+</tr>
+</thead>
 
-        {% for r in reports %}
-        <tr>
+<tbody>
 
-          <td>{{ r.shift_date|date:"d.m.Y" }}</td>
+{% for r in reports %}
+<tr>
 
-          <td>{{ r.get_shift_type_display }}</td>
+<td>
+<input type="checkbox" name="ids" value="{{ r.id }}">
+</td>
 
-          <td>{{ r.created_by.first_name }}</td>
+<td>{{ r.shift_date|date:"d.m.Y" }}</td>
 
-          <td>{{ r.closing_cash }} zł</td>
+<td>{{ r.get_shift_type_display }}</td>
 
-          <td>{{ r.cash_removed }} zł</td>
+<td>{{ r.created_by.first_name }}</td>
 
-          <td>
+<td>{{ r.closing_cash }} zł</td>
 
-            <a href="{% url 'reports:shift_report_detail' r.id %}"
-               class="btn btn-sm btn-outline-light">
+<td>{{ r.cash_removed }} zł</td>
 
-              Szczegóły
+<td>
+<a href="{% url 'reports:shift_report_detail' r.id %}"
+   class="btn btn-sm btn-outline-light always_visible">
 
-            </a>
+Szczegóły
 
-          </td>
+</a>
+</td>
 
-        </tr>
-        {% endfor %}
+</tr>
+{% endfor %}
 
-      </tbody>
+</tbody>
 
-    </table>
+</table>
 
-  </div>
+<button class="btn btn-warning mt-2">
+Porównaj raporty
+</button>
+
+</form>
+
+</div>
 </div>
 
 {% endblock %}
