@@ -248,8 +248,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* WIP / disabled */
 .tool-tile.disabled {
-  opacity: 0.6;
+  opacity: 0.55;
+  filter: grayscale(40%);
   pointer-events: none;
+}
+.tool-tile .badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
 }
 input[type="file"] {
   color: var(--spa-text);
