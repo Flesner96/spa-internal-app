@@ -18,10 +18,9 @@
       {% endif %}
       {% if tool.status == "planned" %}
         <a href="#" class="tool-tile disabled">
+          <span class="badge bg-secondary mt-1">Prace trwają</span>
           <i class="bi {{ tool.icon }}"></i>
           <span>{{ tool.name }}</span>
-
-          <span class="badge bg-secondary mt-1">Prace trwają</span>
         </a>
       {% endif %}
     </div>
