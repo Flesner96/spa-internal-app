@@ -5,8 +5,8 @@ import os
 from google.oauth2.service_account import Credentials
 from django.core.cache import cache
 
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
 CACHE_TTL = 600
 
@@ -26,10 +26,12 @@ SHEETS = {
     #     "worksheet": "Display",
     # },
 }
+
+
 def fetch_schedule(area):
 
     config = SHEETS.get(area)
-    
+
     if not config:
         return []
 
@@ -58,7 +60,7 @@ def get_schedule(area):
     if data:
         return data
 
-    data = fetch_schedule()
+    data = fetch_schedule(area)
 
     cache.set(cache_key, data, CACHE_TTL)
 
