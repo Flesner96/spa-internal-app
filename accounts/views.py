@@ -46,7 +46,7 @@ ALL_TOOLS = [
     {
         "name": "Formularze",
         "icon": "bi-ui-checks",
-        "url": "#",
+        "url": "forms",
         "status": "active",
         "areas": ["RC", "SA", "BD"],
     },
