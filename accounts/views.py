@@ -68,7 +68,7 @@ ALL_TOOLS = [
         "name": "Zajęcia",
         "icon": "bi-person-arms-up",
         "url": "classes",
-        "status": "active",
+        "status": "planned",
         "areas": ["RC", "BD"],
     },
 ]
