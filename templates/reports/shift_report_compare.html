@@ -1,32 +1,79 @@
 {% extends "base.html" %}
-{% block title %}Raport zmiany{% endblock %}
+{% load permissions %}
 
 {% block content %}
 
-<h3>Porównanie raportów</h3>
+<h3 class="mb-4">
+Porównanie raportów
+</h3>
+
+<div class="row g-4">
+
+<!-- raport 1 -->
+<div class="col-md-6">
+
 <div class="card">
-  <div class="card-body">
-    <table class="table">
 
-    <tr>
-    <th>Data</th>
-    <th>Osoba</th>
-    <th>Stan kasy</th>
-    <th>Wypłata</th>
-    <th>Pranie</th>
-    </tr>
-
-    {% for r in reports %}
-    <tr>
-    <td>{{ r.shift_date }}</td>
-    <td>{{ r.created_by }}</td>
-    <td>{{ r.closing_cash }}</td>
-    <td>{{ r.cash_removed }}</td>
-    <td>{{ r.laundry_delivery }}</td>
-    </tr>
-    {% endfor %}
-
-    </table>
-  </div>
+<div class="card-header">
+{{ r1.shift_date|date:"d.m.Y" }} — {{ r1.get_shift_type_display }}
 </div>
+
+<div class="card-body">
+
+<p><b>Osoba:</b> {{ r1.created_by.first_name }}</p>
+
+<p><b>Stan kasy:</b> {{ r1.closing_cash }} zł</p>
+
+<p><b>Wypłata:</b> {{ r1.cash_removed }} zł</p>
+
+<p><b>Dostawa prania:</b>
+{% if r1.laundry_delivery %}Tak{% else %}Nie{% endif %}
+</p>
+
+<p><b>Notatki:</b></p>
+
+<div class="border p-2 rounded">
+{{ r1.notes|default:"—" }}
+</div>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- raport 2 -->
+<div class="col-md-6">
+
+<div class="card">
+
+<div class="card-header">
+{{ r2.shift_date|date:"d.m.Y" }} — {{ r2.get_shift_type_display }}
+</div>
+
+<div class="card-body">
+
+<p><b>Osoba:</b> {{ r2.created_by.first_name }}</p>
+
+<p><b>Stan kasy:</b> {{ r2.closing_cash }} zł</p>
+
+<p><b>Wypłata:</b> {{ r2.cash_removed }} zł</p>
+
+<p><b>Dostawa prania:</b>
+{% if r2.laundry_delivery %}Tak{% else %}Nie{% endif %}
+</p>
+
+<p><b>Notatki:</b></p>
+
+<div class="border p-2 rounded">
+{{ r2.notes|default:"—" }}
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
 {% endblock %}

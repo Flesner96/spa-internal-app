@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from accounts.permissions import Capability
 from .forms import ShiftCloseReportForm
 from django.utils import timezone
@@ -119,14 +119,27 @@ def compare_shift_reports(request):
         return HttpResponseForbidden()
     
     ids = request.GET.getlist("ids")
+    
+    if len(ids) != 2:
+        return HttpResponseBadRequest("Wybierz dokładnie 2 raporty")
 
-    reports = ShiftCloseReport.objects.filter(
-        id__in=ids,
-        area=request.user.area
+    reports = (
+        ShiftCloseReport.objects
+        .filter(id__in=ids)
+        .select_related("created_by")
+        .order_by("created_at")
     )
+
+    if reports.count() != 2:
+        return HttpResponseBadRequest("Nie znaleziono raportów")
+
+    r1, r2 = reports
 
     return render(
         request,
         "reports/shift_report_compare.html",
-        {"reports": reports},
+        {
+            "r1": r1,
+            "r2": r2,
+        },
     )
