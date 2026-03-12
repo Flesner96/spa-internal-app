@@ -7,11 +7,31 @@ from django.core.cache import cache
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
-CACHE_KEY = "schedule_raw"
+
 CACHE_TTL = 600
 
 
-def fetch_schedule():
+SHEETS = {
+    "RC": {
+        "spreadsheet": "15xzRT871M5bqXOS3atuNh9U9MDbfyCbwmUAGv5MZRa0",
+        "worksheet": "Display",
+    },
+    # przyszłość:
+    # "SA": {
+    #     "spreadsheet": "...",
+    #     "worksheet": "Display",
+    # },
+    # "SP": {
+    #     "spreadsheet": "...",
+    #     "worksheet": "Display",
+    # },
+}
+def fetch_schedule(area):
+
+    config = SHEETS.get(area)
+    
+    if not config:
+        return []
 
     creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS_JSON"])
 
@@ -23,21 +43,23 @@ def fetch_schedule():
     client = gspread.authorize(creds)
 
     sheet = client.open_by_key(
-        "15xzRT871M5bqXOS3atuNh9U9MDbfyCbwmUAGv5MZRa0"
-    ).worksheet("Display")
+        config["spreadsheet"]
+    ).worksheet(config["worksheet"])
 
     return sheet.get_all_values()
 
 
-def get_schedule():
+def get_schedule(area):
 
-    data = cache.get(CACHE_KEY)
+    cache_key = f"schedule_raw_{area}"
+
+    data = cache.get(cache_key)
 
     if data:
         return data
 
     data = fetch_schedule()
 
-    cache.set(CACHE_KEY, data, CACHE_TTL)
+    cache.set(cache_key, data, CACHE_TTL)
 
     return data
