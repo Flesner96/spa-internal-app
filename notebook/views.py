@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from .models import AreaMessage
 from django.utils import timezone
 from django.http import HttpResponseForbidden, FileResponse, Http404
-from accounts.permissions import Capability
+from core.rbac.permissions import Capability
 from .forms import AreaMessageReplyForm
 from .permissions import (
     can_view_notebook,
