@@ -35,7 +35,12 @@ def fetch_schedule(area):
     if not config:
         return []
 
-    creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS_JSON"])
+    creds_json = os.environ.get("GOOGLE_CREDENTIALS_JSON")
+
+    if not creds_json:
+        raise RuntimeError("GOOGLE_CREDENTIALS_JSON missing")
+
+    creds_dict = json.loads(creds_json)
 
     creds = Credentials.from_service_account_info(
         creds_dict,
