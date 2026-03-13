@@ -121,18 +121,4 @@ def user_has_capability(user, capability: str) -> bool:
     return user.area.code in allowed_areas
 
 
-def require_capability(capability):
-    def decorator(view_func):
-        @wraps(view_func)
-        def _wrapped(request, *args, **kwargs):
 
-            if not request.user.is_authenticated:
-                return redirect("login")
-
-            if not request.user.can(capability):
-                return HttpResponseForbidden()
-
-            return view_func(request, *args, **kwargs)
-
-        return _wrapped
-    return decorator
