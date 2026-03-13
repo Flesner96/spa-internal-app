@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .views import AreaMessage
+from .models import AreaMessage
 
 @admin.register(AreaMessage)
 class AreaMessageAdmin(admin.ModelAdmin):

@@ -1,4 +1,4 @@
-from accounts.permissions import Capability
+from core.rbac.permissions import Capability
 
 
 def can_view_notebook(user) -> bool:
