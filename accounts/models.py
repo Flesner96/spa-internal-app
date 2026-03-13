@@ -56,12 +56,13 @@ class User(AbstractUser):
     # =====================
 
     @property
-    def role_codes(self) -> set[str]:
-        
+    def role_codes(self):
+
         if not hasattr(self, "_cached_role_codes"):
             self._cached_role_codes = set(
                 self.userrole_set.values_list("role__code", flat=True)
             )
+
         return self._cached_role_codes
 
     def has_role(self, code: str) -> bool:

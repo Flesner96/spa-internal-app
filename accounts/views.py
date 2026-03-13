@@ -22,6 +22,7 @@ ALL_TOOLS = [
         "name": "Zeszyt",
         "icon": "bi-journal-text",
         "url": "notebook",
+        "capability": Capability.VIEW_NOTEBOOK,
         "status": "active",
         "areas": ["RC", "SP", "SA", "BD"],
     },
@@ -29,6 +30,7 @@ ALL_TOOLS = [
         "name": "Grafik",
         "icon": "bi-calendar-week",
         "url": "schedule:schedule_view",
+        "capability": Capability.VIEW_SCHEDULE,
         "status": "active",
         "areas": ["RC", "SA", "SP", "BD"],        
     },
@@ -36,6 +38,7 @@ ALL_TOOLS = [
         "name": "Vouchery",
         "icon": "bi-card-list",
         "url": "vouchers:voucher_search",
+        "capability": Capability.VIEW_VOUCHERS,
         "status": "active",
         "areas": ["RC", "BD"],
     },
@@ -43,6 +46,7 @@ ALL_TOOLS = [
         "name": "Stan gotówki",
         "icon": "bi-currency-exchange",
         "url": "balance",
+        "capability": Capability.VIEW_BALANCE,
         "status": "active",
         "areas": ["RC"],
     },
@@ -51,12 +55,13 @@ ALL_TOOLS = [
         "icon": "bi-ui-checks",
         "url": "forms",
         "status": "planned",
-        "areas": ["RC", "SA", "BD"],
+        "areas": ["RC", "SA"],
     },
     {
         "name": "Raporty",
         "icon": "bi-graph-up",
         "url": "reports:reports_dashboard",
+        "capability": Capability.VIEW_REPORTS,
         "status": "active",
         "areas": ["RC"],
     },
@@ -64,6 +69,7 @@ ALL_TOOLS = [
         "name": "Seanse saunowe",
         "icon": "bi-thermometer-half",
         "url": "saunas",
+        "capability": Capability.VIEW_SAUNAS,
         "status": "active",
         "areas": ["RC", "SA", "BD"],
     },
@@ -71,6 +77,7 @@ ALL_TOOLS = [
         "name": "Zajęcia",
         "icon": "bi-person-arms-up",
         "url": "classes",
+        "capability": Capability.VIEW_CLASSES,
         "status": "planned",
         "areas": ["RC", "BD"],
     },
@@ -204,6 +211,7 @@ def edit_area_info_view(request):
         form = AreaInfoForm(instance=info)
 
     return render(request, "accounts/edit_area_info.html", {"form": form})
+
 
 
 @method_decorator(

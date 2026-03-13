@@ -10,3 +10,5 @@ def log_action(user, action, obj=None, details=""):
         object_id=obj.id if obj else None,
         details=details,
     )
+
+    
