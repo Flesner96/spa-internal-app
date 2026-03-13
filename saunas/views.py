@@ -9,7 +9,7 @@ from .utils import get_week_range, parse_polish_day_month
 from django.contrib import messages
 from .parser import parse_sauna_text, split_description_and_sauna
 from django.http import HttpResponseForbidden
-from accounts.permissions import Capability
+from core.rbac.permissions import Capability
 
 
 @login_required

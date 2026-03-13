@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import PoolEvent
 from .forms import PoolEventForm
 from .utils import generate_hour_slots, build_hour_grid, build_combined_grid
-from accounts.permissions import Capability
+from core.rbac.permissions import Capability
 from django.http import HttpResponseForbidden
 from datetime import date
 

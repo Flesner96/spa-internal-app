@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
-from accounts.permissions import Capability
+from core.rbac.permissions import Capability
 from .forms import ShiftCloseReportForm
 from django.utils import timezone
 from decimal import Decimal

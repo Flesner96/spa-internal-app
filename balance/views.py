@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from accounts.permissions import Capability
+from core.rbac.permissions import Capability
 from .forms import CashCountForm
 from .models import CashCount
 from .utils import calculate_total
