@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'vouchers',
     'reports',
     'schedule',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -174,4 +176,58 @@ SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = "Hevelia Internal <hev.internal@gmail.com>"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
+ADMINS = [
+    ("Admin", "hev.internal@gmail.com"),
+]
+LOGGING = {
 
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "standard": {
+            "format": "[{asctime}] {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+
+        "file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/error.log"),
+            "formatter": "standard",
+        },
+
+    # wysyłanie maila przy błędzie 500
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django.utils.log.AdminEmailHandler",
+        },
+    },
+
+    "loggers": {
+
+        # błędy requestów (500)
+        "django.request": {
+            "handlers": ["mail_admins", "file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+
+        # ogólne błędy django
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+
+        # security warnings (CSRF itp.)
+        "django.security": {
+            "handlers": ["file"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}

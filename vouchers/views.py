@@ -292,9 +292,6 @@ def voucher_transaction_view(request, pk):
 @require_capability(Capability.VIEW_VOUCHER_LOGS)
 def voucher_logs_view(request):
 
-    if not request.user.is_superuser:
-        return redirect("dashboard")
-
     logs = (
         VoucherLog.objects
         .select_related("voucher", "performed_by")
@@ -306,7 +303,6 @@ def voucher_logs_view(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, "vouchers/logs.html", {
-        "logs": logs,
         "page_obj": page_obj,
     })
 
