@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 
+
 class Area(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(
@@ -87,7 +88,7 @@ class User(AbstractUser):
 
     def can(self, capability: str) -> bool:
         
-        from .permissions import user_has_capability
+        from core.rbac.permissions import user_has_capability
 
         if self.is_sys_admin:
             return True
