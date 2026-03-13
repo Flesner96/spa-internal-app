@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Nie znaleziono strony{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+
+  <h1 class="display-4">404</h1>
+  <p class="lead">Strona nie istnieje.</p>
+
+  <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">
+    Powrót do dashboardu
+  </a>
+
+</div>
+{% endblock %}

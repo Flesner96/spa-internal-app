@@ -13,6 +13,9 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from utils.email import send_email
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
+
 
 ALL_TOOLS = [
     {
@@ -203,6 +206,14 @@ def edit_area_info_view(request):
     return render(request, "accounts/edit_area_info.html", {"form": form})
 
 
+@method_decorator(
+    ratelimit(key='ip', rate='10/10m', block=True),
+    name='dispatch'
+)
+@method_decorator(
+    ratelimit(key='post:email', rate='5/10m', block=True),
+    name='dispatch'
+)
 class CustomPasswordResetView(PasswordResetView):
     template_name = "accounts/password_reset.html"
 

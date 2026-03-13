@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Błąd serwera{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+
+  <h1 class="display-4">500</h1>
+  <p class="lead">Wystąpił błąd aplikacji.</p>
+
+  <p class="text-muted">
+    Jeśli problem się powtarza zgłoś go administratorowi.
+  </p>
+
+  <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">
+    Powrót do dashboardu
+  </a>
+
+</div>
+{% endblock %}
