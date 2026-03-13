@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .services import get_schedule
+from ..core.services.sheets import get_schedule
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 

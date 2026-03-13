@@ -12,7 +12,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
-from utils.email import send_email
+from core.services.email import send_email
 from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
 
