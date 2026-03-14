@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from core.services.sheets import fetch_sheet
+from core.services.sheets import fetch_schedule
 
 
 CACHE_TTL = 600
@@ -20,7 +20,7 @@ def fetch_schedule(area):
     if not config:
         return []
 
-    return fetch_sheet(
+    return fetch_schedule(
         config["spreadsheet"],
         config["worksheet"]
     )
