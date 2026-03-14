@@ -4,7 +4,8 @@ from .forms import UserProfileForm, AreaInfoForm, StyledPasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView, PasswordResetView
 from django.urls import reverse_lazy, reverse
 from .forms import UserCreateForm
-from core.rbac.permissions import Capability, require_capability
+from core.rbac.permissions import Capability
+from core.rbac.decorators import require_capability
 from .models import AreaInfo
 from django.http import HttpResponseForbidden
 from django.contrib import messages

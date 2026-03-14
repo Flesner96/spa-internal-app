@@ -6,7 +6,8 @@ from .models import Voucher, MPVTransaction, VoucherLog
 from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from core.rbac.permissions import Capability, require_capability
+from core.rbac.permissions import Capability
+from core.rbac.decorators import require_capability
 from django.core.paginator import Paginator
 from django.utils.dateparse import parse_date
 from django.db import transaction
