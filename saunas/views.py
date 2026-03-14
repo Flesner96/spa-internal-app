@@ -10,18 +10,14 @@ from django.contrib import messages
 from .parser import parse_sauna_text, split_description_and_sauna
 from django.http import HttpResponseForbidden
 from core.rbac.permissions import Capability
+from core.rbac.decorators import require_capability
 
 
 @login_required
+@require_capability(Capability.VIEW_SAUNAS)
 def sauna_day_view(request, date):
-    user_area_code = request.user.area.code
 
-    # mapowanie RC → SA
-    if user_area_code == "RC":
-        target_area_code = "SA"
-    else:
-        target_area_code = user_area_code
-
+    target_area_code = "SA" if request.user.area.code == "RC" else request.user.area.code
     target_area = Area.objects.filter(code=target_area_code).first()
 
     if not target_area:
@@ -51,7 +47,7 @@ def sauna_day_view(request, date):
         date=selected_date,
     ).first()
 
-    sessions = sauna_day.sessions.all() if sauna_day else []
+    sessions = sauna_day.sessions.order_by("start_time") if sauna_day else []
 
     return render(
         request,
@@ -64,16 +60,13 @@ def sauna_day_view(request, date):
 
 
 @login_required
+@require_capability(Capability.VIEW_SAUNAS)
 def sauna_session_detail(request, pk):
+
     session = get_object_or_404(SaunaSession, pk=pk)
-    
-    if (
-        session.sauna_day.area != request.user.area
-        and not request.user.can(Capability.VIEW_SAUNAS)
-):
+
+    if session.sauna_day.area != request.user.area and request.user.area.code != "RC":
         return HttpResponseForbidden()
-
-
 
     can_edit = (
         request.user.can(Capability.EDIT_SAUNA_ATTENDANCE)
@@ -87,15 +80,15 @@ def sauna_session_detail(request, pk):
         )
     )
 
-
-
     if request.method == "POST":
+
         if not can_edit:
             return HttpResponseForbidden()
 
         form = SaunaAttendanceForm(request.POST, instance=session)
 
         if form.is_valid():
+
             obj = form.save(commit=False)
 
             women = obj.women or 0
@@ -121,15 +114,11 @@ def sauna_session_detail(request, pk):
 
 
 @login_required
+@require_capability(Capability.VIEW_SAUNAS)
 def sauna_week_view(request):
-    user_area = request.user.area.code
 
-    if user_area == "RC":
-        target_area_code = "SA"
-    else:
-        target_area_code = user_area
-
-    area = request.user.area.__class__.objects.get(code=target_area_code)
+    target_area_code = "SA" if request.user.area.code == "RC" else request.user.area.code
+    area = Area.objects.get(code=target_area_code)
 
     selected = request.GET.get("date")
     base_date = parse_date(selected) if selected else None
@@ -143,7 +132,6 @@ def sauna_week_view(request):
         .order_by("date")
     )
 
-    # mapa: date → SaunaDay
     day_map = {d.date: d for d in days}
 
     week = []
@@ -171,12 +159,10 @@ def sauna_week_view(request):
         },
     )
 
+
 @login_required
+@require_capability(Capability.IMPORT_SAUNAS)
 def sauna_import_view(request):
-
-    if not request.user.can(Capability.IMPORT_SAUNAS):
-        return HttpResponseForbidden()
-
 
     meta = request.session.get("sauna_import_meta")
 
@@ -184,7 +170,6 @@ def sauna_import_view(request):
 
         action = request.POST.get("action")
 
-        # ===== PREVIEW =====
         if action == "preview":
 
             raw_text = request.POST.get("raw_text", "")
@@ -217,7 +202,6 @@ def sauna_import_view(request):
                 },
             )
 
-        # ===== SAVE =====
         if action == "save":
 
             formset = ParsedSessionFormSet(request.POST)
@@ -238,8 +222,8 @@ def sauna_import_view(request):
                 sauna_day.sessions.all().delete()
 
                 for form in formset:
-                    data = form.cleaned_data
 
+                    data = form.cleaned_data
                     start = data["start_time"]
 
                     end = (

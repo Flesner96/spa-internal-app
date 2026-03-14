@@ -1,17 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from core.rbac.permissions import Capability
+from core.rbac.decorators import require_capability
 from .forms import ShiftCloseReportForm
 from django.utils import timezone
 from decimal import Decimal
 from .models import ShiftCloseReport
 
 @login_required
+@require_capability(Capability.VIEW_REPORTS)
 def reports_dashboard(request):
-
-    if not request.user.can(Capability.VIEW_REPORTS):
-        return HttpResponseForbidden()
 
     from .models import ShiftHandoverNote
 
@@ -40,10 +39,8 @@ def reports_dashboard(request):
 
 
 @login_required
+@require_capability(Capability.CREATE_SHIFT_REPORT)
 def shift_close_form(request):
-
-    if not request.user.can(Capability.CREATE_SHIFT_REPORT):
-        return HttpResponseForbidden()
 
     prefill_cash = request.GET.get("prefill")
 
@@ -74,10 +71,8 @@ def shift_close_form(request):
     )
 
 @login_required
+@require_capability(Capability.VIEW_SHIFT_REPORT_LIST)
 def shift_report_list(request):
-
-    if not request.user.can(Capability.VIEW_SHIFT_REPORT_LIST):
-        return HttpResponseForbidden()
 
     reports = ShiftCloseReport.objects.filter(
         area=request.user.area
@@ -94,10 +89,8 @@ def shift_report_list(request):
 
 
 @login_required
+@require_capability(Capability.VIEW_SHIFT_REPORT_DETAIL)
 def shift_report_detail(request, report_id):
-
-    if not request.user.can(Capability.VIEW_SHIFT_REPORT_DETAIL):
-        return HttpResponseForbidden()
     
     report = get_object_or_404(
         ShiftCloseReport,
@@ -113,10 +106,8 @@ def shift_report_detail(request, report_id):
 
 
 @login_required
+@require_capability(Capability.COMPARE_SHIFT_REPORTS)
 def compare_shift_reports(request):
-
-    if not request.user.can(Capability.COMPARE_SHIFT_REPORTS):
-        return HttpResponseForbidden()
     
     ids = request.GET.getlist("ids")
     

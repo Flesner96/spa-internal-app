@@ -2,16 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from core.rbac.permissions import Capability
+from core.rbac.decorators import require_capability
 from .forms import CashCountForm
 from .models import CashCount
 from .utils import calculate_total
 from django.core.paginator import Paginator
 
-@login_required
-def balance_view(request):
 
-    if not request.user.can(Capability.VIEW_BALANCE):
-        return HttpResponseForbidden()
+@login_required
+@require_capability(Capability.VIEW_BALANCE)
+def balance_view(request):
 
     # 👉 odbieramy saved_total z poprzedniego POST (jeśli był)
     saved_total = request.session.pop("saved_total", None)
@@ -63,11 +63,9 @@ def balance_view(request):
     )
 
 @login_required
+@require_capability(Capability.BALANCE_HISTORY)
 def balance_history_view(request):
-
-    if not request.user.can(Capability.BALANCE_HISTORY):
-        return HttpResponseForbidden()
-
+    
     counts = CashCount.objects.select_related("user").order_by("-created_at")
 
     paginator = Paginator(counts, 25)

@@ -6,12 +6,8 @@ from .models import AreaMessage
 from django.utils import timezone
 from django.http import HttpResponseForbidden, FileResponse, Http404
 from core.rbac.permissions import Capability
+from core.rbac.decorators import require_capability
 from .forms import AreaMessageReplyForm
-from .permissions import (
-    can_view_notebook,
-    can_post_message,
-    can_edit_message,
-)
 
 
 @login_required
@@ -22,10 +18,11 @@ def edit_area_message(request, pk):
         return HttpResponseForbidden(
             "Nie można edytować wiadomości z odpowiedzią."
         )
+    if not request.user.can(Capability.EDIT_NOTEBOOK):
+        return HttpResponseForbidden()
 
-
-    if not can_edit_message(request.user, message):
-        return HttpResponseForbidden("Nie masz uprawnień do edycji tego wpisu.")
+    if message.author != request.user:
+        return HttpResponseForbidden()
 
     if request.method == "POST":
         form = AreaMessageForm(request.POST, request.FILES, instance=message)
@@ -45,12 +42,9 @@ def edit_area_message(request, pk):
     )
 
 @login_required
+@require_capability(Capability.VIEW_NOTEBOOK)
 def notebook_view(request):
     area = request.user.area
-
-    if not can_view_notebook(request.user):
-        return HttpResponseForbidden()
-
 
     messages_qs = (
         AreaMessage.objects
@@ -64,7 +58,7 @@ def notebook_view(request):
     reply_form = AreaMessageReplyForm()
 
     if request.method == "POST":
-        if not can_post_message(request.user):
+        if not request.user.can(Capability.POST_NOTEBOOK):
             return HttpResponseForbidden()
         
         form = AreaMessageForm(request.POST, request.FILES)
@@ -90,9 +84,8 @@ def notebook_view(request):
     )
 
 @login_required
+@require_capability(Capability.VIEW_NOTEBOOK)
 def download_area_message_attachment(request, pk):
-    if not can_view_notebook(request.user):
-        raise Http404()
     
     msg = get_object_or_404(AreaMessage, pk=pk)
 
@@ -113,11 +106,9 @@ def download_area_message_attachment(request, pk):
 
 
 @login_required
+@require_capability(Capability.REPLY_NOTEBOOK)
 def reply_area_message(request, pk):
     message = get_object_or_404(AreaMessage, pk=pk)
-
-    if not request.user.can(Capability.REPLY_NOTEBOOK):
-        return HttpResponseForbidden()
 
     if hasattr(message, "reply"):
         return HttpResponseForbidden("Ta wiadomość ma już odpowiedź.")

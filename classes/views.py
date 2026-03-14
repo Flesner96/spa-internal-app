@@ -4,15 +4,14 @@ from .models import PoolEvent
 from .forms import PoolEventForm
 from .utils import generate_hour_slots, build_hour_grid, build_combined_grid
 from core.rbac.permissions import Capability
-from django.http import HttpResponseForbidden
+from core.rbac.decorators import require_capability
 from datetime import date
 
 
 
 @login_required
+@require_capability(Capability.VIEW_CLASSES)
 def schedule_view(request):
-    if not request.user.can(Capability.VIEW_CLASSES):
-        return HttpResponseForbidden()
 
     event_type = request.GET.get("type", "CL")
 
@@ -55,9 +54,8 @@ def schedule_view(request):
 
 
 @login_required
+@require_capability(Capability.VIEW_CLASSES)
 def combined_view(request):
-    if not request.user.can(Capability.VIEW_CLASSES):
-        return HttpResponseForbidden()
     
     day = int(request.GET.get("day", date.today().weekday()))
     day = max(0, min(day, 6))  # clamp safety
@@ -85,9 +83,8 @@ def combined_view(request):
 
 
 @login_required
+@require_capability(Capability.MANAGE_CLASSES)
 def manage_list(request):
-    if not request.user.can(Capability.MANAGE_CLASSES):
-        return HttpResponseForbidden()
 
     events = PoolEvent.objects.all().order_by(
         "day_of_week", "start_time"
@@ -101,9 +98,8 @@ def manage_list(request):
 
 
 @login_required
+@require_capability(Capability.MANAGE_CLASSES)
 def manage_create(request):
-    if not request.user.can(Capability.MANAGE_CLASSES):
-        return HttpResponseForbidden()
 
     form = PoolEventForm(request.POST or None)
 
@@ -119,9 +115,8 @@ def manage_create(request):
 
 
 @login_required
+@require_capability(Capability.MANAGE_CLASSES)
 def manage_edit(request, pk):
-    if not request.user.can(Capability.MANAGE_CLASSES):
-        return HttpResponseForbidden()
 
     event = get_object_or_404(PoolEvent, pk=pk)
 
@@ -139,9 +134,8 @@ def manage_edit(request, pk):
 
 
 @login_required
+@require_capability(Capability.MANAGE_CLASSES)
 def manage_delete(request, pk):
-    if not request.user.can(Capability.MANAGE_CLASSES):
-        return HttpResponseForbidden()
 
     event = get_object_or_404(PoolEvent, pk=pk)
 

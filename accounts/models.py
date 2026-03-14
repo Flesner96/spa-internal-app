@@ -51,7 +51,6 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-
     # =====================
     # PERMISSIONS / RBAC
     # =====================
@@ -66,34 +65,35 @@ class User(AbstractUser):
 
         return self._cached_role_codes
 
+
     def has_role(self, code: str) -> bool:
         return code in self.role_codes
+
 
     def has_any_role(self, *codes: str) -> bool:
         return any(code in self.role_codes for code in codes)
 
+
     @property
     def is_sys_admin(self) -> bool:
-        
         return self.has_role("SysA")
+
 
     @property
     def is_sa_supervisor(self) -> bool:
-        
         return (
             self.area
             and self.area.code == "SA"
             and self.has_role("ASup")
         )
 
+
     def can(self, capability: str) -> bool:
-        
+
         from core.rbac.permissions import user_has_capability
 
-        if self.is_sys_admin:
-            return True
-
         return user_has_capability(self, capability)
+
 
 
 

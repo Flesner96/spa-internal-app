@@ -7,7 +7,6 @@ from .forms import UserCreateForm
 from core.rbac.permissions import Capability
 from core.rbac.decorators import require_capability
 from .models import AreaInfo
-from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -127,10 +126,8 @@ def user_create_view(request):
     )
 
 @login_required
+@require_capability(Capability.EDIT_AREA_INFO)
 def edit_area_info_view(request):
-
-    if not request.user.can("edit_area_info"):
-        return HttpResponseForbidden()
 
     area = request.user.area
     info, _ = AreaInfo.objects.get_or_create(area=area)
