@@ -1,5 +1,5 @@
 {% load static %}
-{% load permissions %}
+{% load rbac %}
 {% if messages %}
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dissmissable fade show" role="alert">
