@@ -153,6 +153,12 @@ class Voucher(models.Model):
         if not self.seller:
             return "-"
         return self.seller.first_name or self.seller.email
+    
+    @property
+    def display_code(self):
+        if self.type == self.Type.MPV and self.mpv_card:
+            return self.mpv_card.code
+        return self.code or "-"
 
 
     # ======================================
