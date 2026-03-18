@@ -16,9 +16,8 @@
 <td class="
     schedule-cell
     {% if not cell %}schedule-module__empty{% endif %}
-    {% if cell == 'W' %}schedule-off{% endif %}
-    {% if cell and ('8.00' in cell or '09.00' in cell) %}schedule-morning{% endif %}
-    {% if cell and '15.00' in cell %}schedule-afternoon{% endif %}
+    {% if cell and cell|slice:":4" == "8.00" %}schedule-morning{% endif %}
+    {% if cell and cell|slice:"-5:" == "22.00" %}schedule-afternoon{% endif %}
 ">
     {{ cell }}
 </td>
