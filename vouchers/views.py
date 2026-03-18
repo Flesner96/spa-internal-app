@@ -311,7 +311,7 @@ def voucher_logs_view(request):
 @require_capability(Capability.VIEW_VOUCHERS)
 def voucher_list_view(request):
 
-    vouchers = Voucher.objects.all().select_related("seller")
+    vouchers = Voucher.objects.all().select_related("seller", "mpv_card")
 
     # --- FILTR TYP ---
     voucher_type = request.GET.get("type")
