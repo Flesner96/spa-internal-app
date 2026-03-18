@@ -59,8 +59,8 @@ def voucher_search_view(request):
             Voucher.objects
             .select_related("mpv_card", "seller")
             .filter(
-                Q(code__icontains=query) |
-                Q(mpv_card__code__icontains=query) |
+                Q(code__istartswith=query) |
+                Q(mpv_card__code__istartswith=query) |
                 Q(client_name__icontains=query)
             )
             .annotate(
