@@ -30,19 +30,6 @@
     color: white;
 
 }
-
-.schedule-morning {
-    background: #4fc3f7;
-}
-
-.schedule-afternoon {
-    background: #ffb74d;
-}
-
-.schedule-off {
-    background: #2c2c2c;
-}
-
 .schedule-module__table tr:nth-child(even) {
 
     background: rgba(255,255,255,0.03);
