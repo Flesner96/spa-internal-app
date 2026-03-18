@@ -1,0 +1,141 @@
+.schedule-wrapper {
+  overflow-x: auto;
+}
+
+.time-col {
+  width: 80px;
+  font-weight: 600;
+}
+
+.schedule-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.schedule-table td,
+.schedule-table th {
+    text-align: center;
+    vertical-align: top;
+}
+
+.schedule-table td {
+    height: 60px;
+}
+
+/* =========================
+   SCHEDULE TABLE FIX
+========================= */
+
+.schedule-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.schedule-table col:first-child {
+    width: 100px;
+}
+
+.schedule-table col:not(:first-child) {
+    width: calc((100% - 80px) / 7);
+}
+
+.event-card {
+  margin-bottom: 6px;
+}
+
+.event-card:last-child {
+  margin-bottom: 0;
+}
+
+.day-nav-arrow {
+  font-size: 2rem;        /* ← główny rozmiar */
+  font-weight: 800;
+  text-decoration: none;
+  color: #ffffff;
+  padding: 0 18px;
+  line-height: 1;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.day-nav-arrow:hover {
+  opacity: 0.7;
+  transform: scale(1.25);
+}
+
+.event-conflict {
+  background: #8b1e1e;
+  border: 1px solid #ff4d4d;
+}
+
+.conflict-warning {
+  font-size: 0.7rem;
+  color: #ff4d4d;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.action-btn {
+    min-width: 150px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+/* ===== EVENT CARDS ===== */
+
+.event-card {
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* Aqua Senior – jasnożółty */
+.event-senior {
+    background-color: #fff4b8;
+    color: #5a4600;
+}
+
+/* Aqua Aerobik – błękit */
+.event-aerobik {
+    background-color: #d8ecff;
+    color: #0f3c5f;
+}
+
+/* Aqua Spinning – zielony */
+.event-spinning {
+    background-color: #d8f7d2;
+    color: #1c4a2b;
+}
+
+/* Nauka pływania – pastelowy czerwony */
+.event-sw {
+    background-color: #ffdcdc;
+    color: #5a1f1f;
+}
+
+/* ===== TABLE HEADER FIX ===== */
+
+.table thead th {
+  background-color: rgba(255,255,255,0.06);
+  color: var(--spa-primary);
+  border-bottom: 1px solid var(--spa-primary);
+}
+
+/* ===== SELECT DARK FIX ===== */
+
+select.form-control,
+select.form-select {
+  background-color: rgba(255,255,255,0.1);
+  color: var(--spa-text);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+select.form-control option,
+select.form-select option {
+  background-color: var(--spa-bg);
+  color: var(--spa-text);
+}

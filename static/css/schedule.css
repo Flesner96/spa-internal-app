@@ -1,0 +1,68 @@
+.schedule-container {
+
+    overflow-x: auto;
+    width: 100%;
+
+    border: 1px solid #d6b36a;
+    border-radius: 6px;
+
+}
+
+.schedule-table {
+
+    min-width: 1200px;
+    border-collapse: collapse;
+
+}
+
+.schedule-table td {
+
+    border: 1px solid #333;
+    padding: 6px;
+    text-align: center;
+    white-space: nowrap;
+
+}
+
+.schedule-cell {
+
+    background: #132c4b;
+    color: white;
+
+}
+
+/* poranna zmiana */
+
+.schedule-cell:has(:contains("8.00")),
+.schedule-cell:has(:contains("09.00")) {
+
+    background: #4fc3f7;
+
+}
+
+/* popołudniowa */
+
+.schedule-cell:has(:contains("15.00")) {
+
+    background: #ffb74d;
+
+}
+
+/* wolne */
+
+.schedule-cell:contains("W") {
+
+    background: #2c2c2c;
+
+}
+.schedule-module__empty {
+
+    background: #3a3a3a;
+    opacity: 0.5;
+
+}
+.schedule-module__table tr:nth-child(even) {
+
+    background: rgba(255,255,255,0.03);
+
+}

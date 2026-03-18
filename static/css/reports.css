@@ -1,0 +1,10 @@
+.card .form-control,
+.card textarea {
+    width: 100%;
+    max-width: 100%;
+}
+
+.card textarea {
+    resize: vertical;
+    box-sizing: border-box;
+}
