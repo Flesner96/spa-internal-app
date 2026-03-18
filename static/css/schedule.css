@@ -31,36 +31,18 @@
 
 }
 
-/* poranna zmiana */
-
-.schedule-cell:has(:contains("8.00")),
-.schedule-cell:has(:contains("09.00")) {
-
+.schedule-morning {
     background: #4fc3f7;
-
 }
 
-/* popołudniowa */
-
-.schedule-cell:has(:contains("15.00")) {
-
+.schedule-afternoon {
     background: #ffb74d;
-
 }
 
-/* wolne */
-
-.schedule-cell:contains("W") {
-
+.schedule-off {
     background: #2c2c2c;
-
 }
-.schedule-module__empty {
 
-    background: #3a3a3a;
-    opacity: 0.5;
-
-}
 .schedule-module__table tr:nth-child(even) {
 
     background: rgba(255,255,255,0.03);
