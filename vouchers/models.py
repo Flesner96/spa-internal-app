@@ -293,18 +293,22 @@ class MPVTransaction(models.Model):
 
     def save(self, *args, **kwargs):
 
-        is_new = self.pk is None
+        if self.pk:
+            return super().save(*args, **kwargs)
 
-        super().save(*args, **kwargs)
+        voucher = self.voucher
 
-        if is_new:
-            voucher = self.voucher
-            voucher.value_remaining -= self.amount
+        if self.amount > voucher.value_remaining:
+            raise ValidationError("Brak wystarczających środków.")
+        
+        voucher.value_remaining -= self.amount
 
-            if voucher.value_remaining <= Decimal("0.00"):
-                voucher.value_remaining = Decimal("0.00")
+        if voucher.value_remaining <= Decimal("0.00"):
+            voucher.value_remaining = Decimal("0.00")
 
-            voucher.save(update_fields=["value_remaining", "updated_at"])
+        voucher.save(update_fields=["value_remaining", "updated_at"])
+
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.voucher} – {self.amount}"

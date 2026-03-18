@@ -70,3 +70,14 @@
 
 
 {% endblock %}
+{% block scripts %}
+<script>
+document.querySelector("form").addEventListener("submit", function() {
+    const btn = this.querySelector("button[type=submit]");
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Zapisywanie...";
+    }
+});
+</script>
+{% endblock %}
