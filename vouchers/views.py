@@ -11,7 +11,7 @@ from core.rbac.decorators import require_capability
 from django.core.paginator import Paginator
 from django.utils.dateparse import parse_date
 from django.db import transaction
-
+from django.core.exceptions import ValidationError
 
 
 @login_required
@@ -185,7 +185,6 @@ def voucher_extend_view(request, pk):
         if form.is_valid():
             voucher = form.save(commit=False)
 
-            # jeżeli był expired — wraca do active
             if voucher.status == Voucher.Status.EXPIRED:
                 voucher.status = Voucher.Status.ACTIVE
 
@@ -252,29 +251,28 @@ def voucher_transaction_view(request, pk):
 
                 voucher = Voucher.objects.select_for_update().get(pk=voucher.pk)
 
-                transaction_obj = MPVTransaction.objects.create(
-                    voucher=voucher,
-                    amount=form.cleaned_data["amount"],
-                    note=form.cleaned_data.get("note", ""),
-                    created_by=request.user,
-                )
+                try:
+                    transaction_obj = MPVTransaction.objects.create(
+                        voucher=voucher,
+                        amount=form.cleaned_data["amount"],
+                        note=form.cleaned_data.get("note", ""),
+                        created_by=request.user,
+                    )
+                except ValidationError as e:
+                    form.add_error("amount", e.message)
+                else:
+                    voucher.refresh_from_db()
 
-                # saldo aktualizuje model save()
-                voucher.refresh_from_db()
+                    VoucherLog.objects.create(
+                        voucher=voucher,
+                        action=VoucherLog.Action.TRANSACTION,
+                        performed_by=request.user,
+                        description=f"Kwota: {transaction_obj.amount}"
+                    )
 
-                VoucherLog.objects.create(
-                    voucher=voucher,
-                    action=VoucherLog.Action.TRANSACTION,
-                    performed_by=request.user,
-                    description=f"Kwota: {transaction_obj.amount}"
-                )
-
-            if voucher.value_remaining == 0:
-                return redirect(f"{request.path}?confirm_return=1")
-
-            messages.success(request, "Transakcja zapisana.")
-            next_url = request.POST.get("next") or request.GET.get("next")
-            return redirect(next_url or "vouchers:voucher_search")
+                    messages.success(request, "Transakcja zapisana.")
+                    next_url = request.POST.get("next") or request.GET.get("next")
+                    return redirect(next_url or "vouchers:voucher_search")
 
     else:
         form = MPVTransactionForm()
