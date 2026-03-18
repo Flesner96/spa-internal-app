@@ -19,9 +19,9 @@
       <td>{{ log.created_at|date:"d.m.Y H:i" }}</td>
       <td>
         {% if log.voucher.type == "MPV" %}
-          MPV – {{ log.voucher.mpv_card.code }}
+          MPV – {{ log.display_code }}
         {% else %}
-          {{ log.voucher.get_type_display }} – {{ log.voucher.code }}
+          {{ log.voucher.get_type_display }} – {{ log.display_code }}
         {% endif %}
       </td>
       <td>{{ log.get_action_display }}</td>

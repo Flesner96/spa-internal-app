@@ -44,9 +44,9 @@
             <div class="d-flex align-items-center gap-2">
               <h5 class="mb-0 fw-bold">
                 {% if v.type == "MPV" %}
-                  MPV – {{ v.mpv_card.code }}
+                  MPV – {{ v.display_code }}
                 {% else %}
-                  {{ v.display_type }} – {{ v.code }}
+                  {{ v.display_type }} – {{ v.display_code }}
                 {% endif %}
               </h5>
 

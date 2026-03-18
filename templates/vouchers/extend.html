@@ -5,9 +5,9 @@
 <div class="card p-4">
     <strong>
         {% if voucher.type == "MPV" %}
-            MPV – {{ voucher.mpv_card.code }}
+            MPV – {{ voucher.display_code }}
         {% else %}
-            {{ voucher.display_type }} – {{ voucher.code }}
+            {{ voucher.display_type }} – {{ voucher.display_code }}
         {% endif %}
     </strong>
 
