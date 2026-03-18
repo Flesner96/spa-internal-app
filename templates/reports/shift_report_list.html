@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+{% load rbac %}
+{% load static %}
 {% block title %}Raporty zmian{% endblock %}
-
+{% block extra_css %} <link rel="stylesheet" href="{% static 'css/reports.css' %}"> {% endblock %}
 {% block content %}
 
 <h3 class="section-title mb-3">

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
+{% load rbac %}
+{% load static %}
+{% block extra_css %} <link rel="stylesheet" href="{% static 'css/schedule.css' %}">{% endblock %}
 {% block title %}Grafiki{% endblock %}
-{% block extra_css %} 
-<link rel="stylesheet" href="{% static 'css/schedule.css' %}">
-{% endblock %}
 {% block content %}
 
 <div class="schedule-container">

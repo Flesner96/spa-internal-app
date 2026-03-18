@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+{% load rbac %}
+{% load static %}
 {% block title %}Raport zmiany{% endblock %}
-
+{% block extra_css %} <link rel="stylesheet" href="{% static 'css/reports.css' %}"> {% endblock %}
 {% block content %}
 
 <div class="row justify-content-center">
