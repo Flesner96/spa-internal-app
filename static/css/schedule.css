@@ -13,15 +13,15 @@
 }
 
 .schedule-morning {
-    background: #4fc3f7;
+    background: #4fc3f7 !important;
 }
 
 .schedule-afternoon {
-    background: #ffb74d;
+    background: #ffb74d !important;
 }
 
 .schedule-empty {
-    background: #3a3a3a;
+    background: #3a3a3a !important;
     opacity: 0.5;
 }
 
