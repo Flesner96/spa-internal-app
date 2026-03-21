@@ -77,10 +77,17 @@ def classify_cell(cell):
 
     cell = str(cell).strip()
 
-    if cell.startswith("8.00"):
+    if "-" not in cell:
+        return {"value": cell, "type": "default"}
+
+    start, end = cell.split("-")
+
+    # rano = zaczyna się przed 12
+    if start < "12.00":
         return {"value": cell, "type": "morning"}
 
-    if cell.endswith("22.00"):
+    # popołudnie = kończy się o 22
+    if end == "22.00":
         return {"value": cell, "type": "afternoon"}
 
     return {"value": cell, "type": "default"}
