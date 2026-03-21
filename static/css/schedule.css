@@ -1,34 +1,15 @@
-.schedule-container {
 
+.schedule-wrapper {
     overflow-x: auto;
-    width: 100%;
-
-    border: 1px solid #d6b36a;
-    border-radius: 6px;
-
 }
 
 .schedule-table {
-
-    min-width: 1200px;
     border-collapse: collapse;
-
-}
-
-.schedule-table td {
-
-    border: 1px solid #333;
-    padding: 6px;
-    text-align: center;
-    white-space: nowrap;
-
+    width: 100%;
 }
 
 .schedule-cell {
-
-    background: #132c4b;
-    color: white;
-
+    color: black;
 }
 
 .schedule-morning {
@@ -39,37 +20,33 @@
     background: #ffb74d;
 }
 
-.schedule-off {
-    background: #2c2c2c;
+.schedule-empty {
+    background: #3a3a3a;
+    opacity: 0.5;
 }
 
-.schedule-module__table tr:nth-child(even) {
-
-    background: rgba(255,255,255,0.03);
-
-}
-
-/* wrapper musi mieć overflow */
-.schedule-wrapper {
-    overflow-x: auto;
-}
-
-/* pierwsza kolumna sticky */
 .schedule-table th:first-child,
 .schedule-table td:first-child {
     position: sticky;
     left: 0;
     z-index: 2;
 
-    background: #1e1e1e; /* ważne — żeby nie było prześwitów */
+    background: #eef2f6;
+    color: black;
+    font-weight: 600;
 }
 
-/* header musi być wyżej niż cells */
 .schedule-table thead th:first-child {
     z-index: 3;
 }
 
+
+.schedule-table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+
 .schedule-table th:first-child,
 .schedule-table td:first-child {
-    box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
 }
