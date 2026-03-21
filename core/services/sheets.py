@@ -82,12 +82,16 @@ def classify_cell(cell):
 
     start, end = cell.split("-")
 
-    # rano = zaczyna się przed 12
-    if start < "12.00":
+    # zamiana na float (godzina)
+    start_hour = float(start.replace(".", ":").split(":")[0])
+    end_hour = float(end.replace(".", ":").split(":")[0])
+
+    # rano = start przed 12
+    if start_hour < 12:
         return {"value": cell, "type": "morning"}
 
     # popołudnie = kończy się o 22
-    if end == "22.00":
+    if end_hour == 22:
         return {"value": cell, "type": "afternoon"}
 
     return {"value": cell, "type": "default"}
