@@ -10,6 +10,8 @@
 
 .schedule-cell {
     color: black;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .schedule-morning {
@@ -21,7 +23,7 @@
 }
 
 .schedule-empty {
-    background: #5e5e5e !important;
+    background: #7c7c7c !important;
     opacity: 0.5;
 }
 
