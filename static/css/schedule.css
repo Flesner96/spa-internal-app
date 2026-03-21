@@ -11,6 +11,7 @@
 .schedule-cell {
     color: black;
     text-align: center;
+    vertical-align: middle;
 }
 
 .schedule-morning {
@@ -23,6 +24,10 @@
 
 .schedule-empty {
     background: #c9c9c9 !important;
+}
+.schedule-table th,
+.schedule-table td {
+    white-space: nowrap;
 }
 
 .schedule-table th:first-child,
