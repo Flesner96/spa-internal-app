@@ -48,3 +48,28 @@
     background: rgba(255,255,255,0.03);
 
 }
+
+/* wrapper musi mieć overflow */
+.schedule-wrapper {
+    overflow-x: auto;
+}
+
+/* pierwsza kolumna sticky */
+.schedule-table th:first-child,
+.schedule-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+
+    background: #1e1e1e; /* ważne — żeby nie było prześwitów */
+}
+
+/* header musi być wyżej niż cells */
+.schedule-table thead th:first-child {
+    z-index: 3;
+}
+
+.schedule-table th:first-child,
+.schedule-table td:first-child {
+    box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+}

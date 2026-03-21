@@ -1,7 +1,7 @@
 import gspread
 import json
 import os
-
+from django.shortcuts import render
 from google.oauth2.service_account import Credentials
 from django.core.cache import cache
 
@@ -70,3 +70,23 @@ def get_schedule(area):
     cache.set(cache_key, data, CACHE_TTL)
 
     return data
+
+def classify_cell(cell):
+    if not cell:
+        return {"value": "", "type": "empty"}
+
+    cell = str(cell).strip()
+
+    if cell.startswith("8.00"):
+        return {"value": cell, "type": "morning"}
+
+    if cell.endswith("22.00"):
+        return {"value": cell, "type": "afternoon"}
+
+    return {"value": cell, "type": "default"}
+
+def transform_schedule(raw_schedule):
+    return [
+        [classify_cell(cell) for cell in row]
+        for row in raw_schedule
+    ]

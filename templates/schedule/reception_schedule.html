@@ -5,7 +5,7 @@
 {% block title %}Grafiki{% endblock %}
 {% block content %}
 
-<div class="schedule-container">
+<div class="schedule-wrapper">
 
 <table class="table table-sm schedule-table">
 
@@ -13,8 +13,8 @@
 <tr>
 
 {% for cell in row %}
-<td class="schedule-module__cell {% if not cell %}schedule-module__empty{% endif %}">
-    {{ cell }}
+<td class="schedule-cell schedule-{{ cell.type }}">
+    {{ cell.value }}
 </td>
 {% endfor %}
 
@@ -25,23 +25,4 @@
 
 </div>
 
-{% endblock %}
-{% block scripts %}
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".schedule-cell").forEach(cell => {
-    const text = cell.textContent.trim();
-
-    if (!text) return;
-
-    if (text.startsWith("8.00")) {
-      cell.classList.add("schedule-morning");
-    }
-
-    if (text.endsWith("22.00")) {
-      cell.classList.add("schedule-afternoon");
-    }
-  });
-});
-</script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from core.services.sheets import get_schedule
+from core.services.sheets import get_schedule, transform_schedule
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
@@ -26,7 +26,8 @@ def schedule_view(request):
 
 def reception_schedule(request):
 
-    schedule = get_schedule("RC")
+    raw_schedule = get_schedule("RC")
+    schedule = transform_schedule(raw_schedule)
 
     return render(
         request,
