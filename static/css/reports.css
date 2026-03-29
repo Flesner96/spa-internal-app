@@ -8,3 +8,16 @@
     resize: vertical;
     box-sizing: border-box;
 }
+
+.btn-details {
+    background: transparent;
+    color: #0d6efd; /* bootstrap primary */
+    border: 1px solid #0d6efd;
+
+    opacity: 1; /* upewnij się */
+}
+
+.btn-details:hover {
+    background: #0d6efd;
+    color: white;
+}
