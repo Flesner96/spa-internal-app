@@ -124,15 +124,18 @@ class VoucherCreateForm(forms.ModelForm):
             last = (
                 Voucher.objects
                 .filter(type=Voucher.Type.OLD)
-                .order_by("-id")
-                .first()
+                .exclude(code__isnull=True)
+                .exclude(code="")
+                .values_list("code", flat=True)
             )
 
-            if last and last.code and last.code.isdigit():
-                next_code = str(int(last.code) + 1)
-            else:
-                next_code = "1"
+            max_code = 0
 
+            for c in last:
+                if c.isdigit():
+                    max_code = max(max_code, int(c))
+
+            next_code = str(max_code + 1)
             instance.code = next_code
 
         if commit:
