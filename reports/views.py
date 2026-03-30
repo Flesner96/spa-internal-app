@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest
+from django.contrib import messages
 from core.rbac.permissions import Capability
 from core.rbac.decorators import require_capability
 from .forms import ShiftCloseReportForm
 from django.utils import timezone
 from decimal import Decimal
 from .models import ShiftCloseReport
+from django.urls import reverse
 
 @login_required
 @require_capability(Capability.VIEW_REPORTS)
@@ -108,29 +109,34 @@ def shift_report_detail(request, report_id):
 @login_required
 @require_capability(Capability.COMPARE_SHIFT_REPORTS)
 def compare_shift_reports(request):
-    
-    ids = request.GET.getlist("ids")
-    
-    if len(ids) != 2:
-        return HttpResponseBadRequest("Wybierz dokładnie 2 raporty")
 
-    reports = (
-        ShiftCloseReport.objects
-        .filter(id__in=ids)
-        .select_related("created_by")
-        .order_by("created_at")
-    )
+    try:
+        ids = request.GET.getlist("ids")
 
-    if reports.count() != 2:
-        return HttpResponseBadRequest("Nie znaleziono raportów")
+        if len(ids) != 2:
+            raise ValueError("Wybierz dokładnie 2 raporty")
 
-    r1, r2 = reports
+        reports = (
+            ShiftCloseReport.objects
+            .filter(id__in=ids)
+            .select_related("created_by")
+            .order_by("created_at")
+        )
 
-    return render(
-        request,
-        "reports/shift_report_compare.html",
-        {
-            "r1": r1,
-            "r2": r2,
-        },
-    )
+        if reports.count() != 2:
+            raise ValueError("Nie znaleziono raportów")
+
+        r1, r2 = reports
+
+        return render(
+            request,
+            "reports/shift_report_compare.html",
+            {
+                "r1": r1,
+                "r2": r2,
+            },
+        )
+
+    except Exception as e:
+        messages.error(request, str(e))
+        return redirect(f"{reverse('reports:shift_report_list')}?ids={','.join(ids)}")
