@@ -9,3 +9,11 @@
     box-sizing: border-box;
 }
 
+.reports .alert-error {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
