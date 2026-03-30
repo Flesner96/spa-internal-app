@@ -61,7 +61,17 @@
   </button>
 
 </form>
-
+{% if new_old_code %}
+<div id="oldModal" class="modal show" style="display:block; background:rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content p-4 text-center">
+      <h4>Twój numer vouchera:</h4>
+      <h1>{{ new_old_code }}</h1>
+      <a href="{% url 'vouchers:voucher_create' %}" class="btn btn-primary mt-3">OK</a>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}

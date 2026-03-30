@@ -105,9 +105,6 @@ class VoucherCreateForm(forms.ModelForm):
 
         elif voucher_type == Voucher.Type.OLD:
 
-            if not code:
-                raise ValidationError("OLD musi mieć kod.")
-
             if not expiry_date:
                 raise ValidationError("Dla OLD musisz ręcznie ustawić datę ważności.")
 
