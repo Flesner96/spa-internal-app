@@ -122,6 +122,22 @@ class VoucherCreateForm(forms.ModelForm):
             instance.mpv_card = self.cleaned_data["mpv_card"]
             instance.value_remaining = self.cleaned_data["value_remaining"]
 
+        if self.cleaned_data.get("type") == Voucher.Type.OLD:
+
+            last = (
+                Voucher.objects
+                .filter(type=Voucher.Type.OLD)
+                .order_by("-id")
+                .first()
+            )
+
+            if last and last.code and last.code.isdigit():
+                next_code = str(int(last.code) + 1)
+            else:
+                next_code = "1"
+
+            instance.code = next_code
+
         if commit:
             instance.save()
 

@@ -17,7 +17,7 @@ from django.core.exceptions import ValidationError
 @login_required
 @require_capability(Capability.CREATE_VOUCHERS)
 def voucher_create_view(request):
-
+    new_old_code = request.session.pop("new_old_code", None)
     if request.method == "POST":
         form = VoucherCreateForm(request.POST)
 
@@ -25,6 +25,9 @@ def voucher_create_view(request):
             voucher = form.save(commit=False)
             voucher.seller = request.user
             voucher.save()
+
+            if voucher.type == Voucher.Type.OLD:
+                request.session["new_old_code"] = voucher.code
             
             VoucherLog.objects.create(
                 voucher=voucher,
@@ -40,7 +43,10 @@ def voucher_create_view(request):
     else:
         form = VoucherCreateForm()
 
-    return render(request, "vouchers/create.html", {"form": form})
+    return render(request, "vouchers/create.html", {
+        "form": form,
+        "new_old_code": new_old_code,                                          
+    })
 
 
 

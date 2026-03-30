@@ -201,9 +201,6 @@ class Voucher(models.Model):
                 )
 
         else:
-            # SPV / OLD muszą mieć kod
-            if not self.code:
-                raise ValidationError("Voucher musi mieć kod.")
 
             if self.type == self.Type.MPV and self.mpv_card is None:
                 raise ValidationError("MPV musi mieć przypisaną kartę.")
@@ -215,6 +212,9 @@ class Voucher(models.Model):
 
         if self.type == self.Type.SPV:
 
+            if not self.code:
+                raise ValidationError("Voucher SPV musi mieć kod.")
+            
             if not self.service_name:
                 raise ValidationError("SPV musi mieć nazwę usługi.")
 
