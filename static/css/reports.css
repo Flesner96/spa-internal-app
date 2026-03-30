@@ -9,7 +9,7 @@
     box-sizing: border-box;
 }
 
-.reports .alert-error {
+.alert-error {
     background-color: #dc3545;
     color: #fff;
     border: none;
