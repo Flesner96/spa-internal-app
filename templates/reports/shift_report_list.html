@@ -46,10 +46,28 @@
 <td>{{ r.closing_cash }} zł</td>
 
 <td>{{ r.cash_removed }} zł</td>
+<td class="report-icons">
 
+  {% if r.laundry_delivery %}
+    <span title="Pranie">🧺</span>
+  {% endif %}
+
+  {% if r.flower_guy_visit %}
+    <span title="Kwiaty">🌸</span>
+  {% endif %}
+
+  {% if r.shoe_mats_replace %}
+    <span title="Wycieraczki">🚪</span>
+  {% endif %}
+
+  {% if r.notes %}
+    <span title="Notatka">📝</span>
+  {% endif %}
+
+</td>
 <td>
 <a href="{% url 'reports:shift_report_detail' r.id %}"
-   class="btn btn-sm btn-outline-primary always_visible">
+   class="btn btn-sm btn-outline-warning always_visible">
 
 Szczegóły
 

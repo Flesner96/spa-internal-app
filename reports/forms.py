@@ -37,7 +37,7 @@ class ShiftCloseReportForm(forms.ModelForm):
             "notes": forms.Textarea(attrs={
                 "class": "form-control",
                 "rows": 4,
-                "placeholder": "np. niezgodność księgowa, uwaga do kierownika obszaru"
+                "placeholder": "np. niezgodność księgowa, uwaga do kierownika obszaru, brakujące zegarki (PONIEDZIAŁEK - zmiana poranna!!!)"
             }),
         }
 
