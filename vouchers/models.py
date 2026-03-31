@@ -301,7 +301,7 @@ class MPVTransaction(models.Model):
         if self.amount > voucher.value_remaining:
             raise ValidationError("Brak wystarczających środków.")
         
-        voucher.value_remaining -= self.amount
+        voucher.value_remaining += self.amount
 
         if voucher.value_remaining <= Decimal("0.00"):
             voucher.value_remaining = Decimal("0.00")

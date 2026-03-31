@@ -223,9 +223,11 @@ class MPVTransactionForm(forms.Form):
     amount = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
-        min_value=Decimal("0.01"),
         label="Kwota",
-        widget=forms.NumberInput(attrs={"class": "form-control"})
+        widget=forms.NumberInput(attrs={
+        "class": "form-control",
+        "placeholder": "np. 200 lub -100"
+    })
     )
 
     note = forms.CharField(

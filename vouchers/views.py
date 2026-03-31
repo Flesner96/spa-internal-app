@@ -253,20 +253,24 @@ def voucher_transaction_view(request, pk):
 
         if form.is_valid():
 
-            with transaction.atomic():
+            amount = form.cleaned_data["amount"]
 
-                voucher = Voucher.objects.select_for_update().get(pk=voucher.pk)
+            if amount == 0:
+                messages.error(request, "Kwota nie może być zerowa.")
+                return redirect(request.path)
 
-                try:
+            try:
+                with transaction.atomic():
+
+                    voucher = Voucher.objects.select_for_update().get(pk=voucher.pk)
+
                     transaction_obj = MPVTransaction.objects.create(
                         voucher=voucher,
-                        amount=form.cleaned_data["amount"],
+                        amount=amount,
                         note=form.cleaned_data.get("note", ""),
                         created_by=request.user,
                     )
-                except ValidationError as e:
-                    form.add_error("amount", e.message)
-                else:
+
                     voucher.refresh_from_db()
 
                     VoucherLog.objects.create(
@@ -276,9 +280,13 @@ def voucher_transaction_view(request, pk):
                         description=f"Kwota: {transaction_obj.amount}"
                     )
 
-                    messages.success(request, "Transakcja zapisana.")
-                    next_url = request.POST.get("next") or request.GET.get("next")
-                    return redirect(next_url or "vouchers:voucher_search")
+            except ValidationError as e:
+                messages.error(request, str(e))
+                return redirect(request.path)
+
+            messages.success(request, "Transakcja zapisana.")
+            next_url = request.POST.get("next") or request.GET.get("next")
+            return redirect(next_url or "vouchers:voucher_search")
 
     else:
         form = MPVTransactionForm()
