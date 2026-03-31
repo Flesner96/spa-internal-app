@@ -34,7 +34,8 @@ class ShiftCloseReport(models.Model):
     auto_prefilled = models.BooleanField(default=False)
 
     laundry_delivery = models.BooleanField(default=False)
-
+    flower_guy_visit = models.BooleanField(default=False)
+    shoe_mats_replace = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
 
     class Meta:

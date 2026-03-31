@@ -64,12 +64,40 @@
             </span>
 
             </div>
+            <div class="d-flex align-items-center gap-2">
+
+            <label for="id_flower_guy_visit"
+                   class="form-label mb-0">
+              Wizyta Pana od kwiatów
+            </label>
+
+            {{ form.flower_guy_visit }}
+
+            <span class="text-muted small">
+              (zaznacz jeśli tak)
+            </span>
+
+            </div>
+            <div class="d-flex align-items-center gap-2">
+
+            <label for="id_shoe_mats_replace"
+                   class="form-label mb-0">
+              Wymiana wycieraczek
+            </label>
+
+            {{ form.shoe_mats_replace }}
+
+            <span class="text-muted small">
+              (zaznacz jeśli tak)
+            </span>
+
+            </div>
           </div>
 
           <!-- NOTES -->
           <div class="mb-4">
             <label class="form-label">
-              Notatka (np. rozbieżność, uwaga do kierownika obszaru)
+              Notatka 
             </label>
             {{ form.notes }}
           </div>

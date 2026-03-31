@@ -12,11 +12,21 @@ class ShiftCloseReportForm(forms.ModelForm):
             "cash_removed",
             "laundry_delivery",
             "notes",
+            "flower_guy_visit",
+            "shoe_mats_replace",
         ]
         widgets = {
             "laundry_delivery": forms.CheckboxInput(attrs={
                 "class": "form-check-input",
-                "id": "id_laundry_delivery"
+                "id": "id_laundry_delivery",
+            }),
+            "flower_guy_visit": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+                "id": "id_flower_guy_visit"
+            }),
+            "shoe_mats_replace": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+                "id": "id_shoe_mats_replace"
             }),
             "closing_cash": forms.NumberInput(attrs={
                 "class": "form-control"
@@ -26,7 +36,8 @@ class ShiftCloseReportForm(forms.ModelForm):
             }),
             "notes": forms.Textarea(attrs={
                 "class": "form-control",
-                "rows": 4
+                "rows": 4,
+                "placeholder": "np. niezgodność księgowa, uwaga do kierownika obszaru"
             }),
         }
 
