@@ -282,13 +282,18 @@ class MPVTransaction(models.Model):
         if self.voucher.type != Voucher.Type.MPV:
             raise ValidationError("Transakcje tylko dla MPV.")
 
-        if self.amount is None or self.amount <= Decimal("0.00"):
-            raise ValidationError("Kwota musi być dodatnia.")
+        if self.amount is None:
+            raise ValidationError("Kwota jest wymagana.")
+
+        if self.amount == Decimal("0.00"):
+            raise ValidationError("Kwota nie może być zerowa.")
 
         if self.voucher.value_remaining is None:
             raise ValidationError("Voucher nie ma salda.")
 
-        if self.amount > self.voucher.value_remaining:
+        new_balance = self.voucher.value_remaining + self.amount
+
+        if new_balance < 0:
             raise ValidationError("Brak wystarczających środków.")
 
     def save(self, *args, **kwargs):
@@ -298,10 +303,12 @@ class MPVTransaction(models.Model):
 
         voucher = self.voucher
 
-        if self.amount > voucher.value_remaining:
+        new_balance = voucher.value_remaining + self.amount
+
+        if new_balance < 0:
             raise ValidationError("Brak wystarczających środków.")
         
-        voucher.value_remaining += self.amount
+        voucher.value_remaining = new_balance
 
         if voucher.value_remaining <= Decimal("0.00"):
             voucher.value_remaining = Decimal("0.00")
