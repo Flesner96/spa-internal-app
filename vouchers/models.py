@@ -309,11 +309,13 @@ class MPVTransaction(models.Model):
             raise ValidationError("Brak wystarczających środków.")
         
         voucher.value_remaining = new_balance
+        if self.amount > 0:
+            voucher.expiry_date = timezone.localdate() + timedelta(days=180)
 
-        if voucher.value_remaining <= Decimal("0.00"):
+        if new_balance <= 0:
             voucher.value_remaining = Decimal("0.00")
 
-        voucher.save(update_fields=["value_remaining", "updated_at"])
+        voucher.save(update_fields=["value_remaining", "updated_at", "expiry_date"])
 
         return super().save(*args, **kwargs)
 
