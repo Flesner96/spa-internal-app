@@ -264,6 +264,8 @@ def voucher_transaction_view(request, pk):
 
                     voucher = Voucher.objects.select_for_update().get(pk=voucher.pk)
 
+                    before_balance = voucher.value_remaining
+                    
                     transaction_obj = MPVTransaction.objects.create(
                         voucher=voucher,
                         amount=amount,
@@ -272,13 +274,16 @@ def voucher_transaction_view(request, pk):
                     )
 
                     voucher.refresh_from_db()
-
+                    after_balance = voucher.value_remaining
+                    
                     VoucherLog.objects.create(
                         voucher=voucher,
                         action=VoucherLog.Action.TRANSACTION,
                         performed_by=request.user,
                         description=f"Kwota: {transaction_obj.amount}"
                     )
+                if before_balance > 0 and after_balance == 0:
+                    return redirect(f"{request.path}?confirm_return=1")    
 
             except ValidationError as e:
                 messages.error(request, str(e))
